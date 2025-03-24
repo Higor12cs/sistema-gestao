@@ -169,7 +169,7 @@ onMounted(() => {
                             label="Código"
                             v-model="filterForm.sequential_id"
                             type="text"
-                            placeholder="Código do pedido"
+                            placeholder="Código do Pedido"
                         />
                     </div>
 

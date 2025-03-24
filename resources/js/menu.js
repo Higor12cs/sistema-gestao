@@ -82,12 +82,14 @@ export const sidebarItems = [
                 label: "Compras",
                 subItems: [
                     {
+                        type: "link",
                         routeName: "purchases.index",
                         iconClass: "fas fa-truck-loading",
                         label: "Compras",
                         permission: "purchases.index",
                     },
                     {
+                        type: "link",
                         routeName: "purchases.create",
                         iconClass: "fas fa-truck-loading",
                         label: "Nova Compra",
@@ -109,30 +111,35 @@ export const sidebarItems = [
                 label: "Financeiro",
                 subItems: [
                     {
+                        type: "link",
                         routeName: "receivables.index",
                         iconClass: "fas fa-arrow-down",
                         label: "Recebíveis",
                         permission: "receivables.index",
                     },
                     {
+                        type: "link",
                         routeName: "payables.index",
                         iconClass: "fas fa-arrow-up",
                         label: "Pagáveis",
                         permission: "payables.index",
                     },
                     {
+                        type: "link",
                         routeName: "accounts.index",
                         iconClass: "fas fa-university",
                         label: "Contas",
                         permission: "accounts.index",
                     },
                     {
+                        type: "link",
                         routeName: "payment-methods.index",
                         iconClass: "fas fa-wallet",
                         label: "Métodos de Pagamento",
                         permission: "payment-methods.index",
                     },
                     {
+                        type: "link",
                         routeName: "chart-accounts.index",
                         iconClass: "fas fa-chart-pie",
                         label: "Planos de Contas",
@@ -176,18 +183,21 @@ export const sidebarItems = [
                 permission: "atributos.index",
                 subItems: [
                     {
+                        type: "link",
                         routeName: "sections.index",
                         iconClass: "fas fa-tag",
                         label: "Seções",
                         permission: "sections.index",
                     },
                     {
+                        type: "link",
                         routeName: "groups.index",
                         iconClass: "fas fa-tag",
                         label: "Grupos",
                         permission: "groups.index",
                     },
                     {
+                        type: "link",
                         routeName: "brands.index",
                         iconClass: "fas fa-tag",
                         label: "Marcas",
@@ -209,10 +219,26 @@ export const sidebarItems = [
                 label: "Relatórios",
                 subItems: [
                     {
-                        routeName: "reports.orders.index",
-                        iconClass: "fas fa-shopping-basket",
-                        label: "Pedidos",
+                        type: "collapsible",
+                        iconClass: "fas fa-circle",
+                        label: "Relatórios de Pedidos",
                         permission: "reports.orders.index",
+                        subItems: [
+                            {
+                                type: "link",
+                                routeName: "reports.orders.analytical",
+                                iconClass: "far fa-circle",
+                                label: "Relatório Analítico",
+                                permission: "reports.orders.analytical",
+                            },
+                            {
+                                type: "link",
+                                routeName: "reports.orders.synthetic",
+                                iconClass: "far fa-circle",
+                                label: "Relatório Sintético",
+                                permission: "reports.orders.synthetic",
+                            },
+                        ],
                     },
                 ],
             },
