@@ -158,7 +158,7 @@ class ChartAccountController extends Controller
         }
 
         $query = $request->search ?? '';
-        $onlyAllowsTransactions = $request->boolean('only_allows_transactions', false);
+        $onlyAllowsTransactions = $request->boolean('only_allows_transactions', true);
 
         $accounts = ChartAccount::query()
             ->where(function ($q) use ($query) {

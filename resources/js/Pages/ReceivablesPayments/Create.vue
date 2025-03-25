@@ -5,7 +5,6 @@ import InputField from "@/Components/InputField.vue";
 import Select2 from "@/Components/Select2.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
-import axios from "axios";
 
 const props = defineProps({
     receivables: {
@@ -14,9 +13,7 @@ const props = defineProps({
     },
 });
 
-const loading = ref(false);
 const validationError = ref("");
-
 const payments = ref([]);
 
 onMounted(() => {
@@ -31,23 +28,30 @@ onMounted(() => {
     }
 });
 
+const parseLocaleNumber = (value) => {
+    if (typeof value === "string") {
+        return parseFloat(value.replace(",", ".")) || 0;
+    }
+    return parseFloat(value) || 0;
+};
+
 const totalPaidAmount = computed(() =>
     payments.value.reduce(
-        (total, payment) => total + parseFloat(payment.paid_amount || 0),
+        (total, payment) => total + parseLocaleNumber(payment.paid_amount || 0),
         0
     )
 );
 
 const totalFees = computed(() =>
     payments.value.reduce(
-        (total, payment) => total + parseFloat(payment.fees || 0),
+        (total, payment) => total + parseLocaleNumber(payment.fees || 0),
         0
     )
 );
 
 const totalDiscounts = computed(() =>
     payments.value.reduce(
-        (total, payment) => total + parseFloat(payment.discount || 0),
+        (total, payment) => total + parseLocaleNumber(payment.discount || 0),
         0
     )
 );
@@ -56,9 +60,9 @@ const effectiveTotal = computed(() =>
     payments.value.reduce(
         (total, payment) =>
             total +
-            parseFloat(payment.paid_amount || 0) +
-            parseFloat(payment.fees || 0) -
-            parseFloat(payment.discount || 0),
+            parseLocaleNumber(payment.paid_amount || 0) +
+            parseLocaleNumber(payment.fees || 0) -
+            parseLocaleNumber(payment.discount || 0),
         0
     )
 );
@@ -68,7 +72,7 @@ const form = useForm({
     payment_method_id: "",
     account_id: "",
     payment_date: new Date().toISOString().slice(0, 10),
-    payments: payments,
+    payments: computed(() => payments.value),
     notes: "",
     total_paid_amount: computed(() => totalPaidAmount.value),
 });
@@ -82,8 +86,8 @@ const validatePaymentAmounts = () => {
         const payment = payments.value[i];
 
         if (
-            parseFloat(payment.paid_amount) >
-            parseFloat(receivable.remaining_amount)
+            parseLocaleNumber(payment.paid_amount) >
+            parseLocaleNumber(receivable.remaining_amount)
         ) {
             validationError.value = `O valor de pagamento não pode exceder o valor restante para o recebível ${formatSequentialId(
                 receivable.sequential_id
@@ -101,45 +105,14 @@ const handleSubmit = () => {
         return;
     }
 
-    loading.value = true;
     validationError.value = "";
-
-    const payload = {
-        receivable_ids: props.receivables.map((r) => r.id),
-        payment_method_id: form.payment_method_id,
-        account_id: form.account_id,
-        payment_date: form.payment_date,
-        total_paid_amount: totalPaidAmount.value,
-        payments: payments.value,
-        notes: form.notes,
-    };
-
-    axios
-        .post(route("receivables.payments.store"), payload)
-        .then(() => {
-            loading.value = false;
-            window.location.href = route("receivables.payments.index");
-        })
-        .catch((error) => {
-            loading.value = false;
-            if (error.response && error.response.status === 422) {
-                form.clearErrors();
-                Object.keys(error.response.data.errors).forEach((key) => {
-                    form.setError(key, error.response.data.errors[key][0]);
-                });
-            } else {
-                console.error("Error submitting form:", error);
-                alert(
-                    "Ocorreu um erro ao processar o pagamento. Por favor, tente novamente."
-                );
-            }
-        });
+    form.post(route("receivables.payments.store"));
 };
 
 const calculateEffectiveAmount = (payment, index) => {
-    const paid = parseFloat(payment.paid_amount || 0);
-    const fees = parseFloat(payment.fees || 0);
-    const discount = parseFloat(payment.discount || 0);
+    const paid = parseLocaleNumber(payment.paid_amount || 0);
+    const fees = parseLocaleNumber(payment.fees || 0);
+    const discount = parseLocaleNumber(payment.discount || 0);
 
     payment.effective_amount = paid + fees - discount;
 };
@@ -320,10 +293,10 @@ const formatSequentialId = (id) => {
                                         />
                                         <div
                                             v-if="
-                                                parseFloat(
+                                                parseLocaleNumber(
                                                     payments[index].paid_amount
                                                 ) >
-                                                parseFloat(
+                                                parseLocaleNumber(
                                                     receivable.remaining_amount
                                                 )
                                             "
@@ -416,15 +389,15 @@ const formatSequentialId = (id) => {
                         <button
                             type="submit"
                             class="btn btn-primary"
-                            :disabled="loading"
+                            :disabled="form.processing"
                         >
                             <span
-                                v-if="loading"
+                                v-if="form.processing"
                                 class="spinner-border spinner-border-sm mr-2"
                                 role="status"
                                 aria-hidden="true"
                             ></span>
-                            <span v-if="loading">Processando...</span>
+                            <span v-if="form.processing">Processando...</span>
                             <span v-else>
                                 <i class="fas fa-save"></i>
                                 &nbsp; Registrar Pagamento

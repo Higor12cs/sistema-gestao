@@ -67,6 +67,7 @@ class PayableController extends Controller
             foreach ($request->payables as $payableData) {
                 Payable::create([
                     'supplier_id' => $payableData['supplier_id'],
+                    'chart_account_id' => $payableData['chart_account_id'],
                     'payment_method_id' => $payableData['payment_method_id'],
                     'is_manual' => true,
                     'issue_date' => $payableData['issue_date'],
