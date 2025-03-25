@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\ChartAccount;
 use App\Models\Payable;
 use App\Models\Product;
 use App\Models\Purchase;
@@ -135,10 +136,17 @@ class PurchaseService
             throw new \Exception('O valor total dos pagáveis deve ser igual ao valor da compra.');
         }
 
-        DB::transaction(function () use ($purchase, $payablesData) {
+        $defaultChartAccountId = ChartAccount::where('default_purchase', true)->value('id');
+
+        if (!$defaultChartAccountId) {
+            throw new \Exception('Não foi possível encontrar uma conta padrão para lançamentos de compras.');
+        }
+
+        DB::transaction(function () use ($purchase, $payablesData, $defaultChartAccountId) {
             foreach ($payablesData as $payableData) {
                 Payable::create([
                     'purchase_id' => $purchase->id,
+                    'chart_account_id' => $defaultChartAccountId,
                     'supplier_id' => $purchase->supplier_id,
                     'payment_method_id' => $payableData['payment_method_id'],
                     'is_manual' => false,

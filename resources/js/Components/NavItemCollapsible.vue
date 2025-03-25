@@ -86,6 +86,7 @@ onMounted(() => {
                                 ? 'nav-link active'
                                 : 'nav-link'
                         "
+                        preserve-scroll
                     >
                         <i :class="`nav-icon ${item.iconClass}`"></i>
                         <p class="ml-1">

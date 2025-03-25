@@ -23,6 +23,8 @@ return new class extends Migration
             $table->boolean('active')->default(true);
             $table->integer('level')->default(1);
             $table->integer('order')->default(0);
+            $table->boolean('default_receivable')->default(false);
+            $table->boolean('default_purchase')->default(false);
             $table->foreignUuid('created_by')->constrained('users');
             $table->timestamps();
 

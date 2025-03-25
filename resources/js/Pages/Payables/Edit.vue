@@ -82,7 +82,9 @@ const formatSequentialId = (id) => {
                         <div class="form-group">
                             <label>Fornecedor</label>
                             <p class="form-control-static">
-                                {{ payable.supplier.name }}
+                                {{ payable.supplier.first_name }}
+                                {{ " " }}
+                                {{ payable.supplier.last_name }}
                             </p>
                         </div>
                     </div>

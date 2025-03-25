@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ChartAccountController;
+use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\KardexController;
@@ -43,7 +44,7 @@ Route::post('/logout', LogoutController::class)->name('logout')->middleware('aut
 
 // Rotas protegidas
 Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRoutePermissionMiddleware::class])->group(function () {
-    // API routes (mantidos juntos para facilitar manutenção)
+    // API routes
     Route::prefix('/api')->as('api.')->group(function () {
         Route::get('/customers/search', [CustomerController::class, 'search'])->name('customers.search');
         Route::get('/suppliers/search', [SupplierController::class, 'search'])->name('suppliers.search');
@@ -115,6 +116,15 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
     // 5. FINANCEIRO
     // Recebíveis e seus pagamentos
     Route::prefix('recebiveis')->group(function () {
+        // Pagamentos de recebíveis
+        Route::controller(ReceivablePaymentController::class)->prefix('pagamentos')->name('receivables.payments.')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/novo', 'create')->name('create');
+            Route::post('/', 'store')->name('store');
+            Route::get('/{payment:sequential_id}', 'show')->name('show');
+            Route::delete('/{payment}', 'destroy')->name('destroy');
+        });
+
         // Recebíveis
         Route::controller(ReceivableController::class)->name('receivables.')->group(function () {
             Route::get('/', 'index')->name('index');
@@ -124,19 +134,19 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
             Route::get('/{receivable}/editar', 'edit')->name('edit');
             Route::post('/{receivable}', 'update')->name('update');
         });
+    });
 
-        // Pagamentos de recebíveis
-        Route::controller(ReceivablePaymentController::class)->prefix('pagamentos')->name('receivables.payments.')->group(function () {
+    // Pagáveis e seus pagamentos
+    Route::prefix('pagaveis')->group(function () {
+        // Pagamentos de pagáveis
+        Route::controller(PayablePaymentController::class)->prefix('pagamentos')->name('payables.payments.')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/novo', 'create')->name('create');
             Route::post('/', 'store')->name('store');
             Route::get('/{payment:sequential_id}', 'show')->name('show');
             Route::delete('/{payment}', 'destroy')->name('destroy');
         });
-    });
 
-    // Pagáveis e seus pagamentos
-    Route::prefix('pagaveis')->group(function () {
         // Pagáveis
         Route::controller(PayableController::class)->name('payables.')->group(function () {
             Route::get('/', 'index')->name('index');
@@ -145,15 +155,6 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
             Route::delete('/', 'destroy')->name('destroy');
             Route::get('/{payable}/editar', 'edit')->name('edit');
             Route::post('/{payable}', 'update')->name('update');
-        });
-
-        // Pagamentos de pagáveis
-        Route::controller(PayablePaymentController::class)->prefix('pagamentos')->name('payables.payments.')->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::get('/novo', 'create')->name('create');
-            Route::post('/', 'store')->name('store');
-            Route::get('/{payment:sequential_id}', 'show')->name('show');
-            Route::delete('/{payment}', 'destroy')->name('destroy');
         });
     });
 
@@ -278,5 +279,11 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
         Route::get('/{role}/editar', 'edit')->name('edit');
         Route::put('/{role}', 'update')->name('update');
         Route::delete('/{role}', 'destroy')->name('destroy');
+    });
+
+    Route::controller(ConfigurationController::class)->prefix('configuracoes')->name('configurations.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/{configuration:sequential_id}/editar', 'edit')->name('edit');
+        Route::put('/{configuration}', 'update')->name('update');
     });
 });

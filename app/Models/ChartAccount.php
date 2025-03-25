@@ -24,6 +24,8 @@ class ChartAccount extends Model
         'active',
         'level',
         'order',
+        'default_receivable',
+        'default_purchase',
         'created_by',
     ];
 
@@ -32,6 +34,8 @@ class ChartAccount extends Model
         'active' => 'boolean',
         'level' => 'integer',
         'order' => 'integer',
+        'default_receivable' => 'boolean',
+        'default_purchase' => 'boolean',
     ];
 
     public function parent(): BelongsTo

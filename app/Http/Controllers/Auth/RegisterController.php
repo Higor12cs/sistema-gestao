@@ -66,6 +66,7 @@ class RegisterController extends Controller
             (new DefaultCustomerSeeder)->run($tenant);
         });
 
-        return to_route('home.index');
+        // return to_route('home.index');
+        return response()->make('', 409, ['X-Inertia-Location' => route('home.index')]);
     }
 }

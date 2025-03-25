@@ -38,6 +38,14 @@ const form = useForm({
             ? props.account.allows_transactions
             : true,
     active: props.account.active !== undefined ? props.account.active : true,
+    default_receivable:
+        props.account.default_receivable !== undefined
+            ? props.account.default_receivable
+            : false,
+    default_purchase:
+        props.account.default_purchase !== undefined
+            ? props.account.default_purchase
+            : false,
 });
 
 const disableTransactions = computed(() => {
@@ -141,6 +149,58 @@ defineExpose({ form });
                 </div>
                 <div v-if="form.errors.active" class="text-danger mt-1">
                     {{ form.errors.active }}
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb">
+            <div class="col-6">
+                <div class="icheck-primary">
+                    <input
+                        type="checkbox"
+                        id="default_receivable"
+                        v-model="form.default_receivable"
+                        :disabled="disableTransactions"
+                    />
+                    <label for="default_receivable">
+                        Padrão Recebíveis Pedidos
+                        <i
+                            v-if="disableTransactions"
+                            class="fas fa-info-circle text-info ml-1"
+                            title="Contas com subcontas não podem receber lançamentos"
+                        ></i>
+                    </label>
+                </div>
+                <div
+                    v-if="form.errors.default_receivable"
+                    class="text-danger mt-1"
+                >
+                    {{ form.errors.default_receivable }}
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="icheck-primary">
+                    <input
+                        type="checkbox"
+                        id="default_purchase"
+                        v-model="form.default_purchase"
+                        :disabled="disableTransactions"
+                    />
+                    <label for="default_purchase">
+                        Padrão Pagáveis Compras
+                        <i
+                            v-if="disableTransactions"
+                            class="fas fa-info-circle text-info ml-1"
+                            title="Contas com subcontas não podem receber lançamentos"
+                        ></i>
+                    </label>
+                </div>
+                <div
+                    v-if="form.errors.default_purchase"
+                    class="text-danger mt-1"
+                >
+                    {{ form.errors.default_purchase }}
                 </div>
             </div>
         </div>

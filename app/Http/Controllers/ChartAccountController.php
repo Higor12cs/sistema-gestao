@@ -104,6 +104,18 @@ class ChartAccountController extends Controller
             $this->updateChildrenCodes($chartAccount);
         }
 
+        if ($request->has('default_receivable') && $request->default_receivable) {
+            ChartAccount::where('id', '!=', $chartAccount->id)
+                ->where('default_receivable', true)
+                ->update(['default_receivable' => false]);
+        }
+
+        if ($request->has('default_purchase') && $request->default_purchase) {
+            ChartAccount::where('id', '!=', $chartAccount->id)
+                ->where('default_purchase', true)
+                ->update(['default_purchase' => false]);
+        }
+
         $redirectParams = [];
         if ($chartAccount->parent_id) {
             $redirectParams['parent_id'] = $chartAccount->parent_id;
@@ -188,7 +200,7 @@ class ChartAccountController extends Controller
                 $next_segment++;
             }
 
-            $newCode = $parent->code.'.'.$next_segment;
+            $newCode = $parent->code . '.' . $next_segment;
 
             $account->code = $newCode;
             $account->level = $parent->level + 1;
@@ -280,7 +292,7 @@ class ChartAccountController extends Controller
             $childSegments = explode('.', $child->code);
             $lastChildSegment = end($childSegments);
 
-            $newCode = $account->code.'.'.$lastChildSegment;
+            $newCode = $account->code . '.' . $lastChildSegment;
             $child->code = $newCode;
             $child->level = $account->level + 1;
             $child->save();

@@ -18,6 +18,8 @@ class ChartAccountRequest extends FormRequest
         $this->merge([
             'allows_transactions' => $this->boolean('allows_transactions'),
             'active' => $this->boolean('active'),
+            'default_receivable' => $this->boolean('default_receivable'),
+            'default_purchase' => $this->boolean('default_purchase'),
         ]);
     }
 
@@ -29,6 +31,8 @@ class ChartAccountRequest extends FormRequest
             'parent_id' => 'nullable|uuid|exists:chart_accounts,id',
             'allows_transactions' => 'required|boolean',
             'active' => 'required|boolean',
+            'default_receivable' => 'nullable|boolean',
+            'default_purchase' => 'nullable|boolean',
         ];
 
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
@@ -73,6 +77,10 @@ class ChartAccountRequest extends FormRequest
             'name.max' => 'O nome não pode ter mais que 255 caracteres',
             'parent_id.exists' => 'O plano de conta pai selecionado não existe',
             'allows_transactions.in' => 'Esta conta possui subcontas e não pode receber lançamentos',
+            'active.required' => 'O campo ativo é obrigatório',
+            'active.boolean' => 'O campo ativo deve ser um booleano',
+            'default_receivable.boolean' => 'O campo padrão a receber deve ser um booleano',
+            'default_purchase.boolean' => 'O campo padrão a pagar deve ser um booleano',
         ];
     }
 }
