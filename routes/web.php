@@ -18,6 +18,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ReceivableController;
 use App\Http\Controllers\ReceivablePaymentController;
+use App\Http\Controllers\Reports\OrderReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\SellerController;
@@ -245,8 +246,10 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
     Route::prefix('relatorios')->name('reports.')->group(function () {
         Route::prefix('pedidos')->name('orders.')->group(function () {
             Route::get('/', fn() => Inertia::render('Reports/Orders/Index'))->name('index');
-            Route::get('/analiticos', fn() => Inertia::render('Reports/Orders/Index'))->name('analyticals');
-            Route::get('/sinteticos', fn() => Inertia::render('Reports/Orders/Index'))->name('synthetics');
+            Route::get('/analiticos', fn() => Inertia::render('Reports/Orders/Analytical'))->name('analyticals');
+            Route::get('/analiticos/imprimir', [OrderReportController::class, 'analytical'])->name('analyticals.print');
+            Route::get('/sinteticos', fn() => Inertia::render('Reports/Orders/Synthetic'))->name('synthetics');
+            Route::get('/sinteticos/imprimir', [OrderReportController::class, 'synthetic'])->name('synthetics.print');
         });
     });
 

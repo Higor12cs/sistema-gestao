@@ -33,8 +33,18 @@ const props = defineProps({
             weekLabel: "S",
             daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
             monthNames: [
-                "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-                "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
+                "Janeiro",
+                "Fevereiro",
+                "Março",
+                "Abril",
+                "Maio",
+                "Junho",
+                "Julho",
+                "Agosto",
+                "Setembro",
+                "Outubro",
+                "Novembro",
+                "Dezembro",
             ],
             firstDay: 0,
         }),
@@ -67,6 +77,10 @@ const props = defineProps({
         type: String,
         default: "date-range-picker",
     },
+    required: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const emit = defineEmits([
@@ -84,7 +98,9 @@ onMounted(() => {
     if (window.jQuery && window.moment) {
         initializePicker();
     } else {
-        console.error('DateRangePicker requer jQuery e Moment.js disponíveis globalmente');
+        console.error(
+            "DateRangePicker requer jQuery e Moment.js disponíveis globalmente"
+        );
     }
 });
 
@@ -130,16 +146,16 @@ watch(
 
 function destroyPicker() {
     try {
-        if (daterangepicker && typeof daterangepicker.remove === 'function') {
+        if (daterangepicker && typeof daterangepicker.remove === "function") {
             daterangepicker.remove();
         }
         if (inputElement.value) {
-            window.jQuery(inputElement.value).off('apply.daterangepicker');
-            window.jQuery(inputElement.value).off('cancel.daterangepicker');
+            window.jQuery(inputElement.value).off("apply.daterangepicker");
+            window.jQuery(inputElement.value).off("cancel.daterangepicker");
         }
         daterangepicker = null;
     } catch (e) {
-        console.warn('Erro ao destruir daterangepicker:', e);
+        console.warn("Erro ao destruir daterangepicker:", e);
     }
 }
 
@@ -151,15 +167,27 @@ function initializePicker() {
     try {
         // Cria ranges usando moment global
         const ranges = {
-            'Hoje': [window.moment(), window.moment()],
-            'Ontem': [window.moment().subtract(1, 'days'), window.moment().subtract(1, 'days')],
-            'Últimos 7 dias': [window.moment().subtract(6, 'days'), window.moment()],
-            'Últimos 30 dias': [window.moment().subtract(29, 'days'), window.moment()],
-            'Este mês': [window.moment().startOf('month'), window.moment().endOf('month')],
-            'Mês passado': [
-                window.moment().subtract(1, 'month').startOf('month'),
-                window.moment().subtract(1, 'month').endOf('month')
-            ]
+            Hoje: [window.moment(), window.moment()],
+            Ontem: [
+                window.moment().subtract(1, "days"),
+                window.moment().subtract(1, "days"),
+            ],
+            "Últimos 7 dias": [
+                window.moment().subtract(6, "days"),
+                window.moment(),
+            ],
+            "Últimos 30 dias": [
+                window.moment().subtract(29, "days"),
+                window.moment(),
+            ],
+            "Este mês": [
+                window.moment().startOf("month"),
+                window.moment().endOf("month"),
+            ],
+            "Mês passado": [
+                window.moment().subtract(1, "month").startOf("month"),
+                window.moment().subtract(1, "month").endOf("month"),
+            ],
         };
 
         const options = {
@@ -176,32 +204,38 @@ function initializePicker() {
             showCustomRangeLabel: true,
             showDropdowns: false,
             opens: "right",
-            ...props.options
+            ...props.options,
         };
 
         window.jQuery(inputElement.value).daterangepicker(options);
-        daterangepicker = window.jQuery(inputElement.value).data('daterangepicker');
+        daterangepicker = window
+            .jQuery(inputElement.value)
+            .data("daterangepicker");
 
-        window.jQuery(inputElement.value).on('apply.daterangepicker', function(ev, picker) {
-            const startDate = picker.startDate.format('YYYY-MM-DD');
-            const endDate = picker.endDate.format('YYYY-MM-DD');
+        window
+            .jQuery(inputElement.value)
+            .on("apply.daterangepicker", function (ev, picker) {
+                const startDate = picker.startDate.format("YYYY-MM-DD");
+                const endDate = picker.endDate.format("YYYY-MM-DD");
 
-            emit('update:startDate', startDate);
-            emit('update:endDate', endDate);
-            emit('change', { startDate, endDate });
-            emit('apply', { startDate, endDate });
-        });
+                emit("update:startDate", startDate);
+                emit("update:endDate", endDate);
+                emit("change", { startDate, endDate });
+                emit("apply", { startDate, endDate });
+            });
 
-        window.jQuery(inputElement.value).on('cancel.daterangepicker', function() {
-            emit('cancel');
-        });
+        window
+            .jQuery(inputElement.value)
+            .on("cancel.daterangepicker", function () {
+                emit("cancel");
+            });
     } catch (e) {
-        console.error('Erro ao inicializar daterangepicker:', e);
+        console.error("Erro ao inicializar daterangepicker:", e);
     }
 }
 
 function getFormattedRange() {
-    if (!props.startDate || !props.endDate) return '';
+    if (!props.startDate || !props.endDate) return "";
 
     try {
         if (window.moment) {
@@ -213,7 +247,7 @@ function getFormattedRange() {
             return formatDateRange();
         }
     } catch (e) {
-        console.error('Erro ao formatar intervalo:', e);
+        console.error("Erro ao formatar intervalo:", e);
         return formatDateRange();
     }
 }
@@ -222,11 +256,11 @@ function formatDateRange() {
     try {
         const formatDate = (dateStr) => {
             const date = new Date(dateStr);
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, "0");
+            const month = String(date.getMonth() + 1).padStart(2, "0");
             const year = date.getFullYear();
 
-            if (props.format === 'DD/MM/YYYY') {
+            if (props.format === "DD/MM/YYYY") {
                 return `${day}/${month}/${year}`;
             }
             return `${year}-${month}-${day}`;
@@ -236,14 +270,17 @@ function formatDateRange() {
         const end = formatDate(props.endDate);
         return `${start} - ${end}`;
     } catch (e) {
-        return '';
+        return "";
     }
 }
 </script>
 
 <template>
     <div :class="`daterangepicker-wrapper ${customClass}`">
-        <label :for="id" class="form-label">{{ placeholder }}</label>
+        <label :for="id" class="form-label">
+            {{ placeholder }}
+            <span v-if="required" class="text-danger">*</span>
+        </label>
         <input
             ref="inputElement"
             type="text"
@@ -254,6 +291,7 @@ function formatDateRange() {
             :readonly="readonly"
             :value="getFormattedRange()"
             class="form-control"
+            :required="required"
         />
     </div>
 </template>

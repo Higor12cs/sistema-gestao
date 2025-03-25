@@ -197,14 +197,14 @@ class OrderController extends Controller
     public function print(Order $order, Request $request)
     {
         $type = $request->query('type', 'a4');
-        if (! in_array($type, ['a4', 'thermal'])) {
+        if (!in_array($type, ['a4', 'thermal'])) {
             $type = 'a4';
         }
 
         $order = Order::with(['customer', 'items.product', 'createdBy', 'receivables.paymentMethod'])
             ->findOrFail($order->id);
 
-        $view = $type === 'thermal' ? 'reports.order-thermal' : 'reports.order-a4';
+        $view = $type === 'thermal' ? 'reports.orders.order-thermal' : 'reports.orders.order-a4';
         $html = view($view, compact('order'))->render();
 
         $browsershot = Browsershot::html($html)
