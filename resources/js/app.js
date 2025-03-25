@@ -15,6 +15,9 @@ import "admin-lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css";
 window.$ = window.jQuery = jQuery;
 Select2($);
 
+import moment from 'moment';
+window.moment = moment;
+
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
 createInertiaApp({
@@ -45,6 +48,7 @@ createInertiaApp({
 
         return app;
     },
+    scrollRegions: ['.main-sidebar .sidebar'],
     progress: {
         color: "#007BFF",
     },

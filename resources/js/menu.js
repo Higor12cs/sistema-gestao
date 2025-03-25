@@ -221,22 +221,22 @@ export const sidebarItems = [
                     {
                         type: "collapsible",
                         iconClass: "fas fa-circle",
-                        label: "Relatórios de Pedidos",
+                        label: "Pedidos",
                         permission: "reports.orders.index",
                         subItems: [
                             {
                                 type: "link",
-                                routeName: "reports.orders.analytical",
+                                routeName: "reports.orders.analyticals",
                                 iconClass: "far fa-circle",
                                 label: "Relatório Analítico",
-                                permission: "reports.orders.analytical",
+                                permission: "reports.orders.analyticals",
                             },
                             {
                                 type: "link",
-                                routeName: "reports.orders.synthetic",
+                                routeName: "reports.orders.synthetics",
                                 iconClass: "far fa-circle",
                                 label: "Relatório Sintético",
-                                permission: "reports.orders.synthetic",
+                                permission: "reports.orders.synthetics",
                             },
                         ],
                     },

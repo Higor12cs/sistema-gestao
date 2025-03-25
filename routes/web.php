@@ -245,8 +245,8 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
     Route::prefix('relatorios')->name('reports.')->group(function () {
         Route::prefix('pedidos')->name('orders.')->group(function () {
             Route::get('/', fn() => Inertia::render('Reports/Orders/Index'))->name('index');
-            Route::get('/analitico', fn() => Inertia::render('Reports/Orders/Index'))->name('analytical');
-            Route::get('/sintetico', fn() => Inertia::render('Reports/Orders/Index'))->name('synthetic');
+            Route::get('/analiticos', fn() => Inertia::render('Reports/Orders/Index'))->name('analyticals');
+            Route::get('/sinteticos', fn() => Inertia::render('Reports/Orders/Index'))->name('synthetics');
         });
     });
 

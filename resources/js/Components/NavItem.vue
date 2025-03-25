@@ -22,6 +22,7 @@ const props = defineProps({
         <Link
             :href="route(routeName)"
             :class="route().current(routeName) ? 'nav-link active' : 'nav-link'"
+            preserve-scroll
         >
             <i :class="`nav-icon ${iconClass}`"></i>
             <p class="ml-1">{{ label }}</p>
