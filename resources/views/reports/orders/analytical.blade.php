@@ -36,7 +36,7 @@
             color: var(--text-color);
             width: 210mm;
             margin: 0 auto;
-            /* padding: 10mm; */
+            padding: 1mm;
             counter-reset: page 1;
         }
 
