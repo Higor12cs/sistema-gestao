@@ -8,6 +8,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ChartAccountController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\KardexController;
 use App\Http\Controllers\OrderController;
@@ -63,7 +64,7 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
 
     // 1. INÍCIO
     Route::get('/home', fn() => Inertia::render('Home/Index'))->name('home.index');
-    Route::get('/dashboard', fn() => Inertia::render('Dashboard/Index'))->name('dashboard.index');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     // 2. CADASTROS
     // Clientes
