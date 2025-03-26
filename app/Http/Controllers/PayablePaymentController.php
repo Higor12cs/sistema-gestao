@@ -90,7 +90,7 @@ class PayablePaymentController extends Controller
             foreach ($request->payments as $payment) {
                 $payable = Payable::findOrFail($payment['payable_id']);
 
-                PayablePayment::create([
+                $payablePayment = PayablePayment::create([
                     'payable_id' => $payment['payable_id'],
                     'payment_method_id' => $request->payment_method_id,
                     'account_id' => $request->account_id,
@@ -113,6 +113,10 @@ class PayablePaymentController extends Controller
                     'paid_amount' => $newPaidAmount,
                     'remaining_amount' => $newRemainingAmount,
                     'status' => $status,
+                ]);
+
+                $payablePayment->account->update([
+                    'current_balance' => $payablePayment->account->current_balance - $payablePayment->paid_amount,
                 ]);
             }
         });

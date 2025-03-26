@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\AccountReconciliationController;
+use App\Http\Controllers\AccountTransferController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -168,6 +170,23 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
         Route::get('/{account:sequential_id}/editar', 'edit')->name('edit');
         Route::put('/{account}', 'update')->name('update');
         Route::delete('/{account}', 'destroy')->name('destroy');
+    });
+
+    // Transferências entre contas
+    Route::controller(AccountTransferController::class)->prefix('transferencias')->name('account-transfers.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/criar', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{accountTransfer:sequential_id}', 'show')->name('show');
+        Route::delete('/{accountTransfer}', 'destroy')->name('destroy');
+    });
+
+    // Conciliação bancária
+    Route::controller(AccountReconciliationController::class)->prefix('conciliacao')->name('account-reconciliation.')->group(function () {
+        Route::get('/', 'selectAccount')->name('select');
+        Route::get('/{account}', 'index')->name('index');
+        Route::post('/{transaction}', 'update')->name('update');
+        Route::post('/', 'bulkUpdate')->name('bulk-update');
     });
 
     // Métodos de Pagamento

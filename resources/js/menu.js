@@ -133,6 +133,20 @@ export const sidebarItems = [
                     },
                     {
                         type: "link",
+                        routeName: "account-transfers.index",
+                        iconClass: "fas fa-exchange-alt",
+                        label: "Transferências",
+                        permission: "accounts.index",
+                    },
+                    {
+                        type: "link",
+                        routeName: "account-reconciliation.select",
+                        iconClass: "fas fa-check-double",
+                        label: "Conciliação Bancária",
+                        permission: "accounts.index",
+                    },
+                    {
+                        type: "link",
                         routeName: "payment-methods.index",
                         iconClass: "fas fa-wallet",
                         label: "Métodos de Pagamento",

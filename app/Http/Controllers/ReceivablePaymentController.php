@@ -61,11 +61,11 @@ class ReceivablePaymentController extends Controller
 
         $customerId = $receivables->first()->customer_id;
 
-        if ($receivables->some(fn ($r) => $r->customer_id !== $customerId)) {
+        if ($receivables->some(fn($r) => $r->customer_id !== $customerId)) {
             return to_route('receivables.index')->with('error', 'Só é possível baixar recebíveis do mesmo cliente.');
         }
 
-        if ($receivables->some(fn ($r) => $r->status === 'paid')) {
+        if ($receivables->some(fn($r) => $r->status === 'paid')) {
             return to_route('receivables.index')->with('error', 'Não é possível baixar recebíveis já pagos.');
         }
 
@@ -90,7 +90,7 @@ class ReceivablePaymentController extends Controller
             foreach ($request->payments as $payment) {
                 $receivable = Receivable::findOrFail($payment['receivable_id']);
 
-                ReceivablePayment::create([
+                $receivablePayment = ReceivablePayment::create([
                     'receivable_id' => $payment['receivable_id'],
                     'payment_method_id' => $request->payment_method_id,
                     'account_id' => $request->account_id,
@@ -113,6 +113,10 @@ class ReceivablePaymentController extends Controller
                     'paid_amount' => $newPaidAmount,
                     'remaining_amount' => $newRemainingAmount,
                     'status' => $status,
+                ]);
+
+                $receivablePayment->account->update([
+                    'current_balance' => $receivablePayment->account->current_balance + $receivablePayment->paid_amount,
                 ]);
             }
         });
