@@ -44,6 +44,7 @@ class DashboardController extends Controller
             'financialData' => $this->getFinancialData($startDate, $endDate),
             'topProducts' => $this->getTopProducts($startDate, $endDate),
             'topCustomers' => $this->getTopCustomers($startDate, $endDate),
+            'topSellers' => $this->getTopSellers($startDate, $endDate),
             'salesByDay' => $this->getSalesByDay($startDate, $endDate),
         ];
     }
@@ -200,6 +201,22 @@ class DashboardController extends Controller
             ->join('customers', 'orders.customer_id', '=', 'customers.id')
             ->whereBetween('orders.issue_date', [$startDate, $endDate])
             ->groupBy('customers.id', 'customers.first_name', 'customers.last_name')
+            ->orderBy('total_spent', 'desc')
+            ->limit(5)
+            ->get();
+    }
+
+    private function getTopSellers($startDate, $endDate)
+    {
+        return Order::select(
+            'sellers.id',
+            DB::raw("sellers.name as name"),
+            DB::raw('COUNT(orders.id) as order_count'),
+            DB::raw('SUM(orders.total_price) as total_spent')
+        )
+            ->join('sellers', 'orders.seller_id', '=', 'sellers.id')
+            ->whereBetween('orders.issue_date', [$startDate, $endDate])
+            ->groupBy('sellers.id', 'sellers.name')
             ->orderBy('total_spent', 'desc')
             ->limit(5)
             ->get();

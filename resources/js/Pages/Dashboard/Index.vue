@@ -20,6 +20,7 @@ const metrics = ref(
         financialData: {},
         topProducts: [],
         topCustomers: [],
+        topSellers: [],
         salesByDay: [],
     }
 );
@@ -64,6 +65,7 @@ const purchasesData = computed(() => metrics.value.purchasesData || {});
 const financialData = computed(() => metrics.value.financialData || {});
 const topProducts = computed(() => metrics.value.topProducts || []);
 const topCustomers = computed(() => metrics.value.topCustomers || []);
+const topSellers = computed(() => metrics.value.topSellers || []);
 const salesByDay = computed(() => metrics.value.salesByDay || []);
 
 const updateDashboard = () => {
@@ -384,7 +386,7 @@ onMounted(() => {
                                     }}
                                 </h4>
                             </div>
-                            <div class="bg-info p-3 rounded">
+                            <div class="bg-success p-3 rounded">
                                 <i class="fas fa-dollar-sign text-white"></i>
                             </div>
                         </div>
@@ -421,7 +423,7 @@ onMounted(() => {
                                 </h4>
                             </div>
                             <div class="bg-warning p-3 rounded">
-                                <i class="fas fa-credit-card text-white"></i>
+                                <i class="fas fa-dollar-sign text-white"></i>
                             </div>
                         </div>
                     </div>
@@ -610,6 +612,66 @@ onMounted(() => {
                                     <tr v-if="!topCustomers.length">
                                         <td colspan="3" class="text-center">
                                             Nenhum cliente realizou compras no
+                                            período.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody v-else>
+                                    <tr>
+                                        <td
+                                            colspan="3"
+                                            class="text-center py-3"
+                                        >
+                                            <i
+                                                class="fas fa-sync-alt fa-spin mr-2"
+                                            ></i>
+                                            Carregando...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h5 class="mt-3 mb-3">Top Vendedores</h5>
+        <div class="row">
+            <div class="col-12">
+                <div class="card position-relative">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="col-6">Vendedor</th>
+                                        <th class="text-right col-3">
+                                            Pedidos
+                                        </th>
+                                        <th class="text-right col-3">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody v-if="!isLoading">
+                                    <tr
+                                        v-for="seller in topSellers"
+                                        :key="seller.id"
+                                    >
+                                        <td>{{ seller.name }}</td>
+                                        <td class="text-right">
+                                            {{ seller.order_count }}
+                                        </td>
+                                        <td class="text-right">
+                                            {{
+                                                formatCurrency(
+                                                    seller.total_spent
+                                                )
+                                            }}
+                                        </td>
+                                    </tr>
+                                    <tr v-if="!topSellers.length">
+                                        <td colspan="3" class="text-center">
+                                            Nenhum vendedor realizou vendas no
                                             período.
                                         </td>
                                     </tr>
