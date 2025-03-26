@@ -11,12 +11,11 @@ import "../css/app.css";
 import "icheck-bootstrap/icheck-bootstrap.min.css";
 import "select2/dist/css/select2.css";
 import "admin-lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css";
+import moment from 'moment';
 
 window.$ = window.jQuery = jQuery;
-Select2($);
-
-import moment from 'moment';
 window.moment = moment;
+Select2($);
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 

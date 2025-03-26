@@ -55,6 +55,11 @@ class PermissionSeeder extends Seeder
                 'permissions' => ['index', 'create', 'edit', 'destroy'],
             ],
 
+            'account_plans' => [
+                'name' => 'Planos de Contas',
+                'permissions' => ['index', 'create', 'edit', 'destroy'],
+            ],
+
             'products' => [
                 'name' => 'Produtos',
                 'permissions' => ['index', 'create', 'edit', 'destroy'],
@@ -68,6 +73,11 @@ class PermissionSeeder extends Seeder
             'kardex' => [
                 'name' => 'Kardex',
                 'permissions' => ['index'],
+            ],
+
+            'reports.orders' => [
+                'name' => 'Relatórios de Pedidos',
+                'permissions' => ['analytical', 'synthetic'],
             ],
 
             'sections' => [
@@ -90,19 +100,19 @@ class PermissionSeeder extends Seeder
                 'permissions' => ['index', 'create', 'edit', 'destroy'],
             ],
 
-            'roles' => [
-                'name' => 'Permissões',
-                'permissions' => ['index', 'create', 'edit', 'destroy'],
-            ],
-
             'sellers' => [
                 'name' => 'Vendedores',
                 'permissions' => ['index', 'create', 'edit', 'destroy'],
             ],
 
-            'account_plans' => [
-                'name' => 'Planos de Contas',
+            'roles' => [
+                'name' => 'Permissões',
                 'permissions' => ['index', 'create', 'edit', 'destroy'],
+            ],
+
+            'configurations' => [
+                'name' => 'Configurações',
+                'permissions' => ['index', 'edit'],
             ],
         ];
 
@@ -114,6 +124,8 @@ class PermissionSeeder extends Seeder
             'create-receivables' => 'Recebíveis',
             'create-payables' => 'Pagáveis',
             'adjust' => 'Ajustar',
+            'analytical' => 'Analítico',
+            'synthetic' => 'Sintético',
         ];
 
         foreach ($resources as $resource => $config) {

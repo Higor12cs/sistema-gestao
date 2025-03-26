@@ -124,21 +124,27 @@ const renderChart = () => {
         );
 
         chartInstance.value = new Chart(ctx, {
-            type: "bar",
+            type: "line",
             data: {
                 labels: labels,
                 datasets: [
                     {
                         label: "Vendas",
                         data: salesValues,
-                        backgroundColor: "#28a745",
-                        borderWidth: 0,
+                        backgroundColor: "rgba(40, 167, 69, 0.5)",
+                        borderColor: "#28a745",
+                        fill: true,
+                        borderWidth: 2,
+                        tension: 0.5,
                     },
                     {
                         label: "Compras",
                         data: expensesValues,
-                        backgroundColor: "#f6993f",
-                        borderWidth: 0,
+                        backgroundColor: "rgba(0, 123, 255, 0.5)",
+                        borderColor: "#007bff",
+                        fill: true,
+                        borderWidth: 2,
+                        tension: 0.5,
                     },
                 ],
             },
@@ -149,6 +155,14 @@ const renderChart = () => {
                     legend: {
                         position: "top",
                     },
+                    tooltip: {
+                        mode: "index",
+                        intersect: false,
+                    },
+                },
+                hover: {
+                    mode: "nearest",
+                    intersect: true,
                 },
                 scales: {
                     x: {
@@ -175,7 +189,7 @@ const renderChart = () => {
                                 } else if (numValue >= 1000) {
                                     return (
                                         "R$ " +
-                                        (numValue / 1000).toFixed(1) +
+                                        (numValue / 1000).toFixed(0) +
                                         "K"
                                     );
                                 }
@@ -226,8 +240,8 @@ onMounted(() => {
         <div class="row">
             <div class="col-12 col-sm-6 col-md-3">
                 <div class="info-box mb-3">
-                    <span class="info-box-icon bg-primary elevation-1 mr-1"
-                        ><i class="fas fa-shopping-cart"></i
+                    <span class="info-box-icon bg-success elevation-1 mr-1"
+                        ><i class="fas fa-shopping-basket"></i
                     ></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Vendas</span>
@@ -246,9 +260,9 @@ onMounted(() => {
 
             <div class="col-12 col-sm-6 col-md-3">
                 <div class="info-box mb-3">
-                    <span class="info-box-icon bg-success elevation-1 mr-1"
-                        ><i class="fas fa-shopping-bag"></i
-                    ></span>
+                    <span class="info-box-icon bg-primary elevation-1 mr-1"
+                        ><i class="fas fa-truck-loading"></i>
+                    </span>
                     <div class="info-box-content">
                         <span class="info-box-text">Compras</span>
                         <span class="info-box-number">{{
@@ -321,7 +335,13 @@ onMounted(() => {
             </div>
         </div>
 
-        <h5 class="mt-3 mb-3">Vendas e Compras</h5>
+        <h5 class="mt-3 mb-3">
+            Vendas e Compras
+            <i
+                class="fas fa-sm fa-question-circle text-muted"
+                title="Valores acumulados de vendas e compras realizadas no período filtrado."
+            ></i>
+        </h5>
         <div class="row">
             <div class="col-12">
                 <div class="card position-relative">
@@ -339,14 +359,20 @@ onMounted(() => {
 
         <h5 class="mt-3 mb-3">Financeiro</h5>
         <div class="row">
-            <div class="col-md-3 col-sm-6 mb-4">
+            <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card position-relative">
                     <div class="card-body">
                         <div
                             class="d-flex justify-content-between align-items-center"
                         >
                             <div>
-                                <h6 class="text-muted mb-1">A Receber</h6>
+                                <h6 class="text-muted mb-1">
+                                    A Receber &nbsp;
+                                    <i
+                                        class="fas fa-sm fa-question-circle"
+                                        title="Valores não vencidos e com vencimento inferior a data final do filtro."
+                                    ></i>
+                                </h6>
                                 <h4 class="mb-0">
                                     {{
                                         isLoading
@@ -369,14 +395,20 @@ onMounted(() => {
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-6 mb-4">
+            <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card position-relative">
                     <div class="card-body">
                         <div
                             class="d-flex justify-content-between align-items-center"
                         >
                             <div>
-                                <h6 class="text-muted mb-1">A Pagar</h6>
+                                <h6 class="text-muted mb-1">
+                                    A Pagar &nbsp;
+                                    <i
+                                        class="fas fa-sm fa-question-circle"
+                                        title="Valores não vencidos e com vencimento inferior a data final do filtro."
+                                    ></i>
+                                </h6>
                                 <h4 class="mb-0">
                                     {{
                                         isLoading
@@ -399,7 +431,7 @@ onMounted(() => {
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-6 mb-4">
+            <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card position-relative">
                     <div class="card-body">
                         <div
@@ -407,7 +439,11 @@ onMounted(() => {
                         >
                             <div>
                                 <h6 class="text-muted mb-1">
-                                    Vencidos a Receber
+                                    Vencidos a Receber &nbsp;
+                                    <i
+                                        class="fas fa-sm fa-question-circle"
+                                        title="Valores de recebíveis vencidos com a data de vencimento inferior a data de hoje."
+                                    ></i>
                                 </h6>
                                 <h4 class="mb-0">
                                     {{
@@ -433,7 +469,7 @@ onMounted(() => {
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-6 mb-4">
+            <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card position-relative">
                     <div class="card-body">
                         <div
@@ -441,7 +477,11 @@ onMounted(() => {
                         >
                             <div>
                                 <h6 class="text-muted mb-1">
-                                    Vencidos a Pagar
+                                    Vencidos a Pagar &nbsp;
+                                    <i
+                                        class="fas fa-sm fa-question-circle"
+                                        title="Valores de pagáveis vencidos com a data de vencimento inferior a data de hoje."
+                                    ></i>
                                 </h6>
                                 <h4 class="mb-0">
                                     {{

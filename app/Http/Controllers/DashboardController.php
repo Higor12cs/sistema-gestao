@@ -143,18 +143,20 @@ class DashboardController extends Controller
     private function getFinancialData($startDate, $endDate)
     {
         $pendingReceivables = Receivable::where('due_date', '<=', $endDate)
+            ->where('due_date', '>=', Carbon::now()->startOfDay())
             ->where('status', '!=', 'paid')
             ->sum('remaining_amount');
 
-        $overdueReceivables = Receivable::where('due_date', '<', Carbon::now())
+        $overdueReceivables = Receivable::where('due_date', '<', Carbon::now()->startOfDay())
             ->where('status', '!=', 'paid')
             ->sum('remaining_amount');
 
         $pendingPayables = Payable::where('due_date', '<=', $endDate)
+            ->where('due_date', '>=', Carbon::now()->startOfDay())
             ->where('status', '!=', 'paid')
             ->sum('remaining_amount');
 
-        $overduePayables = Payable::where('due_date', '<', Carbon::now())
+        $overduePayables = Payable::where('due_date', '<', Carbon::now()->startOfDay())
             ->where('status', '!=', 'paid')
             ->sum('remaining_amount');
 
@@ -250,11 +252,15 @@ class DashboardController extends Controller
         });
 
         $result = [];
+        $cumulativeSales = 0;
+        $cumulativeExpenses = 0;
         foreach ($period as $date) {
+            $cumulativeSales += $salesByDay[$date] ?? 0;
+            $cumulativeExpenses += $expensesByDay[$date] ?? 0;
             $result[] = [
                 'date' => $date,
-                'sales' => $salesByDay[$date] ?? 0,
-                'expenses' => $expensesByDay[$date] ?? 0,
+                'sales' => $cumulativeSales,
+                'expenses' => $cumulativeExpenses,
             ];
         }
 
@@ -287,11 +293,15 @@ class DashboardController extends Controller
             });
 
         $result = [];
+        $cumulativeSales = 0;
+        $cumulativeExpenses = 0;
         foreach ($salesByWeek as $week) {
+            $cumulativeSales += $week->total;
+            $cumulativeExpenses += $expensesByWeek[$week->yearweek] ?? 0;
             $result[] = [
                 'date' => $week->start_date,
-                'sales' => $week->total,
-                'expenses' => $expensesByWeek[$week->yearweek] ?? 0,
+                'sales' => $cumulativeSales,
+                'expenses' => $cumulativeExpenses,
             ];
         }
 
@@ -331,12 +341,16 @@ class DashboardController extends Controller
         $months = $endMonth->diffInMonths($startMonth) + 1;
 
         $result = [];
+        $cumulativeSales = 0;
+        $cumulativeExpenses = 0;
         for ($i = 0; $i < $months; $i++) {
             $month = $startMonth->copy()->addMonths($i)->format('Y-m-01');
+            $cumulativeSales += $salesByMonth[$month] ?? 0;
+            $cumulativeExpenses += $expensesByMonth[$month] ?? 0;
             $result[] = [
                 'date' => $month,
-                'sales' => $salesByMonth[$month] ?? 0,
-                'expenses' => $expensesByMonth[$month] ?? 0,
+                'sales' => $cumulativeSales,
+                'expenses' => $cumulativeExpenses,
             ];
         }
 
