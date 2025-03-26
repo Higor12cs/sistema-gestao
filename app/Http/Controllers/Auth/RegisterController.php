@@ -8,6 +8,7 @@ use App\Models\Role;
 use App\Models\Tenant;
 use Database\Seeders\ChartAccountSeeder;
 use Database\Seeders\DefaultCustomerSeeder;
+use Database\Seeders\TestSeeder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -64,6 +65,10 @@ class RegisterController extends Controller
 
             (new ChartAccountSeeder)->run($tenant);
             (new DefaultCustomerSeeder)->run($tenant);
+
+            if (config('app.env') === 'local') {
+                // (new (TestSeeder::class))->run($tenant, $user);
+            }
         });
 
         // return to_route('home.index');

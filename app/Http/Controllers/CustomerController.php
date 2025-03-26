@@ -86,7 +86,7 @@ class CustomerController extends Controller
 
         $query = $request->search ?? '';
         $customers = Customer::where('first_name', 'ilike', "%{$query}%")
-            ->limit(10)
+            ->limit(5)
             ->get();
 
         return response()->json([

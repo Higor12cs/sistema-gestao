@@ -82,6 +82,7 @@ class ChartAccountSeeder extends Seeder
             'active' => true,
             'level' => 3,
             'order' => 2,
+            'default_receivable' => true,
             'created_by' => $user->id,
         ]);
 
@@ -244,6 +245,7 @@ class ChartAccountSeeder extends Seeder
             'active' => true,
             'level' => 3,
             'order' => 1,
+            'default_purchase' => true,
             'created_by' => $user->id,
         ]);
 
