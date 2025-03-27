@@ -7,7 +7,6 @@ use App\Models\Configuration;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Receivable;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -76,7 +75,7 @@ class OrderService
             $order = Order::create([
                 'customer_id' => $data['customer_id'],
                 'seller_id' => $data['seller_id'] ?? null,
-                'issue_date' => Carbon::parse($data['issue_date'])->format('Y-m-d'),
+                'issue_date' => $data['issue_date'],
                 'total_cost' => $orderData['total_cost'],
                 'discount' => ($data['discount'] ?? 0),
                 'fees' => ($data['fees'] ?? 0),
