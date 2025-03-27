@@ -208,6 +208,9 @@ class OrderController extends Controller
         $html = view($view, compact('order'))->render();
 
         $browsershot = Browsershot::html($html)
+            ->setNodeBinary('/usr/local/bin/node')
+            ->setNpmBinary('/usr/local/bin/npm')
+            ->noSandbox()
             ->showBackground();
 
         if ($type === 'thermal') {

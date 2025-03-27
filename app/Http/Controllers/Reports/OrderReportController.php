@@ -17,7 +17,7 @@ class OrderReportController extends Controller
             ->when($request->filled("seller_id"), fn($q) => $q->where("seller_id", $request->get("seller_id")))
             ->when($request->filled("created_by"), fn($q) => $q->where("created_by", $request->get("created_by")))
             ->when($request->filled("start_date") && $request->filled("end_date"), fn($q) =>
-            $q->whereBetween("issue_date", [$request->get("start_date"), $request->get("end_date")]))
+                $q->whereBetween("issue_date", [$request->get("start_date"), $request->get("end_date")]))
             ->get();
 
         $html = view('reports.orders.analytical', [
@@ -27,6 +27,9 @@ class OrderReportController extends Controller
         ])->render();
 
         $pdf = Browsershot::html($html)
+            ->setNodeBinary('/usr/local/bin/node')
+            ->setNpmBinary('/usr/local/bin/npm')
+            ->noSandbox()
             ->showBackground()
             ->waitUntilNetworkIdle()
             ->margins(10, 10, 10, 10)
@@ -46,7 +49,7 @@ class OrderReportController extends Controller
             ->when($request->filled('seller_id'), fn($q) => $q->where('seller_id', $request->get('seller_id')))
             ->when($request->filled('created_by'), fn($q) => $q->where('created_by', $request->get('created_by')))
             ->when($request->filled('start_date') && $request->filled('end_date'), fn($q) =>
-            $q->whereBetween('issue_date', [$request->get('start_date'), $request->get('end_date')]));
+                $q->whereBetween('issue_date', [$request->get('start_date'), $request->get('end_date')]));
 
         $ordersWithItems = $query->with('items.product')->get();
         $totalOrders = $ordersWithItems->count();
@@ -105,6 +108,9 @@ class OrderReportController extends Controller
         ])->render();
 
         $pdf = Browsershot::html($html)
+            ->setNodeBinary('/usr/local/bin/node')
+            ->setNpmBinary('/usr/local/bin/npm')
+            ->noSandbox()
             ->showBackground()
             ->waitUntilNetworkIdle()
             ->margins(10, 10, 10, 10)
