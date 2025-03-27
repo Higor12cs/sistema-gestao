@@ -208,8 +208,8 @@ class OrderController extends Controller
         $html = view($view, compact('order'))->render();
 
         $browsershot = Browsershot::html($html)
-            ->setNodeBinary('/usr/local/bin/node')
-            ->setNpmBinary('/usr/local/bin/npm')
+            ->setNodeBinary('/usr/bin/node')
+            ->setNpmBinary('/usr/bin/npm')
             ->noSandbox()
             ->showBackground();
 

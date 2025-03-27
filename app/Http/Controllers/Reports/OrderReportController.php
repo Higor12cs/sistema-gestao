@@ -27,8 +27,8 @@ class OrderReportController extends Controller
         ])->render();
 
         $pdf = Browsershot::html($html)
-            ->setNodeBinary('/usr/local/bin/node')
-            ->setNpmBinary('/usr/local/bin/npm')
+            ->setNodeBinary('/usr/bin/node')
+            ->setNpmBinary('/usr/bin/npm')
             ->noSandbox()
             ->showBackground()
             ->waitUntilNetworkIdle()
@@ -108,8 +108,8 @@ class OrderReportController extends Controller
         ])->render();
 
         $pdf = Browsershot::html($html)
-            ->setNodeBinary('/usr/local/bin/node')
-            ->setNpmBinary('/usr/local/bin/npm')
+            ->setNodeBinary('/usr/bin/node')
+            ->setNpmBinary('/usr/bin/npm')
             ->noSandbox()
             ->showBackground()
             ->waitUntilNetworkIdle()
