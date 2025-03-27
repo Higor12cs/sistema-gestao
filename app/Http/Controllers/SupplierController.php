@@ -35,7 +35,7 @@ class SupplierController extends Controller
     {
         Supplier::create($request->validated());
 
-        return to_route('suppliers.index');
+        return to_route('suppliers.index')->with('success', 'Fornecedor criado com sucesso!');
     }
 
     // public function show(Supplier $supplier)
@@ -54,7 +54,7 @@ class SupplierController extends Controller
     {
         $supplier->update($request->validated());
 
-        return to_route('suppliers.index');
+        return to_route('suppliers.index')->with('success', 'Fornecedor atualizado com sucesso!');
     }
 
     public function destroy(Supplier $supplier)
@@ -65,7 +65,7 @@ class SupplierController extends Controller
 
         $supplier->delete();
 
-        return to_route('suppliers.index');
+        return to_route('suppliers.index')->with('success', 'Fornecedor excluído com sucesso!');
     }
 
     public function search(Request $request)

@@ -35,7 +35,7 @@ class CustomerController extends Controller
     {
         Customer::create($request->validated());
 
-        return to_route('customers.index');
+        return to_route('customers.index')->with('success', 'Cliente criado com sucesso!');
     }
 
     // public function show(Customer $customer)
@@ -54,7 +54,7 @@ class CustomerController extends Controller
     {
         $customer->update($request->validated());
 
-        return to_route('customers.index');
+        return to_route('customers.index')->with('success', 'Cliente atualizado com sucesso!');
     }
 
     public function destroy(Customer $customer)
@@ -65,7 +65,7 @@ class CustomerController extends Controller
 
         $customer->delete();
 
-        return to_route('customers.index');
+        return to_route('customers.index')->with('success', 'Cliente excluído com sucesso!');
     }
 
     public function search(Request $request)
@@ -78,7 +78,7 @@ class CustomerController extends Controller
                 'data' => $customers->map(function (Customer $customer) {
                     return [
                         'id' => $customer->id,
-                        'name' => $customer->first_name.' '.$customer->last_name,
+                        'name' => $customer->first_name . ' ' . $customer->last_name,
                     ];
                 }),
             ]);
@@ -93,7 +93,7 @@ class CustomerController extends Controller
             'data' => $customers->map(function (Customer $customer) {
                 return [
                     'id' => $customer->id,
-                    'name' => $customer->first_name.' '.$customer->last_name,
+                    'name' => $customer->first_name . ' ' . $customer->last_name,
                 ];
             }),
         ]);

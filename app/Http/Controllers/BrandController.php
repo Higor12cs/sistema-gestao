@@ -33,7 +33,7 @@ class BrandController extends Controller
     {
         Brand::create($request->validated());
 
-        return to_route('brands.index');
+        return to_route('brands.index')->with('success', 'Marca criada com sucesso!');
     }
 
     // public function show(Brand $brand)
@@ -52,7 +52,7 @@ class BrandController extends Controller
     {
         $brand->update($request->validated());
 
-        return to_route('brands.index');
+        return to_route('brands.index')->with('success', 'Marca atualizada com sucesso!');
     }
 
     public function destroy(Brand $brand)
@@ -63,7 +63,7 @@ class BrandController extends Controller
 
         $brand->delete();
 
-        return to_route('brands.index');
+        return to_route('brands.index')->with('success', 'Marca excluída com sucesso!');
     }
 
     public function search(Request $request)

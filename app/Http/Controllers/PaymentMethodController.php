@@ -33,7 +33,7 @@ class PaymentMethodController extends Controller
     {
         PaymentMethod::create($request->validated());
 
-        return to_route('payment-methods.index')->with('success', 'Conta criada com sucesso.');
+        return to_route('payment-methods.index')->with('success', 'Método de pagamento criado com sucesso!');
     }
 
     // public function show(PaymentMethod $paymentMethod)
@@ -52,7 +52,7 @@ class PaymentMethodController extends Controller
     {
         $paymentMethod->update($request->validated());
 
-        return to_route('payment-methods.index');
+        return to_route('payment-methods.index')->with('success', 'Método de pagamento atualizado com sucesso!');
     }
 
     public function destroy(PaymentMethod $paymentMethod)
@@ -63,7 +63,7 @@ class PaymentMethodController extends Controller
 
         $paymentMethod->delete();
 
-        return to_route('payment-methods.index');
+        return to_route('payment-methods.index')->with('success', 'Método de pagamento excluído com sucesso!');
     }
 
     public function search(Request $request)

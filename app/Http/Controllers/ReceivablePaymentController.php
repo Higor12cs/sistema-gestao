@@ -62,11 +62,11 @@ class ReceivablePaymentController extends Controller
         $customerId = $receivables->first()->customer_id;
 
         if ($receivables->some(fn($r) => $r->customer_id !== $customerId)) {
-            return to_route('receivables.index')->with('error', 'Só é possível baixar recebíveis do mesmo cliente.');
+            return to_route('receivables.index')->with('error', 'Só é possível liquidar recebíveis do mesmo cliente.');
         }
 
         if ($receivables->some(fn($r) => $r->status === 'paid')) {
-            return to_route('receivables.index')->with('error', 'Não é possível baixar recebíveis já pagos.');
+            return to_route('receivables.index')->with('error', 'Não é possível liquidar recebíveis já pagos.');
         }
 
         return inertia('ReceivablesPayments/Create', [
@@ -121,7 +121,7 @@ class ReceivablePaymentController extends Controller
             }
         });
 
-        return to_route('receivables.payments.index')->with('success', 'Pagamento registrado com sucesso.');
+        return to_route('receivables.payments.index')->with('success', 'Liquidação registrada com sucesso!');
     }
 
     public function show(ReceivablePayment $payment)
@@ -163,7 +163,7 @@ class ReceivablePaymentController extends Controller
                 $payment->transaction->delete();
             }
 
-            return to_route('receivables.payments.index')->with('success', 'Baixa excluída e saldo do recebível restaurado com sucesso.');
+            return to_route('receivables.payments.index')->with('success', 'Liquidação excluída e saldo do recebível restaurado com sucesso!');
         });
     }
 }

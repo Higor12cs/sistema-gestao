@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Permission;
 
@@ -40,7 +41,7 @@ class RoleController extends Controller
         $request->validate([
             'name' => [
                 'required',
-                Rule::unique('roles', 'name')->where('tenant_id', auth()->user()->tenant_id),
+                Rule::unique('roles', 'name')->where('tenant_id', Auth::user()->tenant_id),
             ],
             'permissions' => 'array',
         ], [
@@ -58,8 +59,7 @@ class RoleController extends Controller
             $role->syncPermissions($permissionNames);
         }
 
-        return to_route('roles.index')
-            ->with('success', 'Papel criado com sucesso!');
+        return to_route('roles.index')->with('success', 'Papel criado com sucesso!');
     }
 
     public function edit(Role $role)
@@ -79,7 +79,7 @@ class RoleController extends Controller
         $request->validate([
             'name' => [
                 'required',
-                Rule::unique('roles', 'name')->where('tenant_id', auth()->user()->tenant_id)->ignore($role->id),
+                Rule::unique('roles', 'name')->where('tenant_id', Auth::user()->tenant_id)->ignore($role->id),
             ],
             'permissions' => 'array',
         ], [
@@ -98,8 +98,7 @@ class RoleController extends Controller
             $role->permissions()->detach();
         }
 
-        return to_route('roles.index')
-            ->with('success', 'Papel atualizado com sucesso!');
+        return to_route('roles.index')->with('success', 'Papel atualizado com sucesso!');
     }
 
     public function destroy(Role $role)
@@ -110,7 +109,7 @@ class RoleController extends Controller
 
         $role->delete();
 
-        return response()->json(null, 204);
+        return to_route('roles.index')->with('success', 'Papel excluído com sucesso!');
     }
 
     public function search(Request $request)
@@ -118,7 +117,7 @@ class RoleController extends Controller
         if ($request->has('ids')) {
             $ids = explode(',', $request->ids);
             $roles = Role::whereIn('id', $ids)
-                ->where('tenant_id', auth()->user()->tenant_id)
+                ->where('tenant_id', Auth::user()->tenant_id)
                 ->get(['id', 'name']);
 
             return response()->json([
@@ -129,7 +128,7 @@ class RoleController extends Controller
         $query = $request->search ?? '';
 
         $roles = Role::query()
-            ->where('tenant_id', auth()->user()->tenant_id)
+            ->where('tenant_id', Auth::user()->tenant_id)
             ->where('name', 'ilike', "%{$query}%")
             ->limit(5)
             ->get(['id', 'name']);

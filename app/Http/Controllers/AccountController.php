@@ -33,7 +33,7 @@ class AccountController extends Controller
     {
         Account::create($request->validated());
 
-        return to_route('accounts.index')->with('success', 'Conta criada com sucesso.');
+        return to_route('accounts.index')->with('success', 'Conta criada com sucesso!');
     }
 
     // public function show(Account $account)
@@ -52,7 +52,7 @@ class AccountController extends Controller
     {
         $account->update($request->validated());
 
-        return to_route('accounts.index');
+        return to_route('accounts.index')->with('success', 'Conta atualizada com sucesso!');
     }
 
     public function destroy(Account $account)
@@ -63,7 +63,7 @@ class AccountController extends Controller
 
         $account->delete();
 
-        return to_route('accounts.index');
+        return to_route('accounts.index')->with('success', 'Conta excluída com sucesso!');
     }
 
     public function search(Request $request)

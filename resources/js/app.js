@@ -2,20 +2,17 @@ import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy";
+import { setupPlugins } from "./plugins";
+import { setupThirdParty } from "./bootstrap";
 
-import jQuery from "jquery";
-import Select2 from "select2";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import "admin-lte/dist/js/adminlte.min.js";
 import "../css/app.css";
+import "../css/toastify.css";
 import "icheck-bootstrap/icheck-bootstrap.min.css";
 import "select2/dist/css/select2.css";
 import "admin-lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css";
-import moment from 'moment';
+import 'vue3-toastify/dist/index.css';
 
-window.$ = window.jQuery = jQuery;
-window.moment = moment;
-Select2($);
+setupThirdParty();
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
@@ -31,19 +28,11 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue);
 
+        setupPlugins(app);
+
         app.mount(el);
 
-        jQuery(function () {
-            try {
-                $('[data-widget="treeview"]').Treeview("destroy");
-            } catch (e) {
-                //
-            }
-
-            setTimeout(function () {
-                $('[data-widget="treeview"]').Treeview("init");
-            }, 200);
-        });
+        initTreeview();
 
         return app;
     },
@@ -52,3 +41,14 @@ createInertiaApp({
         color: "#007BFF",
     },
 });
+
+function initTreeview() {
+    jQuery(function () {
+        try {
+            $('[data-widget="treeview"]').Treeview("destroy");
+        } catch (e) { }
+        setTimeout(function () {
+            $('[data-widget="treeview"]').Treeview("init");
+        }, 200);
+    });
+}

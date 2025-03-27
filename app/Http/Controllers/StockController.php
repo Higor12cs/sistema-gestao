@@ -50,6 +50,6 @@ class StockController extends Controller
 
         $this->stockService->adjustStock($stock, $newQuantity, $notes);
 
-        return to_route('stocks.index')->with('success', 'Estoque ajustado com sucesso.');
+        return to_route('stocks.index')->with('success', 'Estoque ajustado com sucesso!');
     }
 }

@@ -33,7 +33,7 @@ class SectionController extends Controller
     {
         Section::create($request->validated());
 
-        return to_route('sections.index');
+        return to_route('sections.index')->with('success', 'Seção criada com sucesso!');
     }
 
     // public function show(Section $section)
@@ -52,7 +52,7 @@ class SectionController extends Controller
     {
         $section->update($request->validated());
 
-        return to_route('sections.index');
+        return to_route('sections.index')->with('success', 'Seção atualizada com sucesso!');
     }
 
     public function destroy(Section $section)
@@ -63,7 +63,7 @@ class SectionController extends Controller
 
         $section->delete();
 
-        return to_route('sections.index');
+        return to_route('sections.index')->with('success', 'Seção excluída com sucesso!');
     }
 
     public function search(Request $request)

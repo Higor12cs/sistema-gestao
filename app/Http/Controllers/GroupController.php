@@ -34,7 +34,7 @@ class GroupController extends Controller
     {
         Group::create($request->validated());
 
-        return to_route('groups.index');
+        return to_route('groups.index')->with('success', 'Grupo criado com sucesso!');
     }
 
     // public function show(Group $group)
@@ -53,7 +53,7 @@ class GroupController extends Controller
     {
         $group->update($request->validated());
 
-        return to_route('groups.index');
+        return to_route('groups.index')->with('success', 'Grupo atualizado com sucesso!');
     }
 
     public function destroy(Group $group)
@@ -64,7 +64,7 @@ class GroupController extends Controller
 
         $group->delete();
 
-        return to_route('groups.index');
+        return to_route('groups.index')->with('success', 'Grupo excluído com sucesso!');
     }
 
     public function search(Request $request)

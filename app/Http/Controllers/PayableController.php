@@ -84,7 +84,7 @@ class PayableController extends Controller
             }
         });
 
-        return to_route('payables.index')->with('success', 'Pagáveis criados com sucesso.');
+        return to_route('payables.index')->with('success', 'Pagáveis criados com sucesso!');
     }
 
     public function edit(Payable $payable)
@@ -108,7 +108,7 @@ class PayableController extends Controller
             'due_date' => $request->due_date,
         ]);
 
-        return to_route('payables.index')->with('success', 'Pagável atualizado com sucesso.');
+        return to_route('payables.index')->with('success', 'Pagável atualizado com sucesso!');
     }
 
     public function destroy(Request $request)
@@ -125,6 +125,6 @@ class PayableController extends Controller
 
         Payable::whereIn('id', $ids)->delete();
 
-        return to_route('payables.index')->with('success', 'Pagáveis excluídos com sucesso.');
+        return to_route('payables.index')->with('success', 'Pagáveis excluídos com sucesso!');
     }
 }

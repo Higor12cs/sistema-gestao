@@ -69,7 +69,6 @@ class UserController extends Controller
             abort(403);
         }
 
-        // Check if this is the last admin
         if ($user->hasRole('Administrador') && $request->has('role_id')) {
             $newRole = Role::find($request->role_id);
             $isRemovingAdmin = ! $newRole || $newRole->name !== 'Administrador';
@@ -106,7 +105,6 @@ class UserController extends Controller
             abort(403);
         }
 
-        // Check if this is the last admin
         if ($user->hasRole('Administrador')) {
             $adminCount = User::role('Administrador')
                 ->where('tenant_id', Auth::user()->tenant_id)

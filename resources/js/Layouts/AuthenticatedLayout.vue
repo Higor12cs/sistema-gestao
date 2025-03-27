@@ -1,15 +1,76 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { Link, usePage } from "@inertiajs/vue3";
 import { onMounted } from "vue";
 import NavItem from "@/Components/NavItem.vue";
 import NavItemCollapsible from "@/Components/NavItemCollapsible.vue";
 import { sidebarItems, hasPermission } from "@/menu";
+import { toast } from "vue3-toastify";
 
 const appName = import.meta.env.VITE_APP_NAME || "";
 const currentTime = ref("");
 const page = usePage();
 const darkMode = ref(false);
+
+// Função para exibir mensagens flash como toasts
+const showFlashMessages = () => {
+    const props = usePage().props;
+
+    // Verifica se props.flash existe antes de tentar acessá-lo
+    if (props.flash) {
+        // Mensagem de sucesso
+        if (props.flash.success) {
+            toast.success(props.flash.success);
+        }
+
+        // Mensagem de erro
+        if (props.flash.error) {
+            toast.error(props.flash.error);
+        }
+
+        // Mensagem de informação
+        if (props.flash.info) {
+            toast.info(props.flash.info);
+        }
+
+        // Mensagem de alerta
+        if (props.flash.warning) {
+            toast.warning(props.flash.warning);
+        }
+    }
+
+    // Verifica mensagens individuais no nível raiz das props também
+    // (algumas versões do Laravel/Inertia podem estruturar as mensagens assim)
+    if (props.success) {
+        toast.success(props.success);
+    }
+
+    if (props.error) {
+        toast.error(props.error);
+    }
+
+    if (props.info) {
+        toast.info(props.info);
+    }
+
+    if (props.warning) {
+        toast.warning(props.warning);
+    }
+};
+
+// Verificar mensagens flash ao inicializar o componente
+onMounted(() => {
+    showFlashMessages();
+});
+
+// Verificar mensagens flash quando as props mudarem
+watch(
+    () => page.props,
+    (newProps) => {
+        showFlashMessages();
+    },
+    { deep: true }
+);
 
 const toggleDarkMode = () => {
     darkMode.value = !darkMode.value;
@@ -55,6 +116,13 @@ const updateTime = () => {
 onMounted(() => {
     updateTime();
     setInterval(updateTime, 1000);
+
+    // Carregar preferência de modo escuro do localStorage
+    const savedDarkMode = localStorage.getItem("darkMode");
+    if (savedDarkMode === "true") {
+        darkMode.value = true;
+        document.body.classList.add("dark-mode");
+    }
 });
 </script>
 

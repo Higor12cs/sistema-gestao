@@ -25,9 +25,8 @@ class OrderController extends Controller
 
     public function index(Request $request)
     {
-        // Define datas padrão (últimos 7 dias) se não forem fornecidas
-        $startDate = $request->filled('start_date') ? $request->start_date : Carbon::now()->subDays(7)->format('Y-m-d');
-        $endDate = $request->filled('end_date') ? $request->end_date : Carbon::now()->format('Y-m-d');
+        $startDate = $request->filled('start_date') ? $request->start_date : Carbon::now()->startOfMonth()->startOfDay()->format('Y-m-d');
+        $endDate = $request->filled('end_date') ? $request->end_date : Carbon::now()->endOfMonth()->endOfDay()->format('Y-m-d');
 
         $orders = Order::query()
             ->with(['customer', 'receivables', 'seller', 'createdBy'])
@@ -38,7 +37,6 @@ class OrderController extends Controller
                 $query->where('customer_id', $request->customer_id);
             })
             ->when(true, function ($query) use ($startDate, $endDate) {
-                // Sempre aplica o filtro de data, usando os valores padrão se necessário
                 if ($startDate && $endDate) {
                     $query->whereBetween('issue_date', [
                         $startDate,
@@ -95,7 +93,6 @@ class OrderController extends Controller
         ]);
     }
 
-    // Restante dos métodos permanece o mesmo
     public function create()
     {
         return inertia('Orders/Create', [
@@ -108,7 +105,7 @@ class OrderController extends Controller
         $order = $this->orderService->createOrder($request->validated());
 
         return to_route('orders.create-receivables', $order->sequential_id)
-            ->with('success', 'Pedido criado com sucesso.');
+            ->with('success', 'Pedido criado com sucesso!');
     }
 
     public function show(Order $order)
@@ -143,7 +140,7 @@ class OrderController extends Controller
 
         $this->orderService->updateOrder($order, $request->validated());
 
-        return to_route('orders.index')->with('success', 'Pedido atualizado com sucesso.');
+        return to_route('orders.index')->with('success', 'Pedido atualizado com sucesso!');
     }
 
     public function destroy(Order $order)
@@ -152,7 +149,7 @@ class OrderController extends Controller
             $this->orderService->deleteOrder($order);
 
             return to_route('orders.index')
-                ->with('success', 'Pedido excluído com sucesso.');
+                ->with('success', 'Pedido excluído com sucesso!');
         } catch (\Exception $e) {
             return to_route('orders.index')
                 ->with('error', $e->getMessage());
@@ -188,7 +185,7 @@ class OrderController extends Controller
             $this->orderService->createReceivables($order, $receivablesData);
 
             return to_route('orders.show', $order->sequential_id)
-                ->with('success', 'Recebíveis criados com sucesso.');
+                ->with('success', 'Recebíveis criados com sucesso!');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }

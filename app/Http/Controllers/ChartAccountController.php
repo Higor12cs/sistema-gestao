@@ -71,7 +71,7 @@ class ChartAccountController extends Controller
             $redirectParams['parent_id'] = $account->parent_id;
         }
 
-        return to_route('chart-accounts.index', $redirectParams);
+        return to_route('chart-accounts.index', $redirectParams)->with('success', 'Plano de contas criado com sucesso!');
     }
 
     public function edit(ChartAccount $chartAccount)
@@ -121,7 +121,7 @@ class ChartAccountController extends Controller
             $redirectParams['parent_id'] = $chartAccount->parent_id;
         }
 
-        return to_route('chart-accounts.index', $redirectParams);
+        return to_route('chart-accounts.index', $redirectParams)->with('success', 'Plano de contas atualizado com sucesso!');
     }
 
     public function destroy(ChartAccount $chartAccount)
@@ -142,7 +142,7 @@ class ChartAccountController extends Controller
             $redirectParams['parent_id'] = $parentId;
         }
 
-        return to_route('chart-accounts.index', $redirectParams);
+        return to_route('chart-accounts.index', $redirectParams)->with('success', 'Plano de contas excluído com sucesso!');
     }
 
     public function search(Request $request)

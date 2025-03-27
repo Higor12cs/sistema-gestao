@@ -33,7 +33,7 @@ class SellerController extends Controller
     {
         Seller::create($request->validated());
 
-        return to_route('sellers.index');
+        return to_route('sellers.index')->with('success', 'Vendedor criado com sucesso!');
     }
 
     // public function show(Seller $seller)
@@ -52,7 +52,7 @@ class SellerController extends Controller
     {
         $seller->update($request->validated());
 
-        return to_route('sellers.index');
+        return to_route('sellers.index')->with('success', 'Vendedor atualizado com sucesso!');
     }
 
     public function destroy(Seller $seller)
@@ -63,7 +63,7 @@ class SellerController extends Controller
 
         $seller->delete();
 
-        return to_route('sellers.index');
+        return to_route('sellers.index')->with('success', 'Vendedor excluído com sucesso!');
     }
 
     public function search(Request $request)

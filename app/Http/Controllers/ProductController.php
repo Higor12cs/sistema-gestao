@@ -34,7 +34,7 @@ class ProductController extends Controller
     {
         Product::create($request->validated());
 
-        return to_route('products.index');
+        return to_route('products.index')->with('success', 'Produto criado com sucesso!');
     }
 
     // public function show(Product $product)
@@ -53,7 +53,7 @@ class ProductController extends Controller
     {
         $product->update($request->validated());
 
-        return to_route('products.index');
+        return to_route('products.index')->with('success', 'Produto atualizado com sucesso!');
     }
 
     public function destroy(Product $product)
@@ -64,7 +64,7 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return to_route('products.index');
+        return to_route('products.index')->with('success', 'Produto excluído com sucesso!');
     }
 
     public function search(Request $request)

@@ -92,7 +92,7 @@ class AccountTransferController extends Controller
                 'current_balance' => $destinationAccount->current_balance + $request->amount,
             ]);
 
-            return to_route('account-transfers.index')->with('success', 'Transferência realizada com sucesso.');
+            return to_route('account-transfers.index')->with('success', 'Transferência realizada com sucesso!');
         });
     }
 
@@ -142,7 +142,7 @@ class AccountTransferController extends Controller
 
             $accountTransfer->delete();
 
-            return to_route('account-transfers.index')->with('success', 'Transferência excluída com sucesso.');
+            return to_route('account-transfers.index')->with('success', 'Transferência excluída com sucesso!');
         });
     }
 }

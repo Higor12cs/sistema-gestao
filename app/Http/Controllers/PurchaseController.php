@@ -41,8 +41,7 @@ class PurchaseController extends Controller
     {
         $purchase = $this->purchaseService->createPurchase($request->validated());
 
-        return to_route('purchases.create-payables', $purchase->sequential_id)
-            ->with('success', 'Compra criada com sucesso.');
+        return to_route('purchases.create-payables', $purchase->sequential_id)->with('success', 'Compra criada com sucesso!');
     }
 
     public function show(Purchase $purchase)
@@ -57,8 +56,7 @@ class PurchaseController extends Controller
     public function edit(Purchase $purchase)
     {
         if ($purchase->hasPayables()) {
-            return to_route('purchases.show', $purchase->sequential_id)
-                ->with('error', 'Compras com pagáveis não podem ser editadas.');
+            return to_route('purchases.show', $purchase->sequential_id)->with('error', 'Compras com pagáveis não podem ser editadas.');
         }
 
         $purchase->load(['items.product', 'createdBy']);
@@ -71,13 +69,12 @@ class PurchaseController extends Controller
     public function update(PurchaseUpdateRequest $request, Purchase $purchase)
     {
         if ($purchase->hasPayables()) {
-            return to_route('purchases.show', $purchase->sequential_id)
-                ->with('error', 'Compras com pagáveis não podem ser editadas.');
+            return to_route('purchases.show', $purchase->sequential_id)->with('error', 'Compras com pagáveis não podem ser editadas.');
         }
 
         $this->purchaseService->updatePurchase($purchase, $request->validated());
 
-        return to_route('purchases.index')->with('success', 'Compra atualizada com sucesso.');
+        return to_route('purchases.index')->with('success', 'Compra atualizada com sucesso!');
     }
 
     public function destroy(Purchase $purchase)
@@ -85,11 +82,9 @@ class PurchaseController extends Controller
         try {
             $this->purchaseService->deletePurchase($purchase);
 
-            return to_route('purchases.index')
-                ->with('success', 'Compra excluída com sucesso.');
+            return to_route('purchases.index')->with('success', 'Compra excluída com sucesso!');
         } catch (\Exception $e) {
-            return to_route('purchases.index')
-                ->with('error', $e->getMessage());
+            return to_route('purchases.index')->with('error', $e->getMessage());
         }
     }
 
@@ -122,7 +117,7 @@ class PurchaseController extends Controller
             $this->purchaseService->createPayables($purchase, $payablesData);
 
             return to_route('purchases.show', $purchase->sequential_id)
-                ->with('success', 'Pagáveis criados com sucesso.');
+                ->with('success', 'Pagáveis criados com sucesso!');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }
@@ -138,7 +133,7 @@ class PurchaseController extends Controller
                 'data' => $purchases->map(function (Purchase $purchase) {
                     return [
                         'id' => $purchase->id,
-                        'name' => 'Compra #'.$purchase->sequential_id.' - '.$purchase->issue_date->format('d/m/Y'),
+                        'name' => 'Compra #' . $purchase->sequential_id . ' - ' . $purchase->issue_date->format('d/m/Y'),
                         'total' => $purchase->total_cost,
                     ];
                 }),
@@ -154,7 +149,7 @@ class PurchaseController extends Controller
             'data' => $purchases->map(function (Purchase $purchase) {
                 return [
                     'id' => $purchase->id,
-                    'name' => 'Compra #'.$purchase->sequential_id.' - '.$purchase->issue_date->format('d/m/Y'),
+                    'name' => 'Compra #' . $purchase->sequential_id . ' - ' . $purchase->issue_date->format('d/m/Y'),
                     'total' => $purchase->total_cost,
                 ];
             }),

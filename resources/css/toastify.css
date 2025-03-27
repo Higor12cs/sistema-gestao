@@ -1,0 +1,19 @@
+.Vue3Toastify__toast,
+.Vue3Toastify__toast-body,
+.Vue3Toastify__toast-container div,
+.vue3-toastify,
+.vue3-toastify__toast-body,
+.vue3-toastify__toast-container div,
+.toast-container div,
+.toast,
+.toast-body,
+.Toastify__toast,
+.Toastify__toast-body,
+[class*="toastify"],
+[class*="Toastify"],
+[class*="Toast"] {
+    font-family: "Source Sans Pro", "Segoe UI", Roboto, "Helvetica Neue", Arial,
+        sans-serif !important;
+    font-size: .9rem !important;
+    font-weight: 600 !important;
+}

@@ -62,11 +62,11 @@ class PayablePaymentController extends Controller
         $supplierId = $payables->first()->supplier_id;
 
         if ($payables->some(fn ($r) => $r->supplier_id !== $supplierId)) {
-            return to_route('payables.index')->with('error', 'Só é possível baixar pagáveis do mesmo fornecedor.');
+            return to_route('payables.index')->with('error', 'Só é possível liquidar pagáveis do mesmo fornecedor.');
         }
 
         if ($payables->some(fn ($r) => $r->status === 'paid')) {
-            return to_route('payables.index')->with('error', 'Não é possível baixar pagáveis já pagos.');
+            return to_route('payables.index')->with('error', 'Não é possível liquidar pagáveis já pagos.');
         }
 
         return inertia('PayablesPayments/Create', [
@@ -121,7 +121,7 @@ class PayablePaymentController extends Controller
             }
         });
 
-        return to_route('payables.payments.index')->with('success', 'Pagamento registrado com sucesso.');
+        return to_route('payables.payments.index')->with('success', 'Liquidação registrado com sucesso!');
     }
 
     public function show(PayablePayment $payment)
@@ -163,7 +163,7 @@ class PayablePaymentController extends Controller
                 $payment->transaction->delete();
             }
 
-            return to_route('payables.payments.index')->with('success', 'Baixa excluída e saldo do pagável restaurado com sucesso.');
+            return to_route('payables.payments.index')->with('success', 'Liquidação excluída e saldo do pagável restaurado com sucesso!');
         });
     }
 }

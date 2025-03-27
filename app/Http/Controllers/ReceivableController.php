@@ -83,7 +83,7 @@ class ReceivableController extends Controller
             }
         });
 
-        return to_route('receivables.index')->with('success', 'Recebíveis criados com sucesso.');
+        return to_route('receivables.index')->with('success', 'Recebíveis criados com sucesso!');
     }
 
     public function edit(Receivable $receivable)
@@ -107,7 +107,7 @@ class ReceivableController extends Controller
             'due_date' => $request->due_date,
         ]);
 
-        return to_route('receivables.index')->with('success', 'Recebível atualizado com sucesso.');
+        return to_route('receivables.index')->with('success', 'Recebível atualizado com sucesso!');
     }
 
     public function destroy(Request $request)
@@ -124,6 +124,6 @@ class ReceivableController extends Controller
 
         Receivable::whereIn('id', $ids)->delete();
 
-        return to_route('receivables.index')->with('success', 'Recebíveis excluídos com sucesso.');
+        return to_route('receivables.index')->with('success', 'Recebíveis excluídos com sucesso!');
     }
 }

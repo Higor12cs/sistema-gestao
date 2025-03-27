@@ -44,7 +44,7 @@ class AccountReconciliationController extends Controller
 
         $transaction->update($validated);
 
-        return back()->with('success', 'Transação atualizada com sucesso.');
+        return back()->with('success', 'Transação atualizada com sucesso!');
     }
 
     public function bulkUpdate(BulkTransactionUpdateRequest $request)
@@ -76,9 +76,10 @@ class AccountReconciliationController extends Controller
                 ? ($updateData['reconciled'] ? 'conciliadas' : 'desconciliadas')
                 : 'atualizadas';
 
-            return back()->with('success', count($data['transaction_ids']) . ' transações ' . $actionMessage . ' com sucesso.');
+            return back()->with('success', count($data['transaction_ids']) . ' transações ' . $actionMessage . ' com sucesso!');
         });
     }
+
     public function selectAccount()
     {
         $accounts = Account::where('active', true)
