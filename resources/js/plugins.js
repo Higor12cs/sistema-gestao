@@ -8,6 +8,7 @@ export function setupPlugins(app) {
         theme: 'light',
         closeOnClick: true,
         pauseOnHover: true,
-        hideProgressBar: false
+        hideProgressBar: false,
+        transition: 'bounce',
     });
 }

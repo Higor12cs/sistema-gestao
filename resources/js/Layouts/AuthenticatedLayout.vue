@@ -12,35 +12,27 @@ const currentTime = ref("");
 const page = usePage();
 const darkMode = ref(false);
 
-// Função para exibir mensagens flash como toasts
 const showFlashMessages = () => {
     const props = usePage().props;
 
-    // Verifica se props.flash existe antes de tentar acessá-lo
     if (props.flash) {
-        // Mensagem de sucesso
         if (props.flash.success) {
             toast.success(props.flash.success);
         }
 
-        // Mensagem de erro
         if (props.flash.error) {
             toast.error(props.flash.error);
         }
 
-        // Mensagem de informação
         if (props.flash.info) {
             toast.info(props.flash.info);
         }
 
-        // Mensagem de alerta
         if (props.flash.warning) {
             toast.warning(props.flash.warning);
         }
     }
 
-    // Verifica mensagens individuais no nível raiz das props também
-    // (algumas versões do Laravel/Inertia podem estruturar as mensagens assim)
     if (props.success) {
         toast.success(props.success);
     }
@@ -58,12 +50,10 @@ const showFlashMessages = () => {
     }
 };
 
-// Verificar mensagens flash ao inicializar o componente
 onMounted(() => {
     showFlashMessages();
 });
 
-// Verificar mensagens flash quando as props mudarem
 watch(
     () => page.props,
     (newProps) => {

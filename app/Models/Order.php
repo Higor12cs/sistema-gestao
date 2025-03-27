@@ -29,7 +29,7 @@ class Order extends Model
     ];
 
     protected $casts = [
-        'issue_date' => 'datetime',
+        'issue_date' => 'date:Y-m-d',
         'total_cost' => 'decimal:2',
         'discount' => 'decimal:2',
         'fees' => 'decimal:2',
