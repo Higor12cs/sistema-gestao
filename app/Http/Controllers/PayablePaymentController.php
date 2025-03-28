@@ -121,7 +121,7 @@ class PayablePaymentController extends Controller
             }
         });
 
-        return to_route('payables.payments.index')->with('success', 'Liquidação registrado com sucesso!');
+        return to_route('payables.payments.index')->with('success', 'Baixa registrado com sucesso!');
     }
 
     public function show(PayablePayment $payment)
@@ -163,7 +163,7 @@ class PayablePaymentController extends Controller
                 $payment->transaction->delete();
             }
 
-            return to_route('payables.payments.index')->with('success', 'Liquidação excluída e saldo do pagável restaurado com sucesso!');
+            return to_route('payables.payments.index')->with('success', 'Baixa excluída e saldo do pagável restaurado com sucesso!');
         });
     }
 }

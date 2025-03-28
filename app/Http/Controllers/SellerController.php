@@ -58,6 +58,7 @@ class SellerController extends Controller
     public function destroy(Seller $seller)
     {
         // TODO: Check if the seller has any related data before deleting it
+        return to_route('sellers.index')->with('error', 'Funcionalidade não implementada.');
 
         abort(403, 'Forbidden');
 
@@ -78,6 +79,7 @@ class SellerController extends Controller
         }
 
         return Seller::where('name', 'like', "%{$query}%")
+            ->where('active', true)
             ->take(10)
             ->get(['id', 'name']);
     }

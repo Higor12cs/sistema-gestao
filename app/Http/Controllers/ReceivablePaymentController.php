@@ -121,7 +121,7 @@ class ReceivablePaymentController extends Controller
             }
         });
 
-        return to_route('receivables.payments.index')->with('success', 'Liquidação registrada com sucesso!');
+        return to_route('receivables.payments.index')->with('success', 'Baixa registrada com sucesso!');
     }
 
     public function show(ReceivablePayment $payment)
@@ -163,7 +163,7 @@ class ReceivablePaymentController extends Controller
                 $payment->transaction->delete();
             }
 
-            return to_route('receivables.payments.index')->with('success', 'Liquidação excluída e saldo do recebível restaurado com sucesso!');
+            return to_route('receivables.payments.index')->with('success', 'Baixa excluída e saldo do recebível restaurado com sucesso!');
         });
     }
 }

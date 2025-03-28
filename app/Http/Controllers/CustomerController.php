@@ -60,6 +60,7 @@ class CustomerController extends Controller
     public function destroy(Customer $customer)
     {
         // TODO: Check if the customer has any related data before deleting it
+        return to_route('customers.index')->with('error', 'Funcionalidade não implementada.');
 
         abort(403, 'Forbidden');
 
@@ -85,7 +86,13 @@ class CustomerController extends Controller
         }
 
         $query = $request->search ?? '';
-        $customers = Customer::where('first_name', 'ilike', "%{$query}%")
+        $customers = Customer::query()
+            ->when($query, function ($queryBuilder) use ($query) {
+                $queryBuilder->where('first_name', 'ilike', "%{$query}%")
+                    ->orWhere('last_name', 'ilike', "%{$query}%")
+                    ->orWhere('legal_name', 'ilike', "%{$query}%");
+            })
+            ->where('active', true)
             ->limit(5)
             ->get();
 

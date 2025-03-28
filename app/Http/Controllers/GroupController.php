@@ -59,6 +59,7 @@ class GroupController extends Controller
     public function destroy(Group $group)
     {
         // TODO: Check if the group has any related data before deleting it
+        return to_route('groups.index')->with('error', 'Funcionalidade não implementada.');
 
         abort(403, 'Forbidden');
 
@@ -90,6 +91,7 @@ class GroupController extends Controller
 
         $groups = Group::with('section')
             ->where('name', 'ilike', "%{$query}%")
+            ->where('active', true)
             ->limit(10)
             ->get();
 

@@ -58,6 +58,7 @@ class PaymentMethodController extends Controller
     public function destroy(PaymentMethod $paymentMethod)
     {
         // TODO: Check if the paymentMethod has any related data before deleting it
+        return to_route('payment-methods.index')->with('error', 'Funcionalidade não implementada.');
 
         abort(403, 'Forbidden');
 
@@ -82,6 +83,7 @@ class PaymentMethodController extends Controller
 
         $sections = PaymentMethod::query()
             ->where('name', 'ilike', "%{$query}%")
+            ->where('active', true)
             ->limit(5)
             ->get(['id', 'name']);
 

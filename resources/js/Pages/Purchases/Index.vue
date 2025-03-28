@@ -1,30 +1,83 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, Link, router } from "@inertiajs/vue3";
+import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import Pagination from "@/Components/Pagination.vue";
 import DeleteConfirmation from "@/Components/DeleteConfirmation.vue";
+import FilterModal from "@/Pages/Purchases/FilterModal.vue";
 
 const props = defineProps({
     purchases: Object,
+    filters: Object,
+    hasResults: Boolean,
+    selectedSupplier: Object,
+    selectedCreatedBy: Object,
 });
 
-const formatCurrency = (value) => {
-    return new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-    }).format(value);
+const getLastSevenDays = () => {
+    const endDate = new Date();
+    const startDate = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+
+    const formatDate = (date) => {
+        return date.toISOString().split("T")[0];
+    };
+
+    return {
+        start: formatDate(startDate),
+        end: formatDate(endDate),
+    };
 };
 
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("pt-BR");
-};
+const defaultDates = getLastSevenDays();
 
+const filterForm = useForm({
+    sequential_id: props.filters?.sequential_id || "",
+    supplier_id: props.filters?.supplier_id || "",
+    start_date: props.filters?.start_date || defaultDates.start,
+    end_date: props.filters?.end_date || defaultDates.end,
+    created_by: props.filters?.created_by || "",
+    status: props.filters?.status || "",
+});
+
+const showFilterModal = ref(false);
 const showDeleteModal = ref(false);
 const deleteId = ref(null);
 const loading = ref(false);
+
+const toggleFilterModal = () => {
+    showFilterModal.value = !showFilterModal.value;
+};
+
+const applyFilters = (formData) => {
+    filterForm.sequential_id = formData.sequential_id;
+    filterForm.supplier_id = formData.supplier_id;
+    filterForm.start_date = formData.start_date;
+    filterForm.end_date = formData.end_date;
+    filterForm.created_by = formData.created_by;
+    filterForm.status = formData.status;
+
+    router.get(route("purchases.index"), filterForm.data(), {
+        preserveState: true,
+        replace: true,
+    });
+};
+
+const resetFilters = () => {
+    const defaultDates = getLastSevenDays();
+    filterForm.reset();
+    filterForm.start_date = defaultDates.start;
+    filterForm.end_date = defaultDates.end;
+
+    router.get(
+        route("purchases.index"),
+        { start_date: defaultDates.start, end_date: defaultDates.end },
+        {
+            preserveState: true,
+            replace: true,
+        }
+    );
+};
 
 const confirmDelete = (purchaseId) => {
     deleteId.value = purchaseId;
@@ -40,6 +93,28 @@ const cancelDelete = () => {
     showDeleteModal.value = false;
     deleteId.value = null;
 };
+
+const formatCurrency = (value) => {
+    return new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+    }).format(value);
+};
+
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("pt-BR");
+};
+
+const formatSequentialId = (id) => {
+    return String(id).padStart(6, "0");
+};
+
+onMounted(() => {
+    if (!props.hasResults) {
+        applyFilters(filterForm);
+    }
+});
 </script>
 
 <template>
@@ -55,19 +130,32 @@ const cancelDelete = () => {
                     ]"
                 />
             </div>
-            <Link
-                :href="route('purchases.create')"
-                class="btn btn-primary mb-auto"
-            >
-                <i class="fas fa-sm fa-plus"></i>
-                &nbsp; Nova Compra
-            </Link>
+            <div>
+                <button
+                    @click="toggleFilterModal"
+                    class="btn btn-secondary mr-2"
+                >
+                    <i class="fas fa-filter"></i>
+                    &nbsp; Filtrar
+                </button>
+                <Link :href="route('purchases.create')" class="btn btn-primary">
+                    <i class="fas fa-sm fa-plus"></i>
+                    &nbsp; Nova Compra
+                </Link>
+            </div>
         </div>
 
         <div class="card">
-            <div class="card-header">Compras</div>
+            <div class="card-header">Lista de Compras</div>
             <div class="card-body">
-                <div class="table-responsive">
+                <div
+                    v-if="purchases.data.length === 0"
+                    class="alert alert-warning"
+                >
+                    Nenhuma compra encontrada com os filtros aplicados.
+                </div>
+
+                <div v-else class="table-responsive">
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
@@ -86,9 +174,8 @@ const cancelDelete = () => {
                             >
                                 <td>
                                     {{
-                                        String(purchase.sequential_id).padStart(
-                                            6,
-                                            "0"
+                                        formatSequentialId(
+                                            purchase.sequential_id
                                         )
                                     }}
                                 </td>
@@ -169,17 +256,23 @@ const cancelDelete = () => {
                                     </button>
                                 </td>
                             </tr>
-                            <tr v-if="purchases.data.length === 0">
-                                <td colspan="6" class="text-center">
-                                    Nenhum registro encontrado.
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
                 <Pagination :links="purchases.links" />
             </div>
         </div>
+
+        <FilterModal
+            v-if="showFilterModal"
+            :visible="showFilterModal"
+            :filters="filterForm"
+            :selectedSupplier="selectedSupplier"
+            :selectedCreatedBy="selectedCreatedBy"
+            @cancel="showFilterModal = false"
+            @filter="applyFilters"
+            @reset="resetFilters"
+        />
 
         <DeleteConfirmation
             v-if="showDeleteModal"

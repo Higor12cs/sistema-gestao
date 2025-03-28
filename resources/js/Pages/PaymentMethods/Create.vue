@@ -13,15 +13,15 @@ const handleSubmit = (form) => {
 </script>
 
 <template>
-    <Head title="Criar Forma de Pagamento" />
+    <Head title="Criar Método de Pagamento" />
     <AuthenticatedLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
-                <h4>Criar Forma de Pagamento</h4>
+                <h4>Criar Método de Pagamento</h4>
                 <Breadcrumb
                     :breadcrumb="[
                         { label: 'Home', routeName: 'home.index' },
-                        { label: 'Formas de Pagamento', routeName: 'payment-methods.index' },
+                        { label: 'Métodos de Pagamento', routeName: 'payment-methods.index' },
                         { label: 'Criar' },
                     ]"
                 />
@@ -35,7 +35,7 @@ const handleSubmit = (form) => {
             </Link>
         </div>
         <div class="card">
-            <div class="card-header">Cadastro de Forma de Pagamento</div>
+            <div class="card-header">Cadastro de Método de Pagamento</div>
             <div class="card-body">
                 <PaymentMethodForm
                     ref="formRef"

@@ -51,15 +51,15 @@ const cancelDelete = () => {
 </script>
 
 <template>
-    <Head title="Formas de Pagamento" />
+    <Head title="Métodos de Pagamento" />
     <AuthenticatedLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
-                <h4>Formas de Pagamento</h4>
+                <h4>Métodos de Pagamento</h4>
                 <Breadcrumb
                     :breadcrumb="[
                         { label: 'Home', routeName: 'home.index' },
-                        { label: 'Formas de Pagamento' },
+                        { label: 'Métodos de Pagamento' },
                     ]"
                 />
             </div>
@@ -74,7 +74,7 @@ const cancelDelete = () => {
         </div>
 
         <div class="card">
-            <div class="card-header">Formas de Pagamento</div>
+            <div class="card-header">Métodos de Pagamento</div>
             <div class="card-body">
                 <!-- Search Box -->
                 <div class="mb-3">
@@ -180,7 +180,7 @@ const cancelDelete = () => {
             :delete-route="handleDelete"
             @cancel="cancelDelete"
             success-redirect="paymentMethods.index"
-            success-message="Forma de Pagamento excluída com sucesso!"
+            success-message="Método de Pagamento excluída com sucesso!"
         />
     </AuthenticatedLayout>
 </template>

@@ -104,7 +104,7 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         if ($role->name === 'Administrador') {
-            abort(403, 'Não é possível excluir o papel de Administrador');
+            return back()->withErrors(['error' => 'O papel Administrador não pode ser excluído.']);
         }
 
         $role->delete();

@@ -59,6 +59,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         // TODO: Check if the product has any related data before deleting it
+        return to_route('products.index')->with('error', 'Funcionalidade não implementada.');
 
         abort(403, 'Forbidden');
 
@@ -94,6 +95,7 @@ class ProductController extends Controller
 
         $products = Product::with(['brand', 'group.section'])
             ->where('name', 'ilike', "%{$query}%")
+            ->where('active', true)
             ->limit(10)
             ->get();
 

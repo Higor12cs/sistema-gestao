@@ -4,7 +4,7 @@ import { Head, Link, useForm } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import Select2 from "@/Components/Select2.vue";
 import InputField from "@/Components/InputField.vue";
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, watch } from "vue";
 
 const props = defineProps({
     purchase: Object,
@@ -15,65 +15,6 @@ const formatCurrency = (value) => {
         style: "currency",
         currency: "BRL",
     }).format(value);
-};
-
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("pt-BR");
-};
-
-const loading = ref(false);
-
-const form = useForm({
-    payables: [
-        {
-            payment_method_id: "",
-            due_date: new Date().toISOString().slice(0, 10),
-            amount: props.purchase.total_cost,
-            description: `PAGÁVEL COMPRA #${String(
-                props.purchase.sequential_id
-            ).padStart(6, "0")}`,
-        },
-    ],
-});
-
-const addPayable = () => {
-    const lastDueDate = new Date(
-        form.payables[form.payables.length - 1].due_date
-    );
-    const newDueDate = new Date(lastDueDate.setDate(lastDueDate.getDate() + 30))
-        .toISOString()
-        .slice(0, 10);
-
-    form.payables.push({
-        payment_method_id: "",
-        due_date: newDueDate,
-        amount: 0,
-        description: `PAGÁVEL COMPRA #${String(
-            props.purchase.sequential_id
-        ).padStart(6, "0")}`,
-    });
-};
-
-const removePayable = (index) => {
-    if (form.payables.length > 1) {
-        form.payables.splice(index, 1);
-    }
-};
-
-const totalPayables = computed(() => {
-    return form.payables.reduce((sum, item) => {
-        const amount = parseFloat(convertToNumber(item.amount) || 0);
-        return sum + amount;
-    }, 0);
-});
-
-const isValid = computed(() => {
-    return Math.abs(totalPayables.value - props.purchase.total_cost) < 0.01;
-});
-
-const submit = () => {
-    form.post(route("purchases.store-payables", props.purchase.id));
 };
 
 const convertToNumber = (value) => {
@@ -95,6 +36,196 @@ const convertToNumber = (value) => {
 
     const number = parseFloat(valueStr);
     return number;
+};
+
+const remainingAmount = ref(props.purchase.total_cost);
+
+const form = useForm({
+    payables: [],
+});
+
+const installmentForm = useForm({
+    amount: props.purchase.total_cost,
+    payment_method_id: "",
+    first_due_date: new Date().toISOString().slice(0, 10),
+    installments: 1,
+    due_day: new Date().getDate(),
+});
+
+watch(
+    () => installmentForm.first_due_date,
+    (newValue) => {
+        if (newValue) {
+            installmentForm.due_day = new Date(newValue).getDate();
+        }
+    },
+    { immediate: true }
+);
+
+const generateInstallments = () => {
+    const amount = convertToNumber(installmentForm.amount);
+    const paymentMethodId = installmentForm.payment_method_id;
+    const firstDueDate = new Date(installmentForm.first_due_date);
+    const installmentsCount = installmentForm.installments;
+    const dueDay = installmentForm.due_day;
+
+    if (!paymentMethodId || amount <= 0 || installmentsCount <= 0) {
+        return;
+    }
+
+    const baseInstallmentAmount =
+        Math.floor((amount / installmentsCount) * 100) / 100;
+    const remainder =
+        Math.round((amount - baseInstallmentAmount * installmentsCount) * 100) /
+        100;
+
+    const newPayables = [];
+
+    for (let i = 0; i < installmentsCount; i++) {
+        const dueDate = new Date(firstDueDate);
+        dueDate.setMonth(dueDate.getMonth() + i);
+
+        if (i > 0) {
+            dueDate.setDate(dueDay);
+
+            if (dueDay > 28) {
+                const nextMonth = new Date(
+                    dueDate.getFullYear(),
+                    dueDate.getMonth() + 1,
+                    0
+                );
+                if (dueDay > nextMonth.getDate()) {
+                    dueDate.setDate(nextMonth.getDate());
+                }
+            }
+        }
+
+        const installmentAmount =
+            i === installmentsCount - 1
+                ? parseFloat((baseInstallmentAmount + remainder).toFixed(2))
+                : baseInstallmentAmount;
+
+        newPayables.push({
+            payment_method_id: paymentMethodId,
+            due_date: dueDate.toISOString().slice(0, 10),
+            amount: installmentAmount,
+            description: `PAGÁVEL COMPRA #${String(
+                props.purchase.sequential_id
+            ).padStart(6, "0")} - ${i + 1}/${installmentsCount}`,
+        });
+    }
+
+    form.payables = [...form.payables, ...newPayables];
+    installmentForm.reset();
+    installmentForm.amount =
+        remainingAmount.value > 0 ? remainingAmount.value : 0;
+    installmentForm.first_due_date = new Date().toISOString().slice(0, 10);
+    installmentForm.installments = 1;
+    installmentForm.due_day = new Date().getDate();
+};
+
+const addPayable = () => {
+    const newDueDate =
+        form.payables.length > 0
+            ? (() => {
+                  const lastDueDate = new Date(
+                      form.payables[form.payables.length - 1].due_date
+                  );
+                  return new Date(
+                      lastDueDate.setDate(lastDueDate.getDate() + 30)
+                  )
+                      .toISOString()
+                      .slice(0, 10);
+              })()
+            : new Date().toISOString().slice(0, 10);
+
+    form.payables.push({
+        payment_method_id: "",
+        due_date: newDueDate,
+        amount: remainingAmount.value > 0 ? remainingAmount.value : 0,
+        description: `PAGÁVEL COMPRA #${String(
+            props.purchase.sequential_id
+        ).padStart(6, "0")}`,
+    });
+};
+
+const removePayable = (index) => {
+    form.payables.splice(index, 1);
+};
+
+const totalPayables = computed(() => {
+    return form.payables.reduce((sum, item) => {
+        const amount = parseFloat(convertToNumber(item.amount) || 0);
+        return sum + amount;
+    }, 0);
+});
+
+const difference = computed(() => {
+    const total = Math.round(totalPayables.value * 100) / 100;
+    const purchaseTotal = Math.round(props.purchase.total_cost * 100) / 100;
+    return Math.round((total - purchaseTotal) * 100) / 100;
+});
+
+const isValid = computed(() => {
+    return difference.value === 0;
+});
+
+watch(
+    totalPayables,
+    (newTotal) => {
+        remainingAmount.value = Math.max(
+            0,
+            props.purchase.total_cost - newTotal
+        );
+        installmentForm.amount = remainingAmount.value;
+    },
+    { immediate: true }
+);
+
+const submit = () => {
+    if (!isValid.value) {
+        alert(
+            "O valor total dos pagáveis deve ser exatamente igual ao valor da compra."
+        );
+        return;
+    }
+    form.post(route("purchases.store-payables", props.purchase.id));
+};
+
+const updateDueDates = (index) => {
+    const selectedDate = new Date(form.payables[index].due_date);
+    const dueDay = selectedDate.getDate();
+
+    for (let i = index + 1; i < form.payables.length; i++) {
+        const currentDate = new Date(form.payables[i].due_date);
+        currentDate.setDate(dueDay);
+
+        if (dueDay > 28) {
+            const nextMonth = new Date(
+                currentDate.getFullYear(),
+                currentDate.getMonth() + 1,
+                0
+            );
+            if (dueDay > nextMonth.getDate()) {
+                currentDate.setDate(nextMonth.getDate());
+            }
+        }
+
+        form.payables[i].due_date = currentDate.toISOString().slice(0, 10);
+    }
+};
+
+const adjustLastPayable = () => {
+    if (form.payables.length > 0) {
+        const lastIndex = form.payables.length - 1;
+        const currentLastAmount = convertToNumber(
+            form.payables[lastIndex].amount
+        );
+        const adjustedAmount =
+            Math.round((currentLastAmount - difference.value) * 100) / 100;
+
+        form.payables[lastIndex].amount = adjustedAmount;
+    }
 };
 </script>
 
@@ -127,7 +258,7 @@ const convertToNumber = (value) => {
         </div>
 
         <div class="card">
-            <div class="card-header">Criar Pagáveis</div>
+            <div class="card-header">Informações da Compra</div>
             <div class="card-body">
                 <div class="row mb-3">
                     <div class="col-md-12">
@@ -146,10 +277,128 @@ const convertToNumber = (value) => {
                             }}</strong>
                         </h5>
                     </div>
+                    <div v-if="remainingAmount.value > 0" class="col-md-12">
+                        <h5>
+                            Valor Restante:
+                            {{ " " }}
+                            <strong class="text-warning">{{
+                                formatCurrency(remainingAmount)
+                            }}</strong>
+                        </h5>
+                    </div>
                 </div>
+            </div>
+        </div>
 
+        <div class="card mt-3">
+            <div class="card-header">Gerar Pagáveis</div>
+            <div class="card-body">
+                <form @submit.prevent="generateInstallments">
+                    <div class="row align-items-end">
+                        <div class="col-md-3">
+                            <div class="form-group mb-0">
+                                <label for="amount">Valor a Parcelar</label>
+                                <InputField
+                                    id="amount"
+                                    v-model="installmentForm.amount"
+                                    maskType="currency"
+                                    required
+                                    class="mt-auto"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group mb-0">
+                                <label for="payment_method"
+                                    >Método de Pagamento</label
+                                >
+                                <Select2
+                                    id="payment_method"
+                                    v-model="installmentForm.payment_method_id"
+                                    :search-url="
+                                        route('api.payment-methods.search')
+                                    "
+                                    placeholder="Selecione"
+                                    required
+                                    class="mt-auto"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group mb-0">
+                                <label for="first_due_date"
+                                    >Primeira Data de Vencimento</label
+                                >
+                                <InputField
+                                    id="first_due_date"
+                                    v-model="installmentForm.first_due_date"
+                                    type="date"
+                                    required
+                                    class="mt-auto"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group mb-0">
+                                <label for="installments"
+                                    >Quantidade de Parcelas</label
+                                >
+                                <InputField
+                                    id="installments"
+                                    v-model="installmentForm.installments"
+                                    type="number"
+                                    min="1"
+                                    required
+                                    class="mt-auto"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group mb-0">
+                                <label for="due_day">Dia de Vencimento</label>
+                                <InputField
+                                    id="due_day"
+                                    v-model="installmentForm.due_day"
+                                    type="number"
+                                    min="1"
+                                    max="31"
+                                    required
+                                    class="mt-auto"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end mt-3">
+                        <button
+                            type="submit"
+                            class="btn btn-success"
+                            :disabled="
+                                !installmentForm.payment_method_id ||
+                                installmentForm.amount <= 0 ||
+                                installmentForm.installments <= 0
+                            "
+                        >
+                            <i class="fas fa-calculator"></i>
+                            &nbsp; Gerar Parcelas
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">Pagáveis Gerados</div>
+            <div class="card-body">
                 <form id="payables-form" @submit.prevent="submit">
-                    <div class="table-responsive">
+                    <div
+                        v-if="form.payables.length === 0"
+                        class="alert alert-info"
+                    >
+                        Nenhum pagável gerado. Use o formulário acima para gerar
+                        parcelas ou clique em "Adicionar Pagável" para adicionar
+                        manualmente.
+                    </div>
+                    <div v-else class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -209,6 +458,9 @@ const convertToNumber = (value) => {
                                                 ]
                                             "
                                             required
+                                            @update:modelValue="
+                                                updateDueDates(index)
+                                            "
                                         />
                                     </td>
                                     <td>
@@ -246,9 +498,6 @@ const convertToNumber = (value) => {
                                     </td>
                                     <td>
                                         <button
-                                            :disabled="
-                                                form.payables.length <= 1
-                                            "
                                             type="button"
                                             class="btn btn-sm btn-danger"
                                             @click="removePayable(index)"
@@ -257,26 +506,34 @@ const convertToNumber = (value) => {
                                         </button>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td colspan="6">
-                                        <button
-                                            type="button"
-                                            class="btn btn-sm btn-info"
-                                            @click="addPayable"
-                                        >
-                                            <i class="fas fa-plus"></i>
-                                            &nbsp; Adicionar Pagável
-                                        </button>
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="mt-3 d-flex">
+                        <button
+                            type="button"
+                            class="btn btn-sm btn-info"
+                            @click="addPayable"
+                        >
+                            <i class="fas fa-plus"></i>
+                            &nbsp; Adicionar Pagável
+                        </button>
+
+                        <button
+                            v-if="!isValid && form.payables.length > 0"
+                            type="button"
+                            class="btn btn-sm btn-warning ml-2"
+                            @click="adjustLastPayable"
+                        >
+                            <i class="fas fa-balance-scale"></i>
+                            &nbsp; Ajustar Última Parcela
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
 
-        <div class="card">
+        <div class="card mt-3">
             <div class="card-header">Resumo</div>
             <div class="card-body px-0 pb-0">
                 <table class="table">
@@ -306,11 +563,7 @@ const convertToNumber = (value) => {
                                     'text-danger': !isValid,
                                 }"
                             >
-                                {{
-                                    formatCurrency(
-                                        totalPayables - purchase.total_cost
-                                    )
-                                }}
+                                {{ formatCurrency(difference) }}
                             </td>
                         </tr>
                     </tbody>
@@ -319,28 +572,36 @@ const convertToNumber = (value) => {
         </div>
 
         <div v-if="!isValid" class="alert alert-danger mt-3">
-            O valor total dos pagáveis deve ser igual ao valor da compra.
+            <strong>Atenção:</strong> O valor total dos pagáveis deve ser
+            <strong>exatamente</strong> igual ao valor da compra.
 
-            <div class="">
-                Valor da Compra:
-                {{ " " }}
-                {{ formatCurrency(purchase.total_cost) }}
+            <div class="mt-2">
+                <div>
+                    <strong>Valor da Compra:</strong>
+                    {{ formatCurrency(purchase.total_cost) }}
+                </div>
+                <div>
+                    <strong>Valor Total dos Pagáveis:</strong>
+                    {{ formatCurrency(totalPayables) }}
+                </div>
+                <div>
+                    <strong>Diferença:</strong> {{ formatCurrency(difference) }}
+                </div>
+            </div>
 
-                Valor Total dos Pagáveis:
-                {{ " " }}
-                {{ formatCurrency(totalPayables) }}
-
-                Diferença:
-                {{ " " }}
-                {{ formatCurrency(totalPayables - purchase.total_cost) }}
+            <div class="mt-2">
+                Para corrigir automaticamente esta diferença, clique no botão
+                <strong>"Ajustar Última Parcela"</strong> acima.
             </div>
         </div>
 
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-end mt-3">
             <button
                 type="button"
                 class="btn btn-primary"
-                :disabled="!isValid || form.processing"
+                :disabled="
+                    !isValid || form.processing || form.payables.length === 0
+                "
                 @click="submit"
             >
                 <span

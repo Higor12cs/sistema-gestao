@@ -26,7 +26,7 @@ class KardexController extends Controller
                 })
                 ->with(['createdBy'])
                 ->orderBy('created_at', 'desc')
-                ->paginate(20)
+                ->paginate(10)
                 ->withQueryString();
         }
 

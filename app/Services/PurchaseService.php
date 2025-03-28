@@ -126,24 +126,30 @@ class PurchaseService
 
     public function createPayables(Purchase $purchase, array $payablesData): void
     {
+        $purchaseTotalCost = round($purchase->total_cost, 2);
+
         $totalPayablesAmount = 0;
 
         foreach ($payablesData as $payable) {
-            $totalPayablesAmount += $payable['amount'];
+            $totalPayablesAmount += round((float)$payable['amount'], 2);
         }
 
-        if (abs($totalPayablesAmount - $purchase->total_cost) > 0.01) {
-            throw new \Exception('O valor total dos pagáveis deve ser igual ao valor da compra.');
+        $totalPayablesAmount = round($totalPayablesAmount, 2);
+
+        if ($totalPayablesAmount !== $purchaseTotalCost) {
+            $difference = abs($totalPayablesAmount - $purchaseTotalCost);
+            throw new \Exception("O valor total dos pagáveis deve ser exatamente igual ao valor da compra. Diferença atual: {$difference}");
         }
 
         $defaultChartAccountId = ChartAccount::where('default_purchase', true)->value('id');
-
         if (!$defaultChartAccountId) {
             throw new \Exception('Não foi possível encontrar uma conta padrão para lançamentos de compras.');
         }
 
         DB::transaction(function () use ($purchase, $payablesData, $defaultChartAccountId) {
             foreach ($payablesData as $payableData) {
+                $amount = round((float)$payableData['amount'], 2);
+
                 Payable::create([
                     'purchase_id' => $purchase->id,
                     'chart_account_id' => $defaultChartAccountId,
@@ -152,11 +158,11 @@ class PurchaseService
                     'is_manual' => false,
                     'issue_date' => $purchase->issue_date,
                     'due_date' => $payableData['due_date'],
-                    'total_amount' => $payableData['amount'],
+                    'total_amount' => $amount,
                     'paid_amount' => 0,
                     'fees' => 0,
                     'discount' => 0,
-                    'remaining_amount' => $payableData['amount'],
+                    'remaining_amount' => $amount,
                     'status' => 'pending',
                     'description' => $payableData['description'] ?? 'Pagável gerado automaticamente',
                     'created_by' => Auth::id(),

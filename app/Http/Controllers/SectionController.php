@@ -58,6 +58,7 @@ class SectionController extends Controller
     public function destroy(Section $section)
     {
         // TODO: Check if the section has any related data before deleting it
+        return to_route('sections.index')->with('error', 'Funcionalidade não implementada.');
 
         abort(403, 'Forbidden');
 
@@ -82,6 +83,7 @@ class SectionController extends Controller
 
         $sections = Section::query()
             ->where('name', 'ilike', "%{$query}%")
+            ->where('active', true)
             ->limit(5)
             ->get(['id', 'name']);
 

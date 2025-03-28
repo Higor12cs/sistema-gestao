@@ -190,7 +190,7 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
     });
 
     // Métodos de Pagamento
-    Route::controller(PaymentMethodController::class)->prefix('formas-pagamento')->name('payment-methods.')->group(function () {
+    Route::controller(PaymentMethodController::class)->prefix('metodos-pagamento')->name('payment-methods.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/criar', 'create')->name('create');
         Route::post('/', 'store')->name('store');

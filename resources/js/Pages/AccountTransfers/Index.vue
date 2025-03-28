@@ -1,8 +1,7 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm, router, Link } from "@inertiajs/vue3";
-import { debounce } from "lodash";
 import Pagination from "@/Components/Pagination.vue";
 import DeleteConfirmation from "@/Components/DeleteConfirmation.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
@@ -21,11 +20,6 @@ const searchForm = useForm({
 const loading = ref(false);
 const showDeleteModal = ref(false);
 const deleteTransferId = ref(null);
-const isFilterCardCollapsed = ref(false);
-
-const toggleFilterCard = () => {
-    isFilterCardCollapsed.value = !isFilterCardCollapsed.value;
-};
 
 const applyDateFilter = () => {
     router.get(
@@ -110,25 +104,10 @@ const formatSequentialId = (id) => {
             </Link>
         </div>
 
-        <!-- Card de Filtros Com Toggle -->
+        <!-- Card de Filtros -->
         <div class="card mb-4">
-            <div
-                class="card-header d-flex justify-content-between align-items-center"
-                style="cursor: pointer"
-                @click="toggleFilterCard"
-            >
-                <div>Filtros</div>
-                <div>
-                    <i
-                        :class="
-                            isFilterCardCollapsed
-                                ? 'fas fa-sm fa-plus'
-                                : 'fas fa-sm fa-minus'
-                        "
-                    ></i>
-                </div>
-            </div>
-            <div class="card-body" v-show="!isFilterCardCollapsed">
+            <div class="card-header">Filtros</div>
+            <div class="card-body">
                 <div class="row">
                     <div class="col-md-3">
                         <InputField
@@ -146,18 +125,17 @@ const formatSequentialId = (id) => {
                             type="date"
                         />
                     </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-12 d-flex justify-content-end">
+
+                    <div class="col-md-6 d-flex justify-content-end">
                         <button
-                            class="btn btn-secondary mr-2"
+                            class="btn btn-secondary mt-auto mb-3 mr-2"
                             @click="resetFilter"
                         >
                             <i class="fas fa-times"></i>
                             &nbsp; Limpar Filtros
                         </button>
                         <button
-                            class="btn btn-primary"
+                            class="btn btn-primary mt-auto mb-3"
                             @click="applyDateFilter"
                         >
                             <i class="fas fa-search"></i>

@@ -5,8 +5,7 @@ import Breadcrumb from "@/Components/Breadcrumb.vue";
 import { ref, onMounted } from "vue";
 import Pagination from "@/Components/Pagination.vue";
 import DeleteConfirmation from "@/Components/DeleteConfirmation.vue";
-import Select2 from "@/Components/Select2.vue";
-import InputField from "@/Components/InputField.vue";
+import FilterModal from "@/Pages/Orders/FilterModal.vue";
 
 const props = defineProps({
     orders: Object,
@@ -17,13 +16,10 @@ const props = defineProps({
     selectedCreatedBy: Object,
 });
 
-// Obter as datas para os últimos 7 dias
 const getLastSevenDays = () => {
     const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(endDate.getDate() - 7);
+    const startDate = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
 
-    // Formatação para YYYY-MM-DD
     const formatDate = (date) => {
         return date.toISOString().split("T")[0];
     };
@@ -34,15 +30,6 @@ const getLastSevenDays = () => {
     };
 };
 
-// Estado para controlar se o card de filtros está colapsado
-const isFilterCardCollapsed = ref(false);
-
-// Toggle para o card de filtros
-const toggleFilterCard = () => {
-    isFilterCardCollapsed.value = !isFilterCardCollapsed.value;
-};
-
-// Inicializar datas de filtro com os últimos 7 dias ou valores definidos nos filtros
 const defaultDates = getLastSevenDays();
 
 const filterForm = useForm({
@@ -55,11 +42,24 @@ const filterForm = useForm({
     status: props.filters?.status || "",
 });
 
+const showFilterModal = ref(false);
 const showDeleteModal = ref(false);
 const deleteId = ref(null);
 const loading = ref(false);
 
-const applyFilters = () => {
+const toggleFilterModal = () => {
+    showFilterModal.value = !showFilterModal.value;
+};
+
+const applyFilters = (formData) => {
+    filterForm.sequential_id = formData.sequential_id;
+    filterForm.customer_id = formData.customer_id;
+    filterForm.start_date = formData.start_date;
+    filterForm.end_date = formData.end_date;
+    filterForm.seller_id = formData.seller_id;
+    filterForm.created_by = formData.created_by;
+    filterForm.status = formData.status;
+
     router.get(route("orders.index"), filterForm.data(), {
         preserveState: true,
         replace: true,
@@ -67,7 +67,6 @@ const applyFilters = () => {
 };
 
 const resetFilters = () => {
-    // Resetar para os últimos 7 dias, não para vazio
     const defaultDates = getLastSevenDays();
     filterForm.reset();
     filterForm.start_date = defaultDates.start;
@@ -114,10 +113,9 @@ const formatSequentialId = (id) => {
     return String(id).padStart(6, "0");
 };
 
-// Aplicar filtros padrão ao carregar a página se não houver filtros definidos
 onMounted(() => {
     if (!props.hasResults) {
-        applyFilters();
+        applyFilters(filterForm);
     }
 });
 </script>
@@ -135,139 +133,18 @@ onMounted(() => {
                     ]"
                 />
             </div>
-            <Link
-                :href="route('orders.create')"
-                class="btn btn-primary mb-auto"
-            >
-                <i class="fas fa-sm fa-plus"></i>
-                &nbsp; Novo Pedido
-            </Link>
-        </div>
-
-        <div class="card mb-4">
-            <div
-                class="card-header d-flex justify-content-between align-items-center"
-                style="cursor: pointer"
-                @click="toggleFilterCard"
-            >
-                <div>Filtros</div>
-                <div>
-                    <i
-                        :class="
-                            isFilterCardCollapsed
-                                ? 'fas fa-sm fa-plus'
-                                : 'fas fa-sm fa-minus'
-                        "
-                    ></i>
-                </div>
-            </div>
-            <div class="card-body" v-show="!isFilterCardCollapsed">
-                <div class="row">
-                    <div class="col-md-3">
-                        <InputField
-                            id="sequential_id"
-                            label="Código"
-                            v-model="filterForm.sequential_id"
-                            type="text"
-                            placeholder="Código do Pedido"
-                        />
-                    </div>
-
-                    <div class="col-md-6">
-                        <Select2
-                            label="Cliente"
-                            v-model="filterForm.customer_id"
-                            :search-url="route('api.customers.search')"
-                            value-key="id"
-                            label-key="name"
-                            placeholder="Pesquisar Cliente"
-                            :initial-options="
-                                selectedCustomer ? [selectedCustomer] : []
-                            "
-                        />
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Status</label>
-                            <select
-                                v-model="filterForm.status"
-                                class="form-control"
-                            >
-                                <option value="">Todos</option>
-                                <option value="pending">Pendente</option>
-                                <option value="finalized">Finalizado</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="col-md-3">
-                        <InputField
-                            id="start_date"
-                            label="Data Inicial"
-                            v-model="filterForm.start_date"
-                            type="date"
-                        />
-                    </div>
-
-                    <div class="col-md-3">
-                        <InputField
-                            id="end_date"
-                            label="Data Final"
-                            v-model="filterForm.end_date"
-                            type="date"
-                        />
-                    </div>
-
-                    <div class="col-md-6">
-                        <Select2
-                            label="Vendedor"
-                            v-model="filterForm.seller_id"
-                            :search-url="route('api.sellers.search')"
-                            value-key="id"
-                            label-key="name"
-                            placeholder="Pesquisar Vendedor"
-                            :initial-options="
-                                selectedSeller ? [selectedSeller] : []
-                            "
-                        />
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        <Select2
-                            label="Criado por"
-                            v-model="filterForm.created_by"
-                            :search-url="route('api.users.search')"
-                            value-key="id"
-                            label-key="name"
-                            placeholder="Pesquisar Usuário"
-                            :initial-options="
-                                selectedCreatedBy ? [selectedCreatedBy] : []
-                            "
-                        />
-                    </div>
-
-                    <div
-                        class="col-md-6 d-flex justify-content-end mt-auto pb-3"
-                    >
-                        <button
-                            class="btn btn-secondary mr-2"
-                            @click="resetFilters"
-                        >
-                            <i class="fas fa-times"></i>
-                            &nbsp; Limpar Filtros
-                        </button>
-
-                        <button class="btn btn-primary" @click="applyFilters">
-                            <i class="fas fa-search"></i>
-                            &nbsp; Filtrar
-                        </button>
-                    </div>
-                </div>
+            <div>
+                <button
+                    @click="toggleFilterModal"
+                    class="btn btn-secondary mr-2"
+                >
+                    <i class="fas fa-filter"></i>
+                    &nbsp; Filtrar
+                </button>
+                <Link :href="route('orders.create')" class="btn btn-primary">
+                    <i class="fas fa-sm fa-plus"></i>
+                    &nbsp; Novo Pedido
+                </Link>
             </div>
         </div>
 
@@ -381,6 +258,18 @@ onMounted(() => {
                 <Pagination :links="orders.links" />
             </div>
         </div>
+
+        <FilterModal
+            v-if="showFilterModal"
+            :visible="showFilterModal"
+            :filters="filterForm"
+            :selectedCustomer="selectedCustomer"
+            :selectedSeller="selectedSeller"
+            :selectedCreatedBy="selectedCreatedBy"
+            @cancel="showFilterModal = false"
+            @filter="applyFilters"
+            @reset="resetFilters"
+        />
 
         <DeleteConfirmation
             v-if="showDeleteModal"

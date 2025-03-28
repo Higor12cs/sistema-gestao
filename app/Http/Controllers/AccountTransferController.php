@@ -44,12 +44,10 @@ class AccountTransferController extends Controller
             $sourceAccount = Account::findOrFail($request->source_account_id);
             $destinationAccount = Account::findOrFail($request->destination_account_id);
 
-            // Verifica se a conta de origem tem saldo suficiente
             if ($sourceAccount->current_balance < $request->amount) {
                 return back()->withErrors(['amount' => 'Saldo insuficiente na conta de origem.']);
             }
 
-            // Cria a transação de débito na conta de origem
             $debitTransaction = Transaction::create([
                 'account_id' => $sourceAccount->id,
                 'type' => 'expense',
@@ -60,7 +58,6 @@ class AccountTransferController extends Controller
                 'created_by' => Auth::id(),
             ]);
 
-            // Cria a transação de crédito na conta de destino
             $creditTransaction = Transaction::create([
                 'account_id' => $destinationAccount->id,
                 'type' => 'income',
@@ -71,7 +68,6 @@ class AccountTransferController extends Controller
                 'created_by' => Auth::id(),
             ]);
 
-            // Cria o registro de transferência
             $transfer = AccountTransfer::create([
                 'source_account_id' => $sourceAccount->id,
                 'destination_account_id' => $destinationAccount->id,
@@ -83,7 +79,6 @@ class AccountTransferController extends Controller
                 'created_by' => Auth::id(),
             ]);
 
-            // Atualiza os saldos das contas
             $sourceAccount->update([
                 'current_balance' => $sourceAccount->current_balance - $request->amount,
             ]);
@@ -113,7 +108,6 @@ class AccountTransferController extends Controller
 
     public function destroy(AccountTransfer $accountTransfer)
     {
-        // Verifica se a transferência pode ser excluída
         if ($accountTransfer->debitTransaction->reconciled || $accountTransfer->creditTransaction->reconciled) {
             return back()->withErrors(['delete' => 'Não é possível excluir uma transferência com transações já conciliadas.']);
         }
@@ -122,7 +116,6 @@ class AccountTransferController extends Controller
             $sourceAccount = $accountTransfer->sourceAccount;
             $destinationAccount = $accountTransfer->destinationAccount;
 
-            // Reverte as alterações de saldo
             $sourceAccount->update([
                 'current_balance' => $sourceAccount->current_balance + $accountTransfer->amount,
             ]);
@@ -131,7 +124,6 @@ class AccountTransferController extends Controller
                 'current_balance' => $destinationAccount->current_balance - $accountTransfer->amount,
             ]);
 
-            // Exclui as transações e a transferência
             if ($accountTransfer->debitTransaction) {
                 $accountTransfer->debitTransaction->delete();
             }

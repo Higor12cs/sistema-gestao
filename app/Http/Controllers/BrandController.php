@@ -58,6 +58,7 @@ class BrandController extends Controller
     public function destroy(Brand $brand)
     {
         // TODO: Check if the brand has any related data before deleting it
+        return to_route('brands.index')->with('error', 'Funcionalidade não implementada.');
 
         abort(403, 'Forbidden');
 
@@ -82,6 +83,7 @@ class BrandController extends Controller
 
         $sections = Brand::query()
             ->where('name', 'ilike', "%{$query}%")
+            ->where('active', true)
             ->limit(5)
             ->get(['id', 'name']);
 

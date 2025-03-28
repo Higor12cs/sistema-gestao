@@ -6,7 +6,10 @@ use App\Http\Requests\PurchasePayableRequest;
 use App\Http\Requests\PurchaseStoreRequest;
 use App\Http\Requests\PurchaseUpdateRequest;
 use App\Models\Purchase;
+use App\Models\Supplier;
+use App\Models\User;
 use App\Services\PurchaseService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -19,14 +22,62 @@ class PurchaseController extends Controller
         $this->purchaseService = $purchaseService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $purchases = Purchase::with(['supplier', 'payables'])
-            ->latest()
-            ->paginate(10);
+        $startDate = $request->filled('start_date')
+            ? $request->start_date
+            : Carbon::now()->startOfMonth()->startOfDay()->format('Y-m-d');
+        $endDate = $request->filled('end_date')
+            ? $request->end_date
+            : Carbon::now()->endOfMonth()->endOfDay()->format('Y-m-d');
+
+        $query = Purchase::query()->with(['supplier', 'payables', 'createdBy']);
+
+        if ($request->filled('sequential_id')) {
+            $query->where('sequential_id', $request->sequential_id);
+        } else {
+            if ($request->filled('supplier_id')) {
+                $query->where('supplier_id', $request->supplier_id);
+            }
+
+            if ($startDate && $endDate) {
+                $query->whereBetween('issue_date', [$startDate, $endDate]);
+            } elseif ($startDate) {
+                $query->where('issue_date', '>=', $startDate);
+            } elseif ($endDate) {
+                $query->where('issue_date', '<=', $endDate);
+            }
+
+            if ($request->filled('created_by')) {
+                $query->where('created_by', $request->created_by);
+            }
+
+            if ($request->filled('status')) {
+                $status = $request->status;
+                if ($status === 'pending') {
+                    $query->whereDoesntHave('payables');
+                } elseif ($status === 'finalized') {
+                    $query->whereHas('payables');
+                }
+            }
+        }
+
+        $purchases = $query->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        $selectedSupplier = $request->filled('supplier_id') ? Supplier::find($request->supplier_id) : null;
+        $selectedCreatedBy = $request->filled('created_by') ? User::find($request->created_by) : null;
 
         return Inertia::render('Purchases/Index', [
             'purchases' => $purchases,
+            'filters' => array_merge(
+                $request->only(['sequential_id', 'supplier_id', 'created_by', 'status']),
+                ['start_date' => $startDate, 'end_date' => $endDate]
+            ),
+            'hasResults' => true,
+            'selectedSupplier' => $selectedSupplier,
+            'selectedCreatedBy' => $selectedCreatedBy,
         ]);
     }
 

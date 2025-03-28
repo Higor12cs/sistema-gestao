@@ -120,7 +120,7 @@ class PayableController extends Controller
             ->exists();
 
         if ($hasPurchaseAssociated) {
-            abort(403, 'Não é possível excluir pagáveis associados a compras.');
+            return back()->with('error', 'Não é possível excluir pagáveis associados a compras.');
         }
 
         Payable::whereIn('id', $ids)->delete();

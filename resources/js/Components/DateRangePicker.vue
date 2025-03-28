@@ -165,7 +165,6 @@ function initializePicker() {
     destroyPicker();
 
     try {
-        // Cria ranges usando moment global
         const ranges = {
             Hoje: [window.moment(), window.moment()],
             Ontem: [
@@ -243,7 +242,6 @@ function getFormattedRange() {
             const end = window.moment(props.endDate).format(props.format);
             return `${start} - ${end}`;
         } else {
-            // Fallback para formatação manual se moment não estiver disponível
             return formatDateRange();
         }
     } catch (e) {

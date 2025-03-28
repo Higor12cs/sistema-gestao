@@ -25,60 +25,56 @@ class OrderController extends Controller
 
     public function index(Request $request)
     {
-        $startDate = $request->filled('start_date') ? $request->start_date : Carbon::now()->startOfMonth()->startOfDay()->format('Y-m-d');
-        $endDate = $request->filled('end_date') ? $request->end_date : Carbon::now()->endOfMonth()->endOfDay()->format('Y-m-d');
+        $startDate = $request->filled('start_date')
+            ? $request->start_date
+            : Carbon::now()->startOfMonth()->startOfDay()->format('Y-m-d');
 
-        $orders = Order::query()
-            ->with(['customer', 'receivables', 'seller', 'createdBy'])
-            ->when($request->filled('sequential_id'), function ($query) use ($request) {
-                $query->where('sequential_id', $request->sequential_id);
-            })
-            ->when($request->filled('customer_id'), function ($query) use ($request) {
+        $endDate = $request->filled('end_date')
+            ? $request->end_date
+            : Carbon::now()->endOfMonth()->endOfDay()->format('Y-m-d');
+
+        $query = Order::query()->with(['customer', 'receivables', 'seller', 'createdBy']);
+
+        if ($request->filled('sequential_id')) {
+            $query->where('sequential_id', $request->sequential_id);
+        } else {
+            if ($request->filled('customer_id')) {
                 $query->where('customer_id', $request->customer_id);
-            })
-            ->when(true, function ($query) use ($startDate, $endDate) {
-                if ($startDate && $endDate) {
-                    $query->whereBetween('issue_date', [
-                        $startDate,
-                        $endDate,
-                    ]);
-                } elseif ($startDate) {
-                    $query->where('issue_date', '>=', $startDate);
-                } elseif ($endDate) {
-                    $query->where('issue_date', '<=', $endDate);
-                }
-            })
-            ->when($request->filled('seller_id'), function ($query) use ($request) {
+            }
+
+            if ($startDate && $endDate) {
+                $query->whereBetween('issue_date', [$startDate, $endDate]);
+            } elseif ($startDate) {
+                $query->where('issue_date', '>=', $startDate);
+            } elseif ($endDate) {
+                $query->where('issue_date', '<=', $endDate);
+            }
+
+            if ($request->filled('seller_id')) {
                 $query->where('seller_id', $request->seller_id);
-            })
-            ->when($request->filled('created_by'), function ($query) use ($request) {
+            }
+
+            if ($request->filled('created_by')) {
                 $query->where('created_by', $request->created_by);
-            })
-            ->when($request->filled('status'), function ($query) use ($request) {
+            }
+
+            if ($request->filled('status')) {
                 $status = $request->status;
                 if ($status === 'pending') {
                     $query->whereDoesntHave('receivables');
                 } elseif ($status === 'finalized') {
                     $query->whereHas('receivables');
                 }
-            })
-            ->latest()
+            }
+        }
+
+        $orders = $query->latest()
             ->paginate(10)
             ->withQueryString();
 
-        $hasResults = true;
-
-        $selectedCustomer = $request->filled('customer_id')
-            ? Customer::find($request->customer_id)
-            : null;
-
-        $selectedSeller = $request->filled('seller_id')
-            ? Seller::find($request->seller_id)
-            : null;
-
-        $selectedCreatedBy = $request->filled('created_by')
-            ? User::find($request->created_by)
-            : null;
+        $selectedCustomer = $request->filled('customer_id') ? Customer::find($request->customer_id) : null;
+        $selectedSeller = $request->filled('seller_id') ? Seller::find($request->seller_id) : null;
+        $selectedCreatedBy = $request->filled('created_by') ? User::find($request->created_by) : null;
 
         return inertia('Orders/Index', [
             'orders' => $orders,
@@ -86,7 +82,7 @@ class OrderController extends Controller
                 $request->only(['sequential_id', 'customer_id', 'seller_id', 'created_by', 'status']),
                 ['start_date' => $startDate, 'end_date' => $endDate]
             ),
-            'hasResults' => $hasResults,
+            'hasResults' => true,
             'selectedCustomer' => $selectedCustomer,
             'selectedSeller' => $selectedSeller,
             'selectedCreatedBy' => $selectedCreatedBy,

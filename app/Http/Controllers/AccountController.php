@@ -58,6 +58,7 @@ class AccountController extends Controller
     public function destroy(Account $account)
     {
         // TODO: Check if the account has any related data before deleting it
+        return to_route('accounts.index')->with('error', 'Funcionalidade não implementada.');
 
         abort(403, 'Forbidden');
 
@@ -81,7 +82,11 @@ class AccountController extends Controller
         $query = $request->search ?? '';
 
         $sections = Account::query()
-            ->where('name', 'ilike', "%{$query}%")
+            ->when($query, function ($query, $search) {
+                $query->where('name', 'ilike', "%{$search}%")
+                    ->orWhere('code', 'ilike', "%{$search}%");
+            })
+            ->where('active', true)
             ->limit(5)
             ->get(['id', 'name']);
 

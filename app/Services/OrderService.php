@@ -128,24 +128,29 @@ class OrderService
 
     public function createReceivables(Order $order, array $receivablesData): void
     {
-        $totalReceivablesAmount = 0;
+        $orderTotalPrice = round($order->total_price, 2);
 
+        $totalReceivablesAmount = 0;
         foreach ($receivablesData as $receivable) {
-            $totalReceivablesAmount += $receivable['amount'];
+            $totalReceivablesAmount += round((float)$receivable['amount'], 2);
         }
 
-        if (abs($totalReceivablesAmount - $order->total_price) > 0.01) {
-            throw new \Exception('O valor total dos recebíveis deve ser igual ao valor do pedido.');
+        $totalReceivablesAmount = round($totalReceivablesAmount, 2);
+
+        if ($totalReceivablesAmount !== $orderTotalPrice) {
+            $difference = abs($totalReceivablesAmount - $orderTotalPrice);
+            throw new \Exception("O valor total dos recebíveis deve ser exatamente igual ao valor do pedido. Diferença atual: {$difference}");
         }
 
         $defaultChartAccountId = ChartAccount::where('default_receivable', true)->value('id');
-
         if (!$defaultChartAccountId) {
             throw new \Exception('Não foi possível encontrar uma conta padrão para lançamentos de pedidos.');
         }
 
         DB::transaction(function () use ($order, $receivablesData, $defaultChartAccountId) {
             foreach ($receivablesData as $receivableData) {
+                $amount = round((float)$receivableData['amount'], 2);
+
                 Receivable::create([
                     'order_id' => $order->id,
                     'customer_id' => $order->customer_id,
@@ -154,11 +159,11 @@ class OrderService
                     'is_manual' => false,
                     'issue_date' => $order->issue_date,
                     'due_date' => $receivableData['due_date'],
-                    'total_amount' => $receivableData['amount'],
+                    'total_amount' => $amount,
                     'paid_amount' => 0,
                     'fees' => 0,
                     'discount' => 0,
-                    'remaining_amount' => $receivableData['amount'],
+                    'remaining_amount' => $amount,
                     'status' => 'pending',
                     'description' => $receivableData['description'] ?? 'Recebível gerado automaticamente',
                     'created_by' => Auth::id(),

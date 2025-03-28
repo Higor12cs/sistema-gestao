@@ -1,4 +1,3 @@
-<!-- resources/js/Pages/Kardex/Index.vue -->
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
@@ -129,7 +128,7 @@ const resetFilters = () => {
                             <Select2
                                 v-model="productId"
                                 :search-url="route('api.products.search')"
-                                placeholder="Selecione um produto"
+                                placeholder="Selecione um Produto"
                             />
                         </div>
                     </div>

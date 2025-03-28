@@ -60,6 +60,7 @@ class SupplierController extends Controller
     public function destroy(Supplier $supplier)
     {
         // TODO: Check if the supplier has any related data before deleting it
+        return to_route('suppliers.index')->with('error', 'Funcionalidade não implementada.');
 
         abort(403, 'Forbidden');
 
@@ -78,22 +79,28 @@ class SupplierController extends Controller
                 'data' => $suppliers->map(function (Supplier $supplier) {
                     return [
                         'id' => $supplier->id,
-                        'name' => $supplier->first_name.' '.$supplier->last_name,
+                        'name' => $supplier->first_name . ' ' . $supplier->last_name,
                     ];
                 }),
             ]);
         }
 
         $query = $request->search ?? '';
-        $suppliers = Supplier::where('first_name', 'ilike', "%{$query}%")
-            ->limit(10)
+        $suppliers = Supplier::query()
+            ->when($query, function ($queryBuilder) use ($query) {
+                $queryBuilder->where('first_name', 'ilike', "%{$query}%")
+                    ->orWhere('last_name', 'ilike', "%{$query}%")
+                    ->orWhere('legal_name', 'ilike', "%{$query}%");
+            })
+            ->where('active', true)
+            ->limit(5)
             ->get();
 
         return response()->json([
             'data' => $suppliers->map(function (Supplier $supplier) {
                 return [
                     'id' => $supplier->id,
-                    'name' => $supplier->first_name.' '.$supplier->last_name,
+                    'name' => $supplier->first_name . ' ' . $supplier->last_name,
                 ];
             }),
         ]);
