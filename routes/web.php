@@ -135,7 +135,7 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
             Route::get('/criar', 'create')->name('create');
             Route::post('/', 'store')->name('store');
             Route::delete('/', 'destroy')->name('destroy');
-            Route::get('/{receivable}/editar', 'edit')->name('edit');
+            Route::get('/{receivable:sequential_id}/editar', 'edit')->name('edit');
             Route::post('/{receivable}', 'update')->name('update');
         });
     });
@@ -157,7 +157,7 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
             Route::get('/criar', 'create')->name('create');
             Route::post('/', 'store')->name('store');
             Route::delete('/', 'destroy')->name('destroy');
-            Route::get('/{payable}/editar', 'edit')->name('edit');
+            Route::get('/{payable:sequential_id}/editar', 'edit')->name('edit');
             Route::post('/{payable}', 'update')->name('update');
         });
     });
@@ -184,8 +184,8 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
     // Conciliação bancária
     Route::controller(AccountReconciliationController::class)->prefix('conciliacao')->name('account-reconciliation.')->group(function () {
         Route::get('/', 'selectAccount')->name('select');
-        Route::get('/{account}', 'index')->name('index');
-        Route::post('/{transaction}', 'update')->name('update');
+        Route::get('/{account:sequential_id}', 'index')->name('index');
+        Route::post('/{transaction:sequential_id}', 'update')->name('update');
         Route::post('/', 'bulkUpdate')->name('bulk-update');
     });
 
