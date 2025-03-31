@@ -67,7 +67,7 @@ class RegisterController extends Controller
             (new DefaultCustomerSeeder)->run($tenant);
 
             if (config('app.env') === 'local') {
-                // (new (TestSeeder::class))->run($tenant, $user);
+                (new (TestSeeder::class))->run($tenant, $user);
             }
         });
 

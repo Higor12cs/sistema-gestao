@@ -41,17 +41,14 @@ class UserRequest extends FormRequest
     {
         $validated = parent::validated($key, $default);
 
-        // Hash the password if provided
         if (isset($validated['password']) && $validated['password']) {
             $validated['password'] = bcrypt($validated['password']);
         }
 
-        // Add tenant_id for new users
         if (! $this->user) {
             $validated['tenant_id'] = Auth::user()->tenant_id;
         }
 
-        // Remove role_id from validated data since we'll handle it separately in the controller
         if (isset($validated['role_id'])) {
             unset($validated['role_id']);
         }

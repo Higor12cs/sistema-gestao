@@ -9,12 +9,12 @@ use App\Models\Customer;
 use App\Models\Group;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Payable;
 use App\Models\PaymentMethod;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\PurchaseItem;
 use App\Models\Receivable;
-use App\Models\Payable;
 use App\Models\Section;
 use App\Models\Seller;
 use App\Models\Supplier;
@@ -67,7 +67,7 @@ class TestSeeder extends Seeder
             ->where('default_purchase', true)
             ->first();
 
-        if (!$defaultReceivableAccount || !$defaultPurchaseAccount) {
+        if (! $defaultReceivableAccount || ! $defaultPurchaseAccount) {
             $this->command->warn('Default chart accounts not found. Make sure ChartAccountSeeder has been run.');
         }
 
@@ -184,29 +184,29 @@ class TestSeeder extends Seeder
                 ['name' => 'Chuteiras'],
                 ['name' => 'Tênis de Basquete'],
                 ['name' => 'Tênis Casual'],
-                ['name' => 'Sandálias']
+                ['name' => 'Sandálias'],
             ],
             'Roupas' => [
                 ['name' => 'Camisetas'],
                 ['name' => 'Shorts'],
                 ['name' => 'Calças'],
                 ['name' => 'Jaquetas'],
-                ['name' => 'Agasalhos']
+                ['name' => 'Agasalhos'],
             ],
             'Acessórios' => [
                 ['name' => 'Meias'],
                 ['name' => 'Bonés'],
                 ['name' => 'Mochilas'],
                 ['name' => 'Óculos'],
-                ['name' => 'Relógios']
+                ['name' => 'Relógios'],
             ],
             'Equipamentos' => [
                 ['name' => 'Bolas'],
                 ['name' => 'Raquetes'],
                 ['name' => 'Luvas'],
                 ['name' => 'Proteções'],
-                ['name' => 'Fitness']
-            ]
+                ['name' => 'Fitness'],
+            ],
         ];
 
         $createdGroups = [];
@@ -244,7 +244,7 @@ class TestSeeder extends Seeder
                 'number' => '1000',
                 'neighborhood' => 'Centro',
                 'city' => 'São Paulo',
-                'state' => 'SP'
+                'state' => 'SP',
             ],
             [
                 'first_name' => 'Importadora',
@@ -259,7 +259,7 @@ class TestSeeder extends Seeder
                 'number' => '500',
                 'neighborhood' => 'Barra',
                 'city' => 'Rio de Janeiro',
-                'state' => 'RJ'
+                'state' => 'RJ',
             ],
             [
                 'first_name' => 'Fornecedora',
@@ -274,7 +274,7 @@ class TestSeeder extends Seeder
                 'number' => '700',
                 'neighborhood' => 'Savassi',
                 'city' => 'Belo Horizonte',
-                'state' => 'MG'
+                'state' => 'MG',
             ],
             [
                 'first_name' => 'Suprimentos',
@@ -289,7 +289,7 @@ class TestSeeder extends Seeder
                 'number' => '300',
                 'neighborhood' => 'Batel',
                 'city' => 'Curitiba',
-                'state' => 'PR'
+                'state' => 'PR',
             ],
             [
                 'first_name' => 'Global',
@@ -304,8 +304,8 @@ class TestSeeder extends Seeder
                 'number' => '1500',
                 'neighborhood' => 'Moinhos',
                 'city' => 'Porto Alegre',
-                'state' => 'RS'
-            ]
+                'state' => 'RS',
+            ],
         ];
 
         $createdSuppliers = [];
@@ -596,7 +596,7 @@ class TestSeeder extends Seeder
                 'number' => '123',
                 'neighborhood' => 'Jardim Primavera',
                 'city' => 'São Paulo',
-                'state' => 'SP'
+                'state' => 'SP',
             ],
             [
                 'first_name' => 'Amanda',
@@ -609,7 +609,7 @@ class TestSeeder extends Seeder
                 'number' => '456',
                 'neighborhood' => 'Centro',
                 'city' => 'Rio de Janeiro',
-                'state' => 'RJ'
+                'state' => 'RJ',
             ],
             [
                 'first_name' => 'Carlos',
@@ -622,7 +622,7 @@ class TestSeeder extends Seeder
                 'number' => '789',
                 'neighborhood' => 'Funcionários',
                 'city' => 'Belo Horizonte',
-                'state' => 'MG'
+                'state' => 'MG',
             ],
             [
                 'first_name' => 'Juliana',
@@ -635,7 +635,7 @@ class TestSeeder extends Seeder
                 'number' => '1001',
                 'neighborhood' => 'Água Verde',
                 'city' => 'Curitiba',
-                'state' => 'PR'
+                'state' => 'PR',
             ],
             [
                 'first_name' => 'Fernando',
@@ -648,7 +648,7 @@ class TestSeeder extends Seeder
                 'number' => '222',
                 'neighborhood' => 'Menino Deus',
                 'city' => 'Porto Alegre',
-                'state' => 'RS'
+                'state' => 'RS',
             ],
             [
                 'first_name' => 'Patrícia',
@@ -661,7 +661,7 @@ class TestSeeder extends Seeder
                 'number' => '333',
                 'neighborhood' => 'Boa Viagem',
                 'city' => 'Recife',
-                'state' => 'PE'
+                'state' => 'PE',
             ],
             [
                 'first_name' => 'Marcos',
@@ -674,7 +674,7 @@ class TestSeeder extends Seeder
                 'number' => '444',
                 'neighborhood' => 'Barra',
                 'city' => 'Salvador',
-                'state' => 'BA'
+                'state' => 'BA',
             ],
             [
                 'first_name' => 'Luciana',
@@ -687,7 +687,7 @@ class TestSeeder extends Seeder
                 'number' => '555',
                 'neighborhood' => 'Meireles',
                 'city' => 'Fortaleza',
-                'state' => 'CE'
+                'state' => 'CE',
             ],
             [
                 'first_name' => 'Gustavo',
@@ -700,7 +700,7 @@ class TestSeeder extends Seeder
                 'number' => '666',
                 'neighborhood' => 'Umarizal',
                 'city' => 'Belém',
-                'state' => 'PA'
+                'state' => 'PA',
             ],
             [
                 'first_name' => 'Camila',
@@ -713,8 +713,8 @@ class TestSeeder extends Seeder
                 'number' => '777',
                 'neighborhood' => 'Adrianópolis',
                 'city' => 'Manaus',
-                'state' => 'AM'
-            ]
+                'state' => 'AM',
+            ],
         ];
 
         $createdCustomers = [];
@@ -779,7 +779,7 @@ class TestSeeder extends Seeder
                 'name' => 'Caixa',
                 'type' => 'cash',
                 'current_balance' => 5000.00,
-                'active' => true
+                'active' => true,
             ],
             [
                 'name' => 'Banco Itaú',
@@ -788,7 +788,7 @@ class TestSeeder extends Seeder
                 'agency' => '1234',
                 'account_number' => '56789-0',
                 'current_balance' => 15000.00,
-                'active' => true
+                'active' => true,
             ],
             [
                 'name' => 'Banco Bradesco',
@@ -797,7 +797,7 @@ class TestSeeder extends Seeder
                 'agency' => '5678',
                 'account_number' => '12345-6',
                 'current_balance' => 8000.00,
-                'active' => true
+                'active' => true,
             ],
         ];
 
@@ -832,8 +832,9 @@ class TestSeeder extends Seeder
         ?string $defaultChartAccountId
     ): void {
         // Check for default chart account
-        if (!$defaultChartAccountId) {
+        if (! $defaultChartAccountId) {
             $this->command->warn('Default Purchase ChartAccount not found. Payables might cause errors.');
+
             return;
         }
 
@@ -852,7 +853,7 @@ class TestSeeder extends Seeder
             );
 
             // Create the purchase
-            DB::transaction(function () use ($tenant, $user, $supplier, $purchaseDate, $products, $paymentMethods, $accounts, $i, $defaultChartAccountId) {
+            DB::transaction(function () use ($tenant, $user, $supplier, $purchaseDate, $products, $paymentMethods, $i, $defaultChartAccountId) {
                 // Calculate totals
                 $totalCost = 0;
                 $discount = rand(0, 50);
@@ -866,14 +867,14 @@ class TestSeeder extends Seeder
                     'discount' => $discount,
                     'fees' => $fees,
                     'total_cost' => 0, // Will be updated after items are added
-                    'observation' => "Compra de produtos #{$i} - " . $supplier->legal_name,
+                    'observation' => "Compra de produtos #{$i} - ".$supplier->legal_name,
                     'created_by' => $user->id,
                 ]);
 
                 // Randomly determine how many products to include (2-5)
                 $numItems = rand(2, 5);
                 $selectedProducts = array_rand($products, $numItems);
-                if (!is_array($selectedProducts)) {
+                if (! is_array($selectedProducts)) {
                     $selectedProducts = [$selectedProducts];
                 }
 
@@ -904,7 +905,7 @@ class TestSeeder extends Seeder
                 // Update purchase total cost
                 $finalTotalCost = $totalCost - $discount + $fees;
                 $purchase->update([
-                    'total_cost' => $finalTotalCost
+                    'total_cost' => $finalTotalCost,
                 ]);
 
                 // Create payables
@@ -940,7 +941,7 @@ class TestSeeder extends Seeder
                             'discount' => 0,
                             'remaining_amount' => $amount,
                             'status' => 'pending',
-                            'description' => "Parcela " . ($j + 1) . " de " . $numPayments,
+                            'description' => 'Parcela '.($j + 1).' de '.$numPayments,
                             'created_by' => $user->id,
                         ]);
                     }
@@ -964,7 +965,7 @@ class TestSeeder extends Seeder
                         'discount' => 0,
                         'remaining_amount' => $finalTotalCost,
                         'status' => 'pending',
-                        'description' => "Pagamento à vista",
+                        'description' => 'Pagamento à vista',
                         'created_by' => $user->id,
                     ]);
                 }
@@ -982,13 +983,14 @@ class TestSeeder extends Seeder
         ?string $defaultChartAccountId
     ): void {
         // Check for default chart account
-        if (!$defaultChartAccountId) {
+        if (! $defaultChartAccountId) {
             $this->command->warn('Default Receivable ChartAccount not found. Receivables might cause errors.');
+
             return;
         }
 
         // Define a date range for orders (last 60 days)
-        $startDate = Carbon::now()->subDays(60);
+        $startDate = Carbon::now()->subDays(90);
         $endDate = Carbon::now();
 
         // Create multiple orders
@@ -1002,7 +1004,7 @@ class TestSeeder extends Seeder
             );
 
             // Create the order
-            DB::transaction(function () use ($tenant, $user, $customer, $orderDate, $products, $paymentMethods, $accounts, $i, $defaultChartAccountId) {
+            DB::transaction(function () use ($tenant, $user, $customer, $orderDate, $products, $paymentMethods, $i, $defaultChartAccountId) {
                 // Calculate totals
                 $totalCost = 0;
                 $totalPrice = 0;
@@ -1018,14 +1020,14 @@ class TestSeeder extends Seeder
                     'fees' => $fees,
                     'total_cost' => 0, // Will be updated after items are added
                     'total_price' => 0, // Will be updated after items are added
-                    'observation' => "Pedido cliente #{$i} - " . $customer->first_name . ' ' . $customer->last_name,
+                    'observation' => "Pedido cliente #{$i} - ".$customer->first_name.' '.$customer->last_name,
                     'created_by' => $user->id,
                 ]);
 
                 // Randomly determine how many products to include (1-4)
                 $numItems = rand(1, 4);
                 $selectedProducts = array_rand($products, $numItems);
-                if (!is_array($selectedProducts)) {
+                if (! is_array($selectedProducts)) {
                     $selectedProducts = [$selectedProducts];
                 }
 
@@ -1063,7 +1065,7 @@ class TestSeeder extends Seeder
                 $finalTotalPrice = $totalPrice - $discount + $fees;
                 $order->update([
                     'total_cost' => $totalCost,
-                    'total_price' => $finalTotalPrice
+                    'total_price' => $finalTotalPrice,
                 ]);
 
                 // Create receivables
@@ -1099,7 +1101,7 @@ class TestSeeder extends Seeder
                             'discount' => 0,
                             'remaining_amount' => $amount,
                             'status' => 'pending',
-                            'description' => "Parcela " . ($j + 1) . " de " . $numPayments,
+                            'description' => 'Parcela '.($j + 1).' de '.$numPayments,
                             'created_by' => $user->id,
                         ]);
                     }
@@ -1123,7 +1125,7 @@ class TestSeeder extends Seeder
                         'discount' => 0,
                         'remaining_amount' => $finalTotalPrice,
                         'status' => 'pending',
-                        'description' => "Pagamento à vista",
+                        'description' => 'Pagamento à vista',
                         'created_by' => $user->id,
                     ]);
                 }

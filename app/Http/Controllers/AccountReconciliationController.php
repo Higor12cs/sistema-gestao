@@ -53,8 +53,7 @@ class AccountReconciliationController extends Controller
             $data = $request->validated();
             $updateData = [];
 
-            // Somente inclui os campos que foram preenchidos
-            if (!empty($data['transaction_date'])) {
+            if (! empty($data['transaction_date'])) {
                 $updateData['transaction_date'] = $data['transaction_date'];
             }
 
@@ -62,12 +61,10 @@ class AccountReconciliationController extends Controller
                 $updateData['reconciled'] = $data['reconciled'];
             }
 
-            // Se não há dados para atualizar, retorna erro
             if (empty($updateData)) {
                 return back()->withErrors(['error' => 'Nenhum dado fornecido para atualização.']);
             }
 
-            // Atualiza as transações
             foreach ($data['transaction_ids'] as $id) {
                 Transaction::where('id', $id)->update($updateData);
             }
@@ -76,16 +73,18 @@ class AccountReconciliationController extends Controller
                 ? ($updateData['reconciled'] ? 'conciliadas' : 'desconciliadas')
                 : 'atualizadas';
 
-            return back()->with('success', count($data['transaction_ids']) . ' transações ' . $actionMessage . ' com sucesso!');
+            return back()->with('success', count($data['transaction_ids']).' transações '.$actionMessage.' com sucesso!');
         });
     }
 
     public function selectAccount()
     {
         $accounts = Account::where('active', true)
-            ->withCount(['transactions' => function ($query) {
-                $query->where('reconciled', false);
-            }])
+            ->withCount([
+                'transactions' => function ($query) {
+                    $query->where('reconciled', false);
+                },
+            ])
             ->get();
 
         return inertia('AccountReconciliation/SelectAccount', [

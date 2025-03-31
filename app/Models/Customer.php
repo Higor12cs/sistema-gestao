@@ -42,8 +42,15 @@ class Customer extends Model
         'active' => 'boolean',
     ];
 
+    protected $appends = ['name'];
+
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function getNameAttribute(): string
+    {
+        return trim("{$this->first_name} {$this->last_name}");
     }
 }

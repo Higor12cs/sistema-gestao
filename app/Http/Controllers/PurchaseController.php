@@ -184,7 +184,7 @@ class PurchaseController extends Controller
                 'data' => $purchases->map(function (Purchase $purchase) {
                     return [
                         'id' => $purchase->id,
-                        'name' => 'Compra #' . $purchase->sequential_id . ' - ' . $purchase->issue_date->format('d/m/Y'),
+                        'name' => 'Compra #'.$purchase->sequential_id.' - '.$purchase->issue_date->format('d/m/Y'),
                         'total' => $purchase->total_cost,
                     ];
                 }),
@@ -200,7 +200,7 @@ class PurchaseController extends Controller
             'data' => $purchases->map(function (Purchase $purchase) {
                 return [
                     'id' => $purchase->id,
-                    'name' => 'Compra #' . $purchase->sequential_id . ' - ' . $purchase->issue_date->format('d/m/Y'),
+                    'name' => 'Compra #'.$purchase->sequential_id.' - '.$purchase->issue_date->format('d/m/Y'),
                     'total' => $purchase->total_cost,
                 ];
             }),

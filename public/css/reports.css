@@ -1,0 +1,359 @@
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #ecf0f1;
+    --accent-color: #3498db;
+    --danger-color: #e74c3c;
+    --success-color: #2ecc71;
+    --warning-color: #f39c12;
+    --text-color: #333;
+    --border-color: #ddd;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+@page {
+    margin: 10mm;
+    counter-increment: page;
+}
+
+body {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9pt;
+    line-height: 1.4;
+    color: var(--text-color);
+    width: 210mm;
+    margin: 0 auto;
+    padding: 1mm;
+    counter-reset: page 1;
+}
+
+.container {
+    width: 100%;
+}
+
+.header {
+    text-align: center;
+    padding-bottom: 5mm;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 5mm;
+}
+
+.report-title {
+    font-size: 16pt;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 2mm;
+}
+
+.report-subtitle {
+    font-size: 10pt;
+    color: var(--text-color);
+    margin-bottom: 2mm;
+}
+
+.summary {
+    background-color: var(--secondary-color);
+    padding: 4mm;
+    margin-bottom: 8mm;
+    border-radius: 2mm;
+}
+
+.summary-title {
+    font-size: 12pt;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 3mm;
+    text-align: center;
+}
+
+.summary-grid {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.summary-item {
+    width: 30%;
+    text-align: center;
+    margin-bottom: 3mm;
+}
+
+.summary-label {
+    font-size: 8pt;
+    color: var(--text-color);
+    margin-bottom: 1mm;
+    text-transform: uppercase;
+}
+
+.summary-value {
+    font-size: 12pt;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.section {
+    margin-bottom: 8mm;
+    page-break-inside: avoid;
+}
+
+.section-title {
+    font-size: 12pt;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 3mm;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1mm;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8pt;
+    margin-bottom: 3mm;
+}
+
+th {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    font-weight: 600;
+    text-align: left;
+    padding: 2mm 1mm;
+    border-bottom: 1px solid var(--border-color);
+    text-transform: uppercase;
+    font-size: 7pt;
+    letter-spacing: 0.5px;
+}
+
+td {
+    padding: 1.5mm 1mm;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.numeric {
+    text-align: right;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 7pt;
+    color: #666;
+    padding-top: 2mm;
+    border-top: 1px solid var(--border-color);
+    margin: 0 10mm;
+    background-color: white;
+}
+
+.page-number::after {
+    content: "Página " counter(page);
+}
+
+.page-break {
+    page-break-after: always;
+    height: 0;
+}
+
+.grid {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4mm;
+}
+
+.grid-column {
+    width: 48%;
+}
+
+.info-list {
+    font-size: 8pt;
+}
+
+.info-item {
+    display: flex;
+    margin-bottom: 1mm;
+}
+
+.info-label {
+    font-weight: 600;
+    width: 40%;
+    color: var(--primary-color);
+}
+
+.info-value {
+    width: 60%;
+}
+
+.totals {
+    margin-left: auto;
+    width: 50%;
+}
+
+.total-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1mm;
+}
+
+.total-label {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.total-value {
+    text-align: right;
+}
+
+.grand-total {
+    font-weight: 700;
+    font-size: 10pt;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1mm;
+    margin-top: 1mm;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 1mm 2mm;
+    font-size: 7pt;
+    font-weight: 500;
+    border-radius: 1mm;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-finalized {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.status-pending {
+    background-color: var(--warning-color);
+    color: white;
+}
+
+.status-paid {
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+.status-partial {
+    color: var(--warning-color);
+    font-weight: 600;
+}
+
+.status-pending-text {
+    color: var(--danger-color);
+    font-weight: 600;
+}
+
+.observations {
+    padding: 2mm;
+    background-color: var(--secondary-color);
+    border-radius: 2px;
+    font-size: 8pt;
+}
+
+.order {
+    margin-bottom: 10mm;
+    border: 1px solid var(--border-color);
+    border-radius: 2mm;
+    overflow: hidden;
+    page-break-inside: avoid;
+}
+
+.order-header {
+    background-color: var(--secondary-color);
+    padding: 2mm 4mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-id {
+    font-size: 12pt;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.order-body {
+    padding: 4mm;
+}
+
+.watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    font-size: 70pt;
+    opacity: 0.05;
+    z-index: -1;
+    color: var(--danger-color);
+    font-weight: 800;
+    letter-spacing: 5px;
+}
+
+.signature {
+    margin-top: 30mm;
+    text-align: center;
+}
+
+.signature-line {
+    border-top: 1px solid var(--border-color);
+    width: 300px;
+    margin: 0 auto;
+    padding-top: 2mm;
+}
+
+.signature-label {
+    font-size: 8pt;
+    color: var(--text-color);
+}
+
+.thermal-body {
+    font-family: "Courier New", monospace;
+    font-size: 10pt;
+    width: 76mm;
+    margin: 0 auto;
+    padding: 2mm;
+    color: black;
+    line-height: 1.2;
+}
+
+.thermal-header {
+    text-align: center;
+    margin-bottom: 5mm;
+    border-bottom: 1px dashed black;
+    padding-bottom: 2mm;
+}
+
+.divider {
+    border-top: 1px dashed black;
+    margin: 2mm 0;
+}
+
+.draft-indicator {
+    text-align: center;
+    font-size: 11pt;
+    font-weight: bold;
+    margin: 3mm 0;
+    border: 1px solid black;
+    padding: 1mm;
+}
+
+.item-count {
+    font-size: 8pt;
+    text-align: center;
+    margin-bottom: 2mm;
+}
+
+.status-symbol {
+    font-weight: bold;
+    width: 15%;
+    text-align: center;
+}

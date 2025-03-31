@@ -177,7 +177,9 @@ onMounted(() => {
                                         formatSequentialId(order.sequential_id)
                                     }}
                                 </td>
-                                <td>{{ order.customer.first_name }}</td>
+                                <td>
+                                    {{ order.customer.name }}
+                                </td>
                                 <td>{{ formatDate(order.issue_date) }}</td>
                                 <td>
                                     <span

@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\ChartAccount;
-use App\Models\Configuration;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Receivable;
@@ -132,7 +131,7 @@ class OrderService
 
         $totalReceivablesAmount = 0;
         foreach ($receivablesData as $receivable) {
-            $totalReceivablesAmount += round((float)$receivable['amount'], 2);
+            $totalReceivablesAmount += round((float) $receivable['amount'], 2);
         }
 
         $totalReceivablesAmount = round($totalReceivablesAmount, 2);
@@ -143,13 +142,13 @@ class OrderService
         }
 
         $defaultChartAccountId = ChartAccount::where('default_receivable', true)->value('id');
-        if (!$defaultChartAccountId) {
+        if (! $defaultChartAccountId) {
             throw new \Exception('Não foi possível encontrar uma conta padrão para lançamentos de pedidos.');
         }
 
         DB::transaction(function () use ($order, $receivablesData, $defaultChartAccountId) {
             foreach ($receivablesData as $receivableData) {
-                $amount = round((float)$receivableData['amount'], 2);
+                $amount = round((float) $receivableData['amount'], 2);
 
                 Receivable::create([
                     'order_id' => $order->id,

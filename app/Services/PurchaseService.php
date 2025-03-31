@@ -131,7 +131,7 @@ class PurchaseService
         $totalPayablesAmount = 0;
 
         foreach ($payablesData as $payable) {
-            $totalPayablesAmount += round((float)$payable['amount'], 2);
+            $totalPayablesAmount += round((float) $payable['amount'], 2);
         }
 
         $totalPayablesAmount = round($totalPayablesAmount, 2);
@@ -142,13 +142,13 @@ class PurchaseService
         }
 
         $defaultChartAccountId = ChartAccount::where('default_purchase', true)->value('id');
-        if (!$defaultChartAccountId) {
+        if (! $defaultChartAccountId) {
             throw new \Exception('Não foi possível encontrar uma conta padrão para lançamentos de compras.');
         }
 
         DB::transaction(function () use ($purchase, $payablesData, $defaultChartAccountId) {
             foreach ($payablesData as $payableData) {
-                $amount = round((float)$payableData['amount'], 2);
+                $amount = round((float) $payableData['amount'], 2);
 
                 Payable::create([
                     'purchase_id' => $purchase->id,

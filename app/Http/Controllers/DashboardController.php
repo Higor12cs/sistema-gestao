@@ -210,7 +210,7 @@ class DashboardController extends Controller
     {
         return Order::select(
             'sellers.id',
-            DB::raw("sellers.name as name"),
+            DB::raw('sellers.name as name'),
             DB::raw('COUNT(orders.id) as order_count'),
             DB::raw('SUM(orders.total_price) as total_spent')
         )
@@ -239,7 +239,7 @@ class DashboardController extends Controller
         }
 
         $salesByDay = Order::select(
-            DB::raw("DATE(issue_date) as date"),
+            DB::raw('DATE(issue_date) as date'),
             DB::raw('SUM(total_price) as total')
         )
             ->whereBetween('issue_date', [$startDate, $endDate])
@@ -252,7 +252,7 @@ class DashboardController extends Controller
             });
 
         $expensesByDay = Purchase::select(
-            DB::raw("DATE(issue_date) as date"),
+            DB::raw('DATE(issue_date) as date'),
             DB::raw('SUM(total_cost) as total')
         )
             ->whereBetween('issue_date', [$startDate, $endDate])
@@ -288,7 +288,7 @@ class DashboardController extends Controller
     {
         $salesByWeek = Order::select(
             DB::raw("TO_CHAR(issue_date, 'IYYYIW') as yearweek"),
-            DB::raw("MIN(DATE(issue_date)) as start_date"),
+            DB::raw('MIN(DATE(issue_date)) as start_date'),
             DB::raw('SUM(total_price) as total')
         )
             ->whereBetween('issue_date', [$startDate, $endDate])

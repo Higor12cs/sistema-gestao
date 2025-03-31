@@ -61,11 +61,11 @@ class ReceivablePaymentController extends Controller
 
         $customerId = $receivables->first()->customer_id;
 
-        if ($receivables->some(fn($r) => $r->customer_id !== $customerId)) {
+        if ($receivables->some(fn ($r) => $r->customer_id !== $customerId)) {
             return to_route('receivables.index')->with('error', 'Só é possível liquidar recebíveis do mesmo cliente.');
         }
 
-        if ($receivables->some(fn($r) => $r->status === 'paid')) {
+        if ($receivables->some(fn ($r) => $r->status === 'paid')) {
             return to_route('receivables.index')->with('error', 'Não é possível liquidar recebíveis já pagos.');
         }
 

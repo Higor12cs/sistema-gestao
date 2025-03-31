@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class BrandRequest extends FormRequest
+class ConfigurationRequest extends FormRequest
 {
     public function authorize(): bool
     {

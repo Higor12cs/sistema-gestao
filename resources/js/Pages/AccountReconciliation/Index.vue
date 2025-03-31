@@ -449,16 +449,14 @@ const getTransactionOrigin = (transaction) => {
                                 @click="bulkReconcile(true)"
                             >
                                 <i class="fas fa-check-double"></i>
-                                &nbsp;
-                                Conciliar Todos
+                                &nbsp; Conciliar Todos
                             </button>
                             <button
                                 class="btn btn-danger"
                                 @click="bulkReconcile(false)"
                             >
                                 <i class="fas fa-times"></i>
-                                &nbsp;
-                                Remover Conciliação
+                                &nbsp; Remover Conciliação
                             </button>
                         </div>
                     </div>
@@ -478,8 +476,7 @@ const getTransactionOrigin = (transaction) => {
                         </span>
                         <span v-else>
                             <i class="fas fa-save"></i>
-                            &nbsp;
-                            Atualizar Transações Selecionadas
+                            &nbsp; Atualizar Transações Selecionadas
                         </span>
                     </button>
                 </div>

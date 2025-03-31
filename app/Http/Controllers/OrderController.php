@@ -190,29 +190,31 @@ class OrderController extends Controller
     public function print(Order $order, Request $request)
     {
         $type = $request->query('type', 'a4');
-        if (!in_array($type, ['a4', 'thermal'])) {
+        if (! in_array($type, ['a4', 'thermal'])) {
             $type = 'a4';
         }
 
         $order = Order::with(['customer', 'items.product', 'createdBy', 'receivables.paymentMethod'])
             ->findOrFail($order->id);
 
-        $view = $type === 'thermal' ? 'reports.orders.order-thermal' : 'reports.orders.order-a4';
+        $view = $type === 'thermal' ? 'prints.orders.thermal' : 'prints.orders.a4';
         $html = view($view, compact('order'))->render();
 
         $browsershot = Browsershot::html($html)
             ->setNodeBinary('/usr/bin/node')
             ->setNpmBinary('/usr/bin/npm')
             ->noSandbox()
-            ->showBackground();
+            ->showBackground()
+            ->waitUntilNetworkIdle();
 
         if ($type === 'thermal') {
             $browsershot->paperSize(80, 297)
-                ->margins(1, 1, 1, 1)
+                ->margins(0, 0, 0, 0)
                 ->deviceScaleFactor(1.5)
                 ->scale(1.0);
         } else {
-            $browsershot->format('A4');
+            $browsershot->format('A4')
+                ->margins(10, 10, 10, 10);
         }
 
         $pdf = $browsershot->pdf();

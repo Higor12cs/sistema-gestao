@@ -53,7 +53,7 @@ class AccountTransferController extends Controller
                 'type' => 'expense',
                 'amount' => $request->amount,
                 'transaction_date' => $request->transfer_date,
-                'description' => "Transferência para {$destinationAccount->name}" . ($request->notes ? " - {$request->notes}" : ""),
+                'description' => "Transferência para {$destinationAccount->name}".($request->notes ? " - {$request->notes}" : ''),
                 'reconciled' => false,
                 'created_by' => Auth::id(),
             ]);
@@ -63,7 +63,7 @@ class AccountTransferController extends Controller
                 'type' => 'income',
                 'amount' => $request->amount,
                 'transaction_date' => $request->transfer_date,
-                'description' => "Transferência de {$sourceAccount->name}" . ($request->notes ? " - {$request->notes}" : ""),
+                'description' => "Transferência de {$sourceAccount->name}".($request->notes ? " - {$request->notes}" : ''),
                 'reconciled' => false,
                 'created_by' => Auth::id(),
             ]);
@@ -98,7 +98,7 @@ class AccountTransferController extends Controller
             'destinationAccount',
             'debitTransaction',
             'creditTransaction',
-            'createdBy'
+            'createdBy',
         ]);
 
         return inertia('AccountTransfers/Show', [

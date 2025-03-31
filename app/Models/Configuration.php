@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Configuration extends Model
 {
-    use HasUuids, BelongsToTenant;
+    use BelongsToTenant, HasUuids;
 
     protected $fillable = [
         'description',

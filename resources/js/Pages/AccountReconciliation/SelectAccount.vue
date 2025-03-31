@@ -59,7 +59,7 @@ const formatCurrency = (value) => {
                                     :href="
                                         route(
                                             'account-reconciliation.index',
-                                            account.id
+                                            account.sequential_id
                                         )
                                     "
                                     class="btn btn-primary"

@@ -38,9 +38,9 @@ Route::redirect('/', '/home');
 
 // Rotas de autenticação
 Route::middleware('guest')->group(function () {
-    Route::get('/login', fn() => Inertia::render('Auth/Login'))->name('login');
+    Route::get('/login', fn () => Inertia::render('Auth/Login'))->name('login');
     Route::post('/login', LoginController::class)->name('login.attempt');
-    Route::get('/registrar', fn() => Inertia::render('Auth/Register'))->name('register');
+    Route::get('/registrar', fn () => Inertia::render('Auth/Register'))->name('register');
     Route::post('/registrar', RegisterController::class)->name('register.attempt');
 });
 
@@ -65,7 +65,7 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
     });
 
     // 1. INÍCIO
-    Route::get('/home', fn() => Inertia::render('Home/Index'))->name('home.index');
+    Route::get('/home', fn () => Inertia::render('Home/Index'))->name('home.index');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     // 2. CADASTROS
@@ -265,10 +265,10 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
     // Relatórios de pedidos
     Route::prefix('relatorios')->name('reports.')->group(function () {
         Route::prefix('pedidos')->name('orders.')->group(function () {
-            Route::get('/', fn() => Inertia::render('Reports/Orders/Index'))->name('index');
-            Route::get('/analiticos', fn() => Inertia::render('Reports/Orders/Analytical'))->name('analyticals');
+            Route::get('/', fn () => Inertia::render('Reports/Orders/Index'))->name('index');
+            Route::get('/analiticos', fn () => Inertia::render('Reports/Orders/Analytical'))->name('analyticals');
             Route::get('/analiticos/imprimir', [OrderReportController::class, 'analytical'])->name('analyticals.print');
-            Route::get('/sinteticos', fn() => Inertia::render('Reports/Orders/Synthetic'))->name('synthetics');
+            Route::get('/sinteticos', fn () => Inertia::render('Reports/Orders/Synthetic'))->name('synthetics');
             Route::get('/sinteticos/imprimir', [OrderReportController::class, 'synthetic'])->name('synthetics.print');
         });
     });
