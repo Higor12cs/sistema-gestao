@@ -21,7 +21,11 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ReceivableController;
 use App\Http\Controllers\ReceivablePaymentController;
+use App\Http\Controllers\Reports\CustomerAbcReportController;
 use App\Http\Controllers\Reports\OrderReportController;
+use App\Http\Controllers\Reports\PayableReportController;
+use App\Http\Controllers\Reports\ProductAbcReportController;
+use App\Http\Controllers\Reports\ReceivableReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\SellerController;
@@ -271,6 +275,30 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
             Route::get('/sinteticos', fn () => Inertia::render('Reports/Orders/Synthetic'))->name('synthetics');
             Route::get('/sinteticos/imprimir', [OrderReportController::class, 'synthetic'])->name('synthetics.print');
         });
+
+        Route::prefix('recebiveis')->name('receivables.')->group(function () {
+            Route::get('/', fn () => Inertia::render('Reports/Receivables/Index'))->name('index');
+            Route::get('/analiticos', fn () => Inertia::render('Reports/Receivables/Analytical'))->name('analyticals');
+            Route::get('/analiticos/imprimir', [ReceivableReportController::class, 'analytical'])->name('analyticals.print');
+            Route::get('/sinteticos', fn () => Inertia::render('Reports/Receivables/Synthetic'))->name('synthetics');
+            Route::get('/sinteticos/imprimir', [ReceivableReportController::class, 'synthetic'])->name('synthetics.print');
+        });
+
+        Route::prefix('pagaveis')->name('payables.')->group(function () {
+            Route::get('/', fn () => Inertia::render('Reports/Payables/Index'))->name('index');
+            Route::get('/analiticos', fn () => Inertia::render('Reports/Payables/Analytical'))->name('analyticals');
+            Route::get('/analiticos/imprimir', [PayableReportController::class, 'analytical'])->name('analyticals.print');
+            Route::get('/sinteticos', fn () => Inertia::render('Reports/Payables/Synthetic'))->name('synthetics');
+            Route::get('/sinteticos/imprimir', [PayableReportController::class, 'synthetic'])->name('synthetics.print');
+        });
+
+        Route::prefix('curva-abc')->name('abc.')->group(function () {
+            Route::get('/clientes', fn () => Inertia::render('Reports/CustomerAbc/Index'))->name('customers');
+            Route::get('/produtos', fn () => Inertia::render('Reports/ProductAbc/Index'))->name('products');
+        });
+
+        Route::get('/curva-abc/clientes/gerar', [CustomerAbcReportController::class, 'generate'])->name('customer-abc.generate');
+        Route::get('/curva-abc/produtos/gerar', [ProductAbcReportController::class, 'generate'])->name('product-abc.generate');
     });
 
     // 8. CONFIGURAÇÕES

@@ -1,4 +1,4 @@
-{{-- layouts/report-base.blade.php --}}
+{{-- layouts/report-landscape-base.blade.php --}}
 <!DOCTYPE html>
 <html>
 
@@ -27,6 +27,7 @@
         @page {
             margin: 10mm;
             counter-increment: page;
+            size: landscape;
         }
 
         body {
@@ -34,7 +35,10 @@
             font-size: 9pt;
             line-height: 1.4;
             color: var(--text-color);
-            width: 210mm;
+            width: 100%;
+            /* Usa 100% da largura disponível em vez de largura fixa */
+            max-width: 297mm;
+            /* Largura máxima (A4 paisagem) */
             margin: 0 auto;
             padding: 1mm;
             counter-reset: page 1;

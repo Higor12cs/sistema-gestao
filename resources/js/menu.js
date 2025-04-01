@@ -254,6 +254,72 @@ export const sidebarItems = [
                             },
                         ],
                     },
+                    {
+                        type: "collapsible",
+                        iconClass: "fas fa-circle",
+                        label: "Recebíveis",
+                        permission: "reports.receivables.index",
+                        subItems: [
+                            {
+                                type: "link",
+                                routeName: "reports.receivables.analyticals",
+                                iconClass: "far fa-circle",
+                                label: "Relatório Analítico",
+                                permission: "reports.receivables.analyticals",
+                            },
+                            {
+                                type: "link",
+                                routeName: "reports.receivables.synthetics",
+                                iconClass: "far fa-circle",
+                                label: "Relatório Sintético",
+                                permission: "reports.receivables.synthetics",
+                            },
+                        ]
+                    },
+                    {
+                        type: "collapsible",
+                        iconClass: "fas fa-circle",
+                        label: "Pagáveis",
+                        permission: "reports.payables.index",
+                        subItems: [
+                            {
+                                type: "link",
+                                routeName: "reports.payables.analyticals",
+                                iconClass: "far fa-circle",
+                                label: "Relatório Analítico",
+                                permission: "reports.payables.analyticals",
+                            },
+                            {
+                                type: "link",
+                                routeName: "reports.payables.synthetics",
+                                iconClass: "far fa-circle",
+                                label: "Relatório Sintético",
+                                permission: "reports.payables.synthetics",
+                            },
+                        ]
+                    },
+                    {
+                        type: "collapsible",
+                        iconClass: "fas fa-circle",
+                        label: "Curva ABC",
+                        permission: "reports.abc.index",
+                        subItems: [
+                            {
+                                type: "link",
+                                routeName: "reports.abc.customers",
+                                iconClass: "far fa-circle",
+                                label: "Clientes",
+                                permission: "reports.abc.customers",
+                            },
+                            {
+                                type: "link",
+                                routeName: "reports.abc.products",
+                                iconClass: "far fa-circle",
+                                label: "Produtos",
+                                permission: "reports.abc.products",
+                            },
+                        ]
+                    },
                 ],
             },
         ],

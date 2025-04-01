@@ -80,6 +80,16 @@ class PermissionSeeder extends Seeder
                 'permissions' => ['analytical', 'synthetic'],
             ],
 
+            'reports.receivables' => [
+                'name' => 'Relatórios de Recebíveis',
+                'permissions' => ['analytical', 'synthetic'],
+            ],
+
+            'reports.payables' => [
+                'name' => 'Relatórios de Pagáveis',
+                'permissions' => ['analytical', 'synthetic'],
+            ],
+
             'sections' => [
                 'name' => 'Seções',
                 'permissions' => ['index', 'create', 'edit', 'destroy'],
