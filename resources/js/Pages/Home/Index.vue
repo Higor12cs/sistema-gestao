@@ -68,7 +68,6 @@ const menuCards = computed(() => {
     const cards = [];
 
     sidebarItems.forEach((section) => {
-        // Coletar todos os itens visíveis na seção
         const visibleCards = [];
 
         section.items.forEach((item) => {
@@ -103,14 +102,12 @@ const menuCards = computed(() => {
             }
         });
 
-        // Só adiciona o header se houver cards visíveis na seção
         if (visibleCards.length > 0) {
             cards.push({
                 type: "header",
                 label: section.label,
             });
 
-            // Adiciona os cards encontrados
             cards.push(...visibleCards);
         }
     });
@@ -134,7 +131,6 @@ onBeforeUnmount(() => {
     <Head title="Home" />
 
     <AuthenticatedLayout>
-        <!-- Header with greeting and time -->
         <div class="d-flex justify-content-between">
             <div>
                 <h4>{{ greeting }}, {{ $page.props.auth.user.name }}!</h4>
@@ -147,15 +143,12 @@ onBeforeUnmount(() => {
             </div>
         </div>
 
-        <!-- Menu Cards Section -->
         <div class="row">
             <template v-for="(item, index) in menuCards" :key="index">
-                <!-- Headers -->
                 <div v-if="item.type === 'header'" class="col-12">
                     <h4 class="mt-4">{{ item.label }}</h4>
                 </div>
 
-                <!-- Cards -->
                 <div
                     v-else-if="item.type === 'card'"
                     class="col-sm-6 col-md-4 col-lg-3 mb-4"

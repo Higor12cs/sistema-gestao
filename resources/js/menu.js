@@ -285,13 +285,13 @@ export const sidebarItems = [
                 label: "Papéis",
                 permission: "roles.index",
             },
-            {
-                type: "link",
-                routeName: "configurations.index",
-                iconClass: "fas fa-cogs",
-                label: "Configurações",
-                permission: "configurations.index",
-            }
+            // {
+            //     type: "link",
+            //     routeName: "configurations.index",
+            //     iconClass: "fas fa-cogs",
+            //     label: "Configurações",
+            //     permission: "configurations.index",
+            // }
         ],
     },
 ];

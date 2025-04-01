@@ -16,6 +16,7 @@ class Receivable extends Model
         'tenant_id',
         'sequential_id',
         'order_id',
+        'chart_account_id',
         'payment_method_id',
         'is_manual',
         'customer_id',
@@ -40,6 +41,11 @@ class Receivable extends Model
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function chartAccount(): BelongsTo
+    {
+        return $this->belongsTo(ChartAccount::class);
     }
 
     public function paymentMethod(): BelongsTo

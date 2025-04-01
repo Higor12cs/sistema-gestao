@@ -843,7 +843,7 @@ class TestSeeder extends Seeder
         $endDate = Carbon::now();
 
         // Create multiple purchases
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 30; $i++) {
             // Randomly select a supplier
             $supplier = $suppliers[array_rand($suppliers)];
 
@@ -990,11 +990,11 @@ class TestSeeder extends Seeder
         }
 
         // Define a date range for orders (last 60 days)
-        $startDate = Carbon::now()->subDays(90);
+        $startDate = Carbon::now()->subDays(60);
         $endDate = Carbon::now();
 
         // Create multiple orders
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             // Randomly select a customer
             $customer = $customers[array_rand($customers)];
 
@@ -1020,7 +1020,7 @@ class TestSeeder extends Seeder
                     'fees' => $fees,
                     'total_cost' => 0, // Will be updated after items are added
                     'total_price' => 0, // Will be updated after items are added
-                    'observation' => "Pedido cliente #{$i} - ".$customer->first_name.' '.$customer->last_name,
+                    'observation' => "PEDIDO CLIENTE #{$i} - ".$customer->first_name.' '.$customer->last_name,
                     'created_by' => $user->id,
                 ]);
 

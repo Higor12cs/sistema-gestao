@@ -150,7 +150,7 @@ onMounted(() => {
             <div class="card-body">
                 <div
                     v-if="purchases.data.length === 0"
-                    class="alert alert-warning"
+                    class="alert alert-info"
                 >
                     Nenhuma compra encontrada com os filtros aplicados.
                 </div>

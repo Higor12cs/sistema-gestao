@@ -328,7 +328,7 @@ const isAllSelected = computed(() => {
 
                 <div
                     v-else-if="payables.data.length === 0"
-                    class="alert alert-warning"
+                    class="alert alert-info"
                 >
                     Nenhum pagável encontrado com os filtros aplicados.
                 </div>

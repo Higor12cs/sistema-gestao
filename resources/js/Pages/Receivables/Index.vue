@@ -335,7 +335,7 @@ const isAllSelected = computed(() => {
 
                 <div
                     v-else-if="receivables.data.length === 0"
-                    class="alert alert-warning"
+                    class="alert alert-info"
                 >
                     Nenhum recebível encontrado com os filtros aplicados.
                 </div>

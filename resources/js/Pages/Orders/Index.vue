@@ -153,7 +153,7 @@ onMounted(() => {
             <div class="card-body">
                 <div
                     v-if="orders.data.length === 0"
-                    class="alert alert-warning"
+                    class="alert alert-info"
                 >
                     Nenhum pedido encontrado com os filtros aplicados.
                 </div>

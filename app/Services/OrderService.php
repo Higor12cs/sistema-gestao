@@ -151,9 +151,9 @@ class OrderService
                 $amount = round((float) $receivableData['amount'], 2);
 
                 Receivable::create([
+                    'chart_account_id' => $defaultChartAccountId,
                     'order_id' => $order->id,
                     'customer_id' => $order->customer_id,
-                    'chart_account_id' => $defaultChartAccountId,
                     'payment_method_id' => $receivableData['payment_method_id'],
                     'is_manual' => false,
                     'issue_date' => $order->issue_date,

@@ -250,7 +250,7 @@ onMounted(() => {
 
 <template>
     <form @submit.prevent="submit">
-        <div v-if="networkError" class="alert alert-warning mb-3">
+        <div v-if="networkError" class="alert alert-info mb-3">
             <strong>{{ errorMessage }}</strong>
             <button
                 type="button"

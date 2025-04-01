@@ -322,7 +322,7 @@ const formatSequentialId = (id) => {
                                 </tr>
                             </tbody>
                         </table>
-                        <div v-else class="alert alert-warning">
+                        <div v-else class="alert alert-info">
                             Nenhuma transação associada a este pagamento.
                         </div>
                     </div>

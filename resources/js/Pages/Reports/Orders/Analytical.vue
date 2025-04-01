@@ -36,13 +36,13 @@ const handleSubmit = () => {
 </script>
 
 <template>
-    <Head title="Relatórios de Pedidos Analíticos" />
+    <Head title="Relatório Analítico de Pedidos" />
     <AuthenticatedLayout>
         <div class="d-flex justify-content-between mb-3">
-            <h4>Relatórios de Pedidos Analíticos</h4>
+            <h4>Relatório Analítico de Pedidos</h4>
         </div>
         <div class="card">
-            <div class="card-header">Relatórios de Pedidos</div>
+            <div class="card-header">Filtros</div>
             <div class="card-body">
                 <form @submit.prevent="handleSubmit">
                     <div class="row">

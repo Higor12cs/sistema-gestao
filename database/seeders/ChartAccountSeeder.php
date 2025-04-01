@@ -49,7 +49,7 @@ class ChartAccountSeeder extends Seeder
             'tenant_id' => $tenantId,
             'parent_id' => $entradas->id,
             'code' => '1.1',
-            'name' => 'Vendas',
+            'name' => 'Receitas de Vendas',
             'description' => 'Receitas provenientes de vendas de produtos',
             'allows_transactions' => false,
             'active' => true,

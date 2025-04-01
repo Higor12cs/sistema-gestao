@@ -44,7 +44,7 @@ const handleSubmit = () => {
             <h4>Relatório Sintético de Pedidos</h4>
         </div>
         <div class="card">
-            <div class="card-header">Filtros do Relatório</div>
+            <div class="card-header">Filtros</div>
             <div class="card-body">
                 <form @submit.prevent="handleSubmit">
                     <div class="row">

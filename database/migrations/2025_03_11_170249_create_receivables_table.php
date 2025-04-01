@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignUuid('tenant_id')->index()->nullable()->constrained();
             $table->unsignedBigInteger('sequential_id')->index();
             $table->foreignUuid('order_id')->nullable()->constrained();
+            $table->foreignUuid('chart_account_id')->constrained();
             $table->foreignUuid('payment_method_id')->constrained();
             $table->boolean('is_manual')->default(false);
             $table->foreignUuid('customer_id')->constrained();

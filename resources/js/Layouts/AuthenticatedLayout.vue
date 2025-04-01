@@ -107,7 +107,6 @@ onMounted(() => {
     updateTime();
     setInterval(updateTime, 1000);
 
-    // Carregar preferência de modo escuro do localStorage
     const savedDarkMode = localStorage.getItem("darkMode");
     if (savedDarkMode === "true") {
         darkMode.value = true;
@@ -169,7 +168,10 @@ onMounted(() => {
         </nav>
 
         <aside class="main-sidebar sidebar-dark-primary elevation-2">
-            <Link href="/" class="brand-link d-flex justify-content-center">
+            <Link
+                :href="route('home.index')"
+                class="brand-link d-flex justify-content-center"
+            >
                 <span class="brand-text font-weight-semibold">
                     {{ appName }}
                 </span>

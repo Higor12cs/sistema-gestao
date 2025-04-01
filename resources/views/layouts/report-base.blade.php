@@ -1,3 +1,4 @@
+{{-- layouts/report-base.blade.php --}}
 <!DOCTYPE html>
 <html>
 
@@ -66,8 +67,8 @@
         .summary {
             background-color: var(--secondary-color);
             padding: 4mm;
-            margin-bottom: 8mm;
             border-radius: 2mm;
+            margin-bottom: 8mm;
         }
 
         .summary-title {
@@ -101,6 +102,21 @@
             font-size: 12pt;
             font-weight: 700;
             color: var(--primary-color);
+        }
+
+        .section {
+            margin-bottom: 4mm;
+        }
+
+        .section-title {
+            font-size: 9pt;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 2mm;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1mm;
         }
 
         .order {
@@ -157,21 +173,6 @@
 
         .grid-column {
             width: 48%;
-        }
-
-        .section {
-            margin-bottom: 4mm;
-        }
-
-        .section-title {
-            font-size: 9pt;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 2mm;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 1mm;
         }
 
         .info-list {
@@ -321,100 +322,6 @@
 
         .signature-label {
             font-size: 8pt;
-            color: var(--text-color);
-        }
-
-        .insights-section {
-            margin-bottom: 8mm;
-        }
-
-        .insight-title {
-            font-size: 12pt;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 3mm;
-            text-align: center;
-            text-transform: uppercase;
-        }
-
-        .insight-grid {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
-
-        .insight-card {
-            width: 32%;
-            background-color: var(--secondary-color);
-            border-radius: 2mm;
-            padding: 2mm;
-            margin-bottom: 3mm;
-        }
-
-        .insight-header {
-            font-size: 9pt;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 2mm;
-            text-align: center;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 1mm;
-        }
-
-        .insight-content {
-            font-size: 8pt;
-        }
-
-        .insight-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .insight-table th {
-            background-color: rgba(255, 255, 255, 0.5);
-            text-align: left;
-            padding: 1mm;
-            font-size: 7pt;
-        }
-
-        .insight-table td {
-            padding: 1mm;
-            border-bottom: 1px dotted var(--border-color);
-        }
-
-        .performance-metrics {
-            margin-bottom: 8mm;
-        }
-
-        .metrics-row {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .metric-card {
-            width: 32%;
-            text-align: center;
-            background-color: var(--secondary-color);
-            border-radius: 2mm;
-            padding: 3mm;
-        }
-
-        .metric-title {
-            font-size: 9pt;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 2mm;
-        }
-
-        .metric-value {
-            font-size: 18pt;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 1mm;
-        }
-
-        .metric-desc {
-            font-size: 7pt;
             color: var(--text-color);
         }
     </style>

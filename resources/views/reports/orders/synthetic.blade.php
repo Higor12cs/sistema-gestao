@@ -1,3 +1,4 @@
+{{-- reports/orders/synthetic.blade.php --}}
 @extends('layouts.report-base')
 
 @section('title', 'Relatório Sintético de Pedidos')
