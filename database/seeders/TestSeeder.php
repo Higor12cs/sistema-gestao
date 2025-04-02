@@ -734,7 +734,7 @@ class TestSeeder extends Seeder
             [
                 'name' => 'Caixa',
                 'type' => 'cash',
-                'current_balance' => 5000.00,
+                'current_balance' => 0,
                 'active' => true,
             ],
             [
@@ -743,7 +743,7 @@ class TestSeeder extends Seeder
                 'bank_name' => 'Itaú',
                 'agency' => '1234',
                 'account_number' => '56789-0',
-                'current_balance' => 15000.00,
+                'current_balance' => 0,
                 'active' => true,
             ],
             [
@@ -752,7 +752,7 @@ class TestSeeder extends Seeder
                 'bank_name' => 'Bradesco',
                 'agency' => '5678',
                 'account_number' => '12345-6',
-                'current_balance' => 8000.00,
+                'current_balance' => 0,
                 'active' => true,
             ],
         ];
