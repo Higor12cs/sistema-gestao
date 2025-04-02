@@ -36,17 +36,24 @@ const formatCurrency = (value) => {
     if (isNaN(numValue) || value === null || value === undefined)
         return "R$ 0,00";
 
-    if (numValue >= 1000000) {
-        return `R$ ${(numValue / 1000000).toFixed(2)}M`;
-    } else if (numValue >= 100000) {
-        return `R$ ${(numValue / 1000).toFixed(0)}K`;
-    } else if (numValue >= 10000) {
-        return `R$ ${(numValue / 1000).toFixed(1)}K`;
-    } else if (numValue >= 1000) {
-        return `R$ ${(numValue / 1000).toFixed(2)}K`;
+    const isNegative = numValue < 0;
+    const absValue = Math.abs(numValue);
+
+    let formattedValue;
+
+    if (absValue >= 1000000) {
+        formattedValue = `R$ ${(absValue / 1000000).toFixed(2)}M`;
+    } else if (absValue >= 100000) {
+        formattedValue = `R$ ${(absValue / 1000).toFixed(0)}K`;
+    } else if (absValue >= 10000) {
+        formattedValue = `R$ ${(absValue / 1000).toFixed(1)}K`;
+    } else if (absValue >= 1000) {
+        formattedValue = `R$ ${(absValue / 1000).toFixed(2)}K`;
     } else {
-        return `R$ ${numValue.toFixed(2).replace(".", ",")}`;
+        formattedValue = `R$ ${absValue.toFixed(2).replace(".", ",")}`;
     }
+
+    return isNegative ? formattedValue.replace("R$", "-R$") : formattedValue;
 };
 
 const formatNumber = (value, decimals = 0) => {
