@@ -110,11 +110,8 @@ const renderChart = () => {
         const ctx = cashFlowChartCanvas.value.getContext("2d");
 
         const labels = (cashFlowData.value || []).map((day) => {
-            const date = new Date(day.date);
-            return date.toLocaleDateString("pt-BR", {
-                day: "2-digit",
-                month: "2-digit",
-            });
+            const [year, month, day_num] = day.date.split("-");
+            return `${day_num}/${month}`;
         });
 
         const receivablesData = (cashFlowData.value || []).map(
@@ -251,10 +248,13 @@ const closeDailyDetailsModal = () => {
 };
 
 const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("pt-BR", {
-        timeZone: "America/Sao_Paulo",
-    });
+    if (dateString.includes('T')) {
+        dateString = dateString.split('T')[0];
+    }
+
+    const [year, month, day] = dateString.split('-');
+
+    return `${day}/${month}/${year}`;
 };
 
 onMounted(() => {
@@ -354,7 +354,7 @@ onMounted(() => {
                                   )
                         }}</span>
                         <span class="text-muted text-sm"
-                            >Saldo Atual + Receber - Pagar</span
+                            >Saldo + Receber - Pagar</span
                         >
                     </div>
                     <div v-if="isLoading" class="overlay">

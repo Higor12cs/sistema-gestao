@@ -111,11 +111,8 @@ const renderChart = () => {
         const ctx = salesChartCanvas.value.getContext("2d");
 
         const labels = (salesByDay.value || []).map((day) => {
-            const date = new Date(day.date);
-            return date.toLocaleDateString("pt-BR", {
-                day: "2-digit",
-                month: "2-digit",
-            });
+            const [year, month, day_num] = day.date.split("-");
+            return `${day_num}/${month}`;
         });
 
         const salesValues = (salesByDay.value || []).map(

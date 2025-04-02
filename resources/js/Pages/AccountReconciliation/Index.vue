@@ -131,11 +131,13 @@ const formatCurrency = (value) => {
 };
 
 const formatDate = (dateString) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("pt-BR", {
-        timeZone: "America/Sao_Paulo",
-    });
+    if (dateString.includes('T')) {
+        dateString = dateString.split('T')[0];
+    }
+
+    const [year, month, day] = dateString.split('-');
+
+    return `${day}/${month}/${year}`;
 };
 
 const formatSequentialId = (id) => {

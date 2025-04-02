@@ -8,6 +8,7 @@ use App\Models\Receivable;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -34,18 +35,20 @@ class CashFlowController extends Controller
     {
         $date = Carbon::parse($request->input('date'))->format('Y-m-d');
 
-        $transactions = Transaction::where('tenant_id', auth()->user()->tenant_id)
+        $transactions = Transaction::where('tenant_id', Auth::user()->tenant_id)
             ->whereDate('transaction_date', $date)
             ->with(['account', 'receivable.customer', 'payable.supplier'])
             ->get();
 
-        $receivables = Receivable::where('tenant_id', auth()->user()->tenant_id)
+        $receivables = Receivable::where('tenant_id', Auth::user()->tenant_id)
             ->whereDate('due_date', $date)
+            ->where('status', '!=', 'paid')
             ->with('customer', 'paymentMethod')
             ->get();
 
-        $payables = Payable::where('tenant_id', auth()->user()->tenant_id)
+        $payables = Payable::where('tenant_id', Auth::user()->tenant_id)
             ->whereDate('due_date', $date)
+            ->where('status', '!=', 'paid')
             ->with('supplier', 'paymentMethod')
             ->get();
 
@@ -66,21 +69,21 @@ class CashFlowController extends Controller
         ];
     }
 
-    private function calculateRealBalanceUntilDate($date)
+    private function calculateRealBalanceUntilDate($endDate)
     {
         $accountsBalance = DB::table('accounts')
-            ->where('tenant_id', auth()->user()->tenant_id)
+            ->where('tenant_id', Auth::user()->tenant_id)
             ->where('active', true)
             ->sum('current_balance');
 
-        $futureTransactionsBalance = Transaction::where('tenant_id', auth()->user()->tenant_id)
-            ->where('transaction_date', '>', $date)
+        $transactionsAfterEndDate = Transaction::where('tenant_id', Auth::user()->tenant_id)
+            ->where('transaction_date', '>', $endDate)
             ->selectRaw("SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END) as balance")
             ->first();
 
-        $futureAmount = $futureTransactionsBalance ? $futureTransactionsBalance->balance : 0;
+        $amountAfterEndDate = $transactionsAfterEndDate ? $transactionsAfterEndDate->balance : 0;
 
-        return $accountsBalance - $futureAmount;
+        return $accountsBalance - $amountAfterEndDate;
     }
 
     private function getCashFlowData($startDate, $endDate)
@@ -94,7 +97,7 @@ class CashFlowController extends Controller
             DB::raw("SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as income"),
             DB::raw("SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) as expense")
         )
-            ->where('tenant_id', auth()->user()->tenant_id)
+            ->where('tenant_id', Auth::user()->tenant_id)
             ->whereBetween('transaction_date', [$startDate, $endDate])
             ->groupBy('date')
             ->get()
@@ -104,7 +107,7 @@ class CashFlowController extends Controller
             DB::raw('DATE(due_date) as date'),
             DB::raw('SUM(remaining_amount) as amount')
         )
-            ->where('tenant_id', auth()->user()->tenant_id)
+            ->where('tenant_id', Auth::user()->tenant_id)
             ->where('status', '!=', 'paid')
             ->where('remaining_amount', '>', 0)
             ->whereBetween('due_date', [$startDate, $endDate])
@@ -116,7 +119,7 @@ class CashFlowController extends Controller
             DB::raw('DATE(due_date) as date'),
             DB::raw('SUM(remaining_amount) as amount')
         )
-            ->where('tenant_id', auth()->user()->tenant_id)
+            ->where('tenant_id', Auth::user()->tenant_id)
             ->where('status', '!=', 'paid')
             ->where('remaining_amount', '>', 0)
             ->whereBetween('due_date', [$startDate, $endDate])
@@ -176,27 +179,27 @@ class CashFlowController extends Controller
 
     private function getSummaryData($startDate, $endDate)
     {
-        $currentBalance = $this->calculateRealBalanceUntilDate($startDate);
+        $currentBalance = $this->calculateRealBalanceUntilDate($endDate);
 
-        $totalReceivables = Receivable::where('tenant_id', auth()->user()->tenant_id)
+        $totalReceivables = Receivable::where('tenant_id', Auth::user()->tenant_id)
             ->where('status', '!=', 'paid')
             ->where('remaining_amount', '>', 0)
             ->whereBetween('due_date', [$startDate, $endDate])
             ->sum('remaining_amount');
 
-        $totalPayables = Payable::where('tenant_id', auth()->user()->tenant_id)
+        $totalPayables = Payable::where('tenant_id', Auth::user()->tenant_id)
             ->where('status', '!=', 'paid')
             ->where('remaining_amount', '>', 0)
             ->whereBetween('due_date', [$startDate, $endDate])
             ->sum('remaining_amount');
 
-        $overdueReceivables = Receivable::where('tenant_id', auth()->user()->tenant_id)
+        $overdueReceivables = Receivable::where('tenant_id', Auth::user()->tenant_id)
             ->where('status', '!=', 'paid')
             ->where('remaining_amount', '>', 0)
             ->where('due_date', '<', Carbon::now())
             ->sum('remaining_amount');
 
-        $overduePayables = Payable::where('tenant_id', auth()->user()->tenant_id)
+        $overduePayables = Payable::where('tenant_id', Auth::user()->tenant_id)
             ->where('status', '!=', 'paid')
             ->where('remaining_amount', '>', 0)
             ->where('due_date', '<', Carbon::now())
@@ -214,7 +217,7 @@ class CashFlowController extends Controller
 
     private function getAccountBalances()
     {
-        return Account::where('tenant_id', auth()->user()->tenant_id)
+        return Account::where('tenant_id', Auth::user()->tenant_id)
             ->where('active', true)
             ->select('id', 'name', 'current_balance')
             ->get();

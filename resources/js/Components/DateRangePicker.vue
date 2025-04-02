@@ -166,26 +166,34 @@ function initializePicker() {
 
     try {
         const ranges = {
-            Hoje: [window.moment(), window.moment()],
-            Ontem: [
-                window.moment().subtract(1, "days"),
-                window.moment().subtract(1, "days"),
-            ],
-            "Últimos 7 dias": [
+            "Hoje": [window.moment(), window.moment()],
+            // "Ontem": [
+            //     window.moment().subtract(1, "days"),
+            //     window.moment().subtract(1, "days"),
+            // ],
+            "Últimos 7 Dias": [
                 window.moment().subtract(6, "days"),
                 window.moment(),
             ],
-            "Últimos 30 dias": [
-                window.moment().subtract(29, "days"),
-                window.moment(),
+            // "Últimos 30 dias": [
+            //     window.moment().subtract(29, "days"),
+            //     window.moment(),
+            // ],
+            "Mês Passado": [
+                window.moment().subtract(1, "month").startOf("month"),
+                window.moment().subtract(1, "month").endOf("month"),
             ],
-            "Este mês": [
+            "Este Mês": [
                 window.moment().startOf("month"),
                 window.moment().endOf("month"),
             ],
-            "Mês passado": [
-                window.moment().subtract(1, "month").startOf("month"),
-                window.moment().subtract(1, "month").endOf("month"),
+            "Próximo Mês": [
+                window.moment().add(1, "month").startOf("month"),
+                window.moment().add(1, "month").endOf("month"),
+            ],
+            "Este Ano": [
+                window.moment().startOf("year"),
+                window.moment().endOf("year"),
             ],
         };
 
