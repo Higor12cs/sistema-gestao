@@ -35,6 +35,7 @@ class ReceivableRequest extends FormRequest
         return [
             'receivables' => 'required|array|min:1',
             'receivables.*.customer_id' => 'required|exists:customers,id',
+            'receivables.*.chart_account_id' => 'required|exists:chart_accounts,id',
             'receivables.*.payment_method_id' => 'required|exists:payment_methods,id',
             'receivables.*.issue_date' => 'required|date',
             'receivables.*.due_date' => 'required|date|after_or_equal:receivables.*.issue_date',

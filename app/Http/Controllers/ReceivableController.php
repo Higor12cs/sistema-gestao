@@ -67,6 +67,7 @@ class ReceivableController extends Controller
             foreach ($request->receivables as $receivableData) {
                 Receivable::create([
                     'customer_id' => $receivableData['customer_id'],
+                    'chart_account_id' => $receivableData['chart_account_id'],
                     'payment_method_id' => $receivableData['payment_method_id'],
                     'is_manual' => true,
                     'issue_date' => $receivableData['issue_date'],
