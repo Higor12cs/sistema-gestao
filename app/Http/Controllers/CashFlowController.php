@@ -34,19 +34,16 @@ class CashFlowController extends Controller
     {
         $date = Carbon::parse($request->input('date'))->format('Y-m-d');
 
-        // Get transactions for the day
         $transactions = Transaction::where('tenant_id', auth()->user()->tenant_id)
             ->whereDate('transaction_date', $date)
             ->with(['account', 'receivable.customer', 'payable.supplier'])
             ->get();
 
-        // Get receivables due on that day
         $receivables = Receivable::where('tenant_id', auth()->user()->tenant_id)
             ->whereDate('due_date', $date)
             ->with('customer', 'paymentMethod')
             ->get();
 
-        // Get payables due on that day
         $payables = Payable::where('tenant_id', auth()->user()->tenant_id)
             ->whereDate('due_date', $date)
             ->with('supplier', 'paymentMethod')
@@ -73,13 +70,11 @@ class CashFlowController extends Controller
     {
         $days = $startDate->diffInDays($endDate) + 1;
 
-        // Get current account balance
         $currentBalance = DB::table('accounts')
             ->where('tenant_id', auth()->user()->tenant_id)
             ->where('active', true)
             ->sum('current_balance');
 
-        // Get actual transactions in the period
         $actualTransactions = Transaction::select(
             DB::raw('DATE(transaction_date) as date'),
             DB::raw("SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as income"),
@@ -91,7 +86,6 @@ class CashFlowController extends Controller
             ->get()
             ->keyBy('date');
 
-        // Get expected receivables in the period
         $expectedReceivables = Receivable::select(
             DB::raw('DATE(due_date) as date'),
             DB::raw('SUM(remaining_amount) as amount')
@@ -103,7 +97,6 @@ class CashFlowController extends Controller
             ->get()
             ->keyBy('date');
 
-        // Get expected payables in the period
         $expectedPayables = Payable::select(
             DB::raw('DATE(due_date) as date'),
             DB::raw('SUM(remaining_amount) as amount')
@@ -115,33 +108,27 @@ class CashFlowController extends Controller
             ->get()
             ->keyBy('date');
 
-        // Prepare data containers for all days in the period
         $dates = [];
         $expected_incomes = [];
         $expected_expenses = [];
 
-        // Create array with dates for the period
         for ($i = 0; $i < $days; $i++) {
             $currentDate = $startDate->copy()->addDays($i);
             $dateString = $currentDate->format('Y-m-d');
             $dates[] = $dateString;
 
-            // Initialize values with actual transactions
             $expected_incomes[$dateString] = isset($actualTransactions[$dateString]) ? $actualTransactions[$dateString]->income : 0;
             $expected_expenses[$dateString] = isset($actualTransactions[$dateString]) ? $actualTransactions[$dateString]->expense : 0;
 
-            // Add expected receivables
             if (isset($expectedReceivables[$dateString])) {
                 $expected_incomes[$dateString] += $expectedReceivables[$dateString]->amount;
             }
 
-            // Add expected payables
             if (isset($expectedPayables[$dateString])) {
                 $expected_expenses[$dateString] += $expectedPayables[$dateString]->amount;
             }
         }
 
-        // Prepare daily data with accumulated balance
         $dailyData = [];
         $runningBalance = $currentBalance;
         $cumulativeIncome = 0;
@@ -151,12 +138,10 @@ class CashFlowController extends Controller
             $cumulativeIncome += $expected_incomes[$dateString];
             $cumulativeExpense += $expected_expenses[$dateString];
 
-            // Update running balance for each day
             $dailyIncome = isset($actualTransactions[$dateString]) ? $actualTransactions[$dateString]->income : 0;
             $dailyExpense = isset($actualTransactions[$dateString]) ? $actualTransactions[$dateString]->expense : 0;
             $runningBalance += ($dailyIncome - $dailyExpense);
 
-            // Calculate projected balance as running balance + remaining income - remaining expense
             $projectedBalance = $currentBalance + $cumulativeIncome - $cumulativeExpense;
 
             $dailyData[] = [
@@ -175,34 +160,36 @@ class CashFlowController extends Controller
 
     private function getSummaryData($startDate, $endDate)
     {
-        // Total expected receivables in the period
+        $currentBalance = DB::table('accounts')
+            ->where('tenant_id', auth()->user()->tenant_id)
+            ->where('active', true)
+            ->sum('current_balance');
+
         $totalReceivables = Receivable::where('tenant_id', auth()->user()->tenant_id)
             ->where('status', '!=', 'paid')
             ->whereBetween('due_date', [$startDate, $endDate])
             ->sum('remaining_amount');
 
-        // Total expected payables in the period
         $totalPayables = Payable::where('tenant_id', auth()->user()->tenant_id)
             ->where('status', '!=', 'paid')
             ->whereBetween('due_date', [$startDate, $endDate])
             ->sum('remaining_amount');
 
-        // Overdue receivables
         $overdueReceivables = Receivable::where('tenant_id', auth()->user()->tenant_id)
             ->where('status', '!=', 'paid')
             ->where('due_date', '<', Carbon::now())
             ->sum('remaining_amount');
 
-        // Overdue payables
         $overduePayables = Payable::where('tenant_id', auth()->user()->tenant_id)
             ->where('status', '!=', 'paid')
             ->where('due_date', '<', Carbon::now())
             ->sum('remaining_amount');
 
         return [
+            'currentBalance' => $currentBalance,
             'totalReceivables' => $totalReceivables,
             'totalPayables' => $totalPayables,
-            'expectedBalance' => $totalReceivables - $totalPayables,
+            'expectedBalance' => $currentBalance + $totalReceivables - $totalPayables,
             'overdueReceivables' => $overdueReceivables,
             'overduePayables' => $overduePayables,
         ];

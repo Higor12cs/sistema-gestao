@@ -353,7 +353,9 @@ onMounted(() => {
                                       summaryData.expectedBalance || 0
                                   )
                         }}</span>
-                        <span class="text-muted text-sm">No Período</span>
+                        <span class="text-muted text-sm"
+                            >Saldo Atual + Receber - Pagar</span
+                        >
                     </div>
                     <div v-if="isLoading" class="overlay">
                         <i class="fas fa-sync-alt fa-spin"></i>

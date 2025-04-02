@@ -121,8 +121,6 @@ class ReceivablePaymentController extends Controller
             }
         });
 
-        dd(ReceivablePayment::all()->last());
-
         return to_route('receivables.payments.index')->with('success', 'Baixa registrada com sucesso!');
     }
 
