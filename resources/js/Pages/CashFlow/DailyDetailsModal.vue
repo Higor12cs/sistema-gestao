@@ -28,7 +28,7 @@ watch(
     (value) => {
         isVisible.value = value;
         if (value && window.$) {
-            setTimeout(() => $("#dailyDetailsModal").modal("show"), 100);
+            setTimeout(() => $("#dailyDetailsModal").modal("show"), 500);
         } else if (!value && window.$) {
             $("#dailyDetailsModal").modal("hide");
         }
