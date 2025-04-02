@@ -105,9 +105,9 @@ onMounted(() => {
                             id="detailsTabs"
                             role="tablist"
                         >
-                            <li class="nav-item active">
+                            <li class="nav-item">
                                 <a
-                                    class="nav-link"
+                                    class="nav-link active"
                                     id="receivables-tab"
                                     data-toggle="tab"
                                     href="#receivables"
