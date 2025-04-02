@@ -16,8 +16,8 @@ const isVisible = ref(props.visible);
 const initializeModal = () => {
     if (window.$) {
         $("#dailyDetailsModal").modal({
-            backdrop: "static",
-            keyboard: false,
+            // backdrop: "static",
+            // keyboard: false,
         });
         $("#dailyDetailsModal").on("hidden.bs.modal", () => emit("close"));
     }
@@ -53,11 +53,11 @@ const formatCurrency = (value) => {
 };
 
 const formatDate = (dateString) => {
-    if (dateString.includes('T')) {
-        dateString = dateString.split('T')[0];
+    if (dateString.includes("T")) {
+        dateString = dateString.split("T")[0];
     }
 
-    const [year, month, day] = dateString.split('-');
+    const [year, month, day] = dateString.split("-");
 
     return `${day}/${month}/${year}`;
 };
@@ -97,7 +97,7 @@ onMounted(() => {
                         <div class="spinner-border text-primary" role="status">
                             <span class="sr-only">Carregando...</span>
                         </div>
-                        <p class="mt-2">Carregando detalhes...</p>
+                        <p class="mt-2">Carregando...</p>
                     </div>
                     <div v-else>
                         <ul
@@ -105,18 +105,7 @@ onMounted(() => {
                             id="detailsTabs"
                             role="tablist"
                         >
-                            <li class="nav-item">
-                                <a
-                                    class="nav-link active"
-                                    id="transactions-tab"
-                                    data-toggle="tab"
-                                    href="#transactions"
-                                    role="tab"
-                                >
-                                    Transações
-                                </a>
-                            </li>
-                            <li class="nav-item">
+                            <li class="nav-item active">
                                 <a
                                     class="nav-link"
                                     id="receivables-tab"
@@ -136,6 +125,17 @@ onMounted(() => {
                                     role="tab"
                                 >
                                     Pagáveis
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    id="transactions-tab"
+                                    data-toggle="tab"
+                                    href="#transactions"
+                                    role="tab"
+                                >
+                                    Transações
                                 </a>
                             </li>
                         </ul>

@@ -6,7 +6,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import { Head } from "@inertiajs/vue3";
 import DateRangePicker from "@/Components/DateRangePicker.vue";
-import DailyDetailsModal from "@/Components/CashFlow/DailyDetailsModal.vue";
+import DailyDetailsModal from "@/Pages/CashFlow/DailyDetailsModal.vue";
 import { Chart } from "chart.js";
 import { registerables } from "chart.js";
 
