@@ -59,8 +59,33 @@ function initTreeview() {
         try {
             $('[data-widget="treeview"]').Treeview("destroy");
         } catch (e) {}
+
         setTimeout(function () {
             $('[data-widget="treeview"]').Treeview("init");
+
+            try {
+                $('[data-widget="pushmenu"]').PushMenu("destroy");
+            } catch (e) {}
+
+            $('[data-widget="pushmenu"]').PushMenu({
+                autoCollapseSize: 992,
+                enableRemember: false,
+                collapseScreenSize: 992,
+            });
+
+            $(document).on("click", function (e) {
+                if (
+                    $(window).width() < 992 &&
+                    $("body").hasClass("sidebar-open")
+                ) {
+                    if (
+                        !$(e.target).closest(".main-sidebar").length &&
+                        !$(e.target).closest('[data-widget="pushmenu"]').length
+                    ) {
+                        $('[data-widget="pushmenu"]').PushMenu("collapse");
+                    }
+                }
+            });
         }, 200);
     });
 }
