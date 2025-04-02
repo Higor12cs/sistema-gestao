@@ -47,8 +47,8 @@
         .header {
             text-align: center;
             padding-bottom: 5mm;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 5mm;
+            /* border-bottom: 1px solid var(--border-color); */
+            /* margin-bottom: 5mm; */
         }
 
         .report-title {
@@ -346,8 +346,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="report-title">@yield('title')</div>
-            <div class="report-subtitle">@yield('subtitle')</div>
+            {{-- <div class="report-title">@yield('title')</div>
+            <div class="report-subtitle">@yield('subtitle')</div> --}}
             <div class="report-date">Relatório gerado em {{ now()->format('d/m/Y H:i:s') }}</div>
         </div>
 
