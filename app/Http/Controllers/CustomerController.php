@@ -102,7 +102,7 @@ class CustomerController extends Controller
             'data' => $customers->map(function (Customer $customer) {
                 return [
                     'id' => $customer->id,
-                    'name' => $customer->first_name.' '.$customer->last_name.' | '.$customer->legal_name,
+                    'name' => $customer->name,
                 ];
             }),
         ]);
