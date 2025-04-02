@@ -161,6 +161,12 @@ export const sidebarItems = [
                     },
                 ],
             },
+            {
+                type: "link",
+                routeName: "cash-flow.index",
+                iconClass: "fas fa-chart-area",
+                label: "Fluxo de Caixa",
+            },
         ],
     },
 
@@ -274,7 +280,7 @@ export const sidebarItems = [
                                 label: "Relatório Sintético",
                                 permission: "reports.receivables.synthetics",
                             },
-                        ]
+                        ],
                     },
                     {
                         type: "collapsible",
@@ -296,7 +302,7 @@ export const sidebarItems = [
                                 label: "Relatório Sintético",
                                 permission: "reports.payables.synthetics",
                             },
-                        ]
+                        ],
                     },
                     {
                         type: "collapsible",
@@ -318,7 +324,7 @@ export const sidebarItems = [
                                 label: "Produtos",
                                 permission: "reports.abc.products",
                             },
-                        ]
+                        ],
                     },
                 ],
             },

@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CashFlowController;
 use App\Http\Controllers\ChartAccountController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\CustomerController;
@@ -211,6 +212,12 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
         Route::get('/{chartAccount:sequential_id}/editar', 'edit')->name('edit');
         Route::put('/{chartAccount}', 'update')->name('update');
         Route::delete('/{chartAccount}', 'destroy')->name('destroy');
+    });
+
+    // Fluxo de Caixa
+    Route::controller(CashFlowController::class)->prefix('fluxo-caixa')->name('cash-flow.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/detalhes-diarios', 'getDailyDetails')->name('daily-details');
     });
 
     // 6. ESTOQUE

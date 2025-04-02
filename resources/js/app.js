@@ -4,28 +4,25 @@ import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 import { setupPlugins } from "./plugins";
 import { setupThirdParty } from "./bootstrap";
-import { toast } from 'vue3-toastify'; // Importar diretamente o toast da biblioteca
+import { toast } from "vue3-toastify";
 
 import "../css/app.css";
 import "../css/toastify.css";
 import "icheck-bootstrap/icheck-bootstrap.min.css";
 import "select2/dist/css/select2.css";
 import "admin-lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css";
-import 'vue3-toastify/dist/index.css';
+import "vue3-toastify/dist/index.css";
 
 setupThirdParty();
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
-// Manipulador de eventos para respostas inválidas utilizando Vue3Toastify
-router.on('invalid', (event) => {
+router.on("invalid", (event) => {
     const responseBody = event.detail.response?.data;
     if (responseBody?.error_message) {
-        // Usando diretamente o toast importado da biblioteca
         toast.error(responseBody.error_message, {
-            autoClose: 3000, // 3 segundos
+            autoClose: 3000,
             position: toast.POSITION.TOP_RIGHT,
-            // Você pode adicionar mais opções aqui conforme necessário
         });
         event.preventDefault();
     }
@@ -51,7 +48,7 @@ createInertiaApp({
 
         return app;
     },
-    scrollRegions: ['.main-sidebar .sidebar'],
+    scrollRegions: [".main-sidebar .sidebar"],
     progress: {
         color: "#007BFF",
     },
@@ -61,7 +58,7 @@ function initTreeview() {
     jQuery(function () {
         try {
             $('[data-widget="treeview"]').Treeview("destroy");
-        } catch (e) { }
+        } catch (e) {}
         setTimeout(function () {
             $('[data-widget="treeview"]').Treeview("init");
         }, 200);

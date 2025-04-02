@@ -14,13 +14,13 @@ class CustomerAbcReportController extends Controller
     {
         $startDate = $request->get('start_date');
         $endDate = $request->get('end_date');
-        $analysisType = $request->get('analysis_type', 'value'); // value or quantity
+        $analysisType = $request->get('analysis_type', 'value');
 
-        // Construir a query base para obter os dados necessários
         $query = Order::query()
             ->join('customers', 'orders.customer_id', '=', 'customers.id')
             ->select(
                 'customers.id',
+                'customers.sequential_id',
                 'customers.first_name',
                 'customers.last_name',
                 DB::raw('COUNT(orders.id) as order_count'),
@@ -28,26 +28,21 @@ class CustomerAbcReportController extends Controller
             )
             ->groupBy('customers.id', 'customers.first_name', 'customers.last_name');
 
-        // Aplicar filtro de data se fornecido
         if ($startDate && $endDate) {
             $query->whereBetween('orders.issue_date', [$startDate, $endDate]);
         }
 
-        // Obter todos os clientes com valores
         $customers = $query->get();
 
-        // Ordenar os clientes com base no tipo de análise
         if ($analysisType === 'value') {
             $customers = $customers->sortByDesc('total_value');
         } else {
             $customers = $customers->sortByDesc('order_count');
         }
 
-        // Calcular totais
         $totalValue = $customers->sum('total_value');
         $totalOrders = $customers->sum('order_count');
 
-        // Calcular os percentuais acumulados e classificar em A, B, C
         $accumulatedPercentage = 0;
         $classifiedCustomers = [];
 
@@ -58,7 +53,6 @@ class CustomerAbcReportController extends Controller
 
             $accumulatedPercentage += $percentage;
 
-            // Classificar em A, B ou C
             $classification = 'C';
             if ($accumulatedPercentage <= 80) {
                 $classification = 'A';
@@ -68,6 +62,7 @@ class CustomerAbcReportController extends Controller
 
             $classifiedCustomers[] = [
                 'id' => $customer->id,
+                'sequential_id' => $customer->sequential_id,
                 'name' => $customer->first_name.' '.$customer->last_name,
                 'order_count' => $customer->order_count,
                 'total_value' => $customer->total_value,
@@ -77,7 +72,6 @@ class CustomerAbcReportController extends Controller
             ];
         }
 
-        // Totais por classificação
         $totalsByClass = [
             'A' => [
                 'count' => collect($classifiedCustomers)->where('classification', 'A')->count(),
@@ -96,7 +90,6 @@ class CustomerAbcReportController extends Controller
             ],
         ];
 
-        // Preparar percentuais para cada classe
         foreach (['A', 'B', 'C'] as $class) {
             $totalsByClass[$class]['percent_count'] = count($classifiedCustomers) > 0
                 ? ($totalsByClass[$class]['count'] / count($classifiedCustomers)) * 100
@@ -138,15 +131,19 @@ class CustomerAbcReportController extends Controller
 
     private function generatePdf($html)
     {
-        return Browsershot::html($html)
-            ->setNodeBinary('/usr/bin/node')
-            ->setNpmBinary('/usr/bin/npm')
-            ->noSandbox()
+        $browsershot = Browsershot::html($html)
             ->showBackground()
             ->waitUntilNetworkIdle()
             ->timeout(120)
             ->margins(10, 10, 10, 10)
-            ->format('A4')
-            ->pdf();
+            ->format('A4');
+
+        if (config('app.env') === 'production') {
+            $browsershot->setNodeBinary('/usr/bin/node')
+                ->setNpmBinary('/usr/bin/npm')
+                ->noSandbox();
+        }
+
+        return $browsershot->pdf();
     }
 }

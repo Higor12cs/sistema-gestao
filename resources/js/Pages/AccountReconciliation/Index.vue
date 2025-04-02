@@ -133,7 +133,9 @@ const formatCurrency = (value) => {
 const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
-    return date.toLocaleDateString("pt-BR");
+    return date.toLocaleDateString("pt-BR", {
+        timeZone: "America/Sao_Paulo",
+    });
 };
 
 const formatSequentialId = (id) => {

@@ -17,7 +17,9 @@ const formatCurrency = (value) => {
 const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
-    return date.toLocaleDateString("pt-BR");
+    return date.toLocaleDateString("pt-BR", {
+        timeZone: "America/Sao_Paulo",
+    });
 };
 
 const formatDateTime = (dateString) => {
@@ -76,7 +78,9 @@ const formatSequentialId = (id) => {
                         <table class="table">
                             <tbody>
                                 <tr>
-                                    <th class="pl-4" style="width: 40%">Código:</th>
+                                    <th class="pl-4" style="width: 40%">
+                                        Código:
+                                    </th>
                                     <td>
                                         {{
                                             formatSequentialId(
@@ -136,7 +140,9 @@ const formatSequentialId = (id) => {
                         <table class="table">
                             <tbody>
                                 <tr>
-                                    <th class="pl-4" style="width: 40%">Código:</th>
+                                    <th class="pl-4" style="width: 40%">
+                                        Código:
+                                    </th>
                                     <td>
                                         {{
                                             formatSequentialId(
@@ -211,7 +217,9 @@ const formatSequentialId = (id) => {
                         <table class="table">
                             <tbody>
                                 <tr>
-                                    <th class="pl-4" style="width: 40%">Código:</th>
+                                    <th class="pl-4" style="width: 40%">
+                                        Código:
+                                    </th>
                                     <td>
                                         {{
                                             formatSequentialId(

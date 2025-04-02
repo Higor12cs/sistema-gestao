@@ -149,18 +149,15 @@ class ReceivableReportController extends Controller
 
     private function applyFilters($query, Request $request)
     {
-        // Customer filter
         if ($request->filled('customer_id')) {
             $query->where('customer_id', $request->get('customer_id'));
         }
 
-        // Date range filter with date type
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $dateField = $this->getDateField($request);
             $query->whereBetween($dateField, [$request->get('start_date'), $request->get('end_date')]);
         }
 
-        // Status filter
         if ($request->filled('status') && $request->get('status') !== 'all') {
             if ($request->get('status') === 'paid') {
                 $query->whereColumn('paid_amount', '=', 'total_amount');
@@ -169,21 +166,18 @@ class ReceivableReportController extends Controller
             }
         }
 
-        // Chart account filter (hierarchical)
         if ($request->filled('chart_account_id')) {
             $chartAccountId = $request->get('chart_account_id');
             $chartAccount = ChartAccount::find($chartAccountId);
 
             if ($chartAccount) {
-                // Get all child account IDs including the selected one
-                $accountIds = $this->getAllChildChartAccountIds($chartAccount);
+                $accountIds = $this->getAllChildChartAccountIds($chartAccount->first());
                 $accountIds[] = $chartAccountId;
 
                 $query->whereIn('chart_account_id', $accountIds);
             }
         }
 
-        // Created by filter
         if ($request->filled('created_by')) {
             $query->where('created_by', $request->get('created_by'));
         }
@@ -193,13 +187,10 @@ class ReceivableReportController extends Controller
     {
         $dateType = $request->get('date_type', 'issue_date');
 
-        // Map the date_type to the actual database field
         switch ($dateType) {
             case 'due_date':
                 return 'due_date';
             case 'payment_date':
-                // For payment date, we would need a more complex query involving the payments
-                // This is a simplified version that just uses the issue date
                 return 'issue_date';
             case 'issue_date':
             default:
@@ -242,15 +233,19 @@ class ReceivableReportController extends Controller
 
     private function generatePdf($html)
     {
-        return Browsershot::html($html)
-            ->setNodeBinary('/usr/bin/node')
-            ->setNpmBinary('/usr/bin/npm')
-            ->noSandbox()
+        $browsershot = Browsershot::html($html)
             ->showBackground()
             ->waitUntilNetworkIdle()
             ->timeout(120)
             ->margins(10, 10, 10, 10)
-            ->format('A4')
-            ->pdf();
+            ->format('A4');
+
+        if (config('app.env') === 'production') {
+            $browsershot->setNodeBinary('/usr/bin/node')
+                ->setNpmBinary('/usr/bin/npm')
+                ->noSandbox();
+        }
+
+        return $browsershot->pdf();
     }
 }

@@ -50,64 +50,36 @@
 
     <div class="section">
         <div class="section-title">DISTRIBUIÇÃO DE PRODUTOS POR CLASSE</div>
-        <div style="display: flex; height: 60px; width: 100%; margin-bottom: 10px; border-radius: 4px; overflow: hidden;">
-            @php
-                $classColors = [
-                    'A' => '#3498db', // Azul
-                    'B' => '#2ecc71', // Verde
-                    'C' => '#e74c3c', // Vermelho
-                ];
-            @endphp
 
-            @foreach (['A', 'B', 'C'] as $class)
-                <div
-                    style="
-                height: 100%;
-                width: {{ $totalsByClass[$class]['percent_count'] }}%;
-                background-color: {{ $classColors[$class] }};
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                color: white;
-                font-weight: bold;
-                flex-direction: column;
-                ">
-                    <div>{{ $class }}</div>
-                    <div style="font-size: 8pt;">{{ number_format($totalsByClass[$class]['percent_count'], 1) }}%</div>
-                </div>
-            @endforeach
-        </div>
+        @php
+            $classColors = [
+                'A' => '#3498db', // Azul
+                'B' => '#2ecc71', // Verde
+                'C' => '#e74c3c', // Vermelho
+            ];
+        @endphp
 
-        <div style="display: flex; height: 60px; width: 100%; margin-bottom: 20px; border-radius: 4px; overflow: hidden;">
-            @foreach (['A', 'B', 'C'] as $class)
-                <div
-                    style="
-                height: 100%;
-                width: {{ $totalsByClass[$class]['percent_value'] }}%;
-                background-color: {{ $classColors[$class] }};
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                color: white;
-                font-weight: bold;
-                flex-direction: column;
-                ">
-                    <div>{{ $class }}</div>
-                    <div style="font-size: 8pt;">{{ number_format($totalsByClass[$class]['percent_value'], 1) }}%</div>
-                </div>
-            @endforeach
-        </div>
-
-        <div style="display: flex; justify-content: center; font-size: 8pt; margin-bottom: 10px;">
-            <div style="margin-right: 20px; display: flex; align-items: center;">
-                <div style="width: 12px; height: 12px; background-color: #3498db; margin-right: 5px;"></div>
-                <span>Superior: % de Produtos</span>
+        @if($analysisType === 'value')
+            <div style="display: flex; height: 60px; width: 100%; margin-bottom: 20px; border-radius: 4px; overflow: hidden;">
+                @foreach (['A', 'B', 'C'] as $class)
+                    <div
+                        style="height: 100%;width: {{ $totalsByClass[$class]['percent_value'] }}%;background-color: {{ $classColors[$class] }};display: flex;justify-content: center;align-items: center;color: white;font-weight: bold;flex-direction: column;">
+                        <div>{{ $class }}</div>
+                        <div style="font-size: 8pt;">{{ number_format($totalsByClass[$class]['percent_value'], 1) }}%</div>
+                    </div>
+                @endforeach
             </div>
-            <div style="display: flex; align-items: center;">
-                <div style="width: 12px; height: 12px; background-color: #3498db; margin-right: 5px;"></div>
-                <span>Inferior: % de Valor</span>
+        @else
+            <div style="display: flex; height: 60px; width: 100%; margin-bottom: 10px; border-radius: 4px; overflow: hidden;">
+                @foreach (['A', 'B', 'C'] as $class)
+                    <div
+                        style="height: 100%;width: {{ $totalsByClass[$class]['percent_count'] }}%;background-color: {{ $classColors[$class] }};display: flex;justify-content: center;align-items: center;color: white;font-weight: bold;flex-direction: column;">
+                        <div>{{ $class }}</div>
+                        <div style="font-size: 8pt;">{{ number_format($totalsByClass[$class]['percent_count'], 1) }}%</div>
+                    </div>
+                @endforeach
             </div>
-        </div>
+        @endif
     </div>
 
     <div class="section">
@@ -132,11 +104,11 @@
                     <tr>
                         <td
                             style="
-                        background-color: {{ $classColors[$product['classification']] }};
-                        color: white;
-                        text-align: center;
-                        font-weight: bold;
-                    ">
+                                                                                                                                                                                                        background-color: {{ $classColors[$product['classification']] }};
+                                                                                                                                                                                                        color: white;
+                                                                                                                                                                                                        text-align: center;
+                                                                                                                                                                                                        font-weight: bold;
+                                                                                                                                                                                                    ">
                             {{ $product['classification'] }}
                         </td>
                         <td>{{ $product['product_name'] }}</td>
@@ -166,7 +138,7 @@
     <div class="section">
         <div class="section-title">OBSERVAÇÕES</div>
         <div class="observations">
-            <p><strong>Classificação ABC:</strong></p>
+            <p style="padding-bottom: 0.25rem;"><strong>Classificação ABC:</strong></p>
             <ul>
                 <li><strong>Classe A:</strong> Produtos de alto giro que representam aproximadamente 80% do
                     faturamento/volume total.</li>
@@ -175,7 +147,7 @@
                 <li><strong>Classe C:</strong> Produtos de baixo giro que representam aproximadamente 5% do
                     faturamento/volume total.</li>
             </ul>
-            <p><strong>Recomendações estratégicas:</strong></p>
+            <p style="padding-top: 0.5rem; padding-bottom: 0.25rem;"><strong>Recomendações estratégicas:</strong></p>
             <ul>
                 <li><strong>Para produtos Classe A:</strong> Prioridade em estoque, controle rigoroso, níveis de serviço
                     altos, negociação com fornecedores.</li>

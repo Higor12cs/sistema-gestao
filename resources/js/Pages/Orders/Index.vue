@@ -106,7 +106,9 @@ const formatCurrency = (value) => {
 
 const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("pt-BR");
+    return date.toLocaleDateString("pt-BR", {
+        timeZone: "America/Sao_Paulo",
+    });
 };
 
 const formatSequentialId = (id) => {
@@ -151,10 +153,7 @@ onMounted(() => {
         <div class="card">
             <div class="card-header">Lista de Pedidos</div>
             <div class="card-body">
-                <div
-                    v-if="orders.data.length === 0"
-                    class="alert alert-info"
-                >
+                <div v-if="orders.data.length === 0" class="alert alert-info">
                     Nenhum pedido encontrado com os filtros aplicados.
                 </div>
 

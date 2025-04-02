@@ -201,9 +201,6 @@ class OrderController extends Controller
         $html = view($view, compact('order'))->render();
 
         $browsershot = Browsershot::html($html)
-            ->setNodeBinary('/usr/bin/node')
-            ->setNpmBinary('/usr/bin/npm')
-            ->noSandbox()
             ->showBackground()
             ->waitUntilNetworkIdle();
 
@@ -215,6 +212,12 @@ class OrderController extends Controller
         } else {
             $browsershot->format('A4')
                 ->margins(10, 10, 10, 10);
+        }
+
+        if (config('app.env') === 'production') {
+            $browsershot->setNodeBinary('/usr/bin/node')
+                ->setNpmBinary('/usr/bin/npm')
+                ->noSandbox();
         }
 
         $pdf = $browsershot->pdf();

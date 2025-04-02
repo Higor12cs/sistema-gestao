@@ -26,39 +26,18 @@ use Illuminate\Support\Facades\DB;
 
 class TestSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(Tenant $tenant, User $user): void
     {
-        // Create sellers
         $this->createSellers($tenant, $user);
-
-        // Create brands
         $brands = $this->createBrands($tenant, $user);
-
-        // Create sections
         $sections = $this->createSections($tenant, $user);
-
-        // Create groups
         $groups = $this->createGroups($tenant, $user, $sections);
-
-        // Create suppliers
         $suppliers = $this->createSuppliers($tenant, $user);
-
-        // Create payment methods
         $paymentMethods = $this->createPaymentMethods($tenant, $user);
-
-        // Create accounts
         $accounts = $this->createAccounts($tenant, $user);
-
-        // Create products
         $products = $this->createProducts($tenant, $user, $brands, $groups);
-
-        // Create customers
         $customers = $this->createCustomers($tenant, $user);
 
-        // Get default chart accounts for receivables and payables
         $defaultReceivableAccount = ChartAccount::where('tenant_id', $tenant->id)
             ->where('default_receivable', true)
             ->first();
@@ -71,7 +50,6 @@ class TestSeeder extends Seeder
             $this->command->warn('Default chart accounts not found. Make sure ChartAccountSeeder has been run.');
         }
 
-        // Create purchases
         $this->createPurchases(
             $tenant,
             $user,
@@ -82,7 +60,6 @@ class TestSeeder extends Seeder
             $defaultPurchaseAccount ? $defaultPurchaseAccount->id : null
         );
 
-        // Create orders
         $this->createOrders(
             $tenant,
             $user,
@@ -340,7 +317,6 @@ class TestSeeder extends Seeder
     private function createProducts(Tenant $tenant, User $user, array $brands, array $groups): array
     {
         $products = [
-            // Tênis de Corrida
             [
                 'name' => 'Nike Air Zoom Pegasus 38',
                 'brand' => 'Nike',
@@ -368,8 +344,6 @@ class TestSeeder extends Seeder
                 'cost' => 320.00,
                 'price' => 649.90,
             ],
-
-            // Chuteiras
             [
                 'name' => 'Nike Mercurial Superfly 8',
                 'brand' => 'Nike',
@@ -397,8 +371,6 @@ class TestSeeder extends Seeder
                 'cost' => 250.00,
                 'price' => 499.90,
             ],
-
-            // Tênis de Basquete
             [
                 'name' => 'Nike LeBron 18',
                 'brand' => 'Nike',
@@ -417,8 +389,6 @@ class TestSeeder extends Seeder
                 'cost' => 350.00,
                 'price' => 699.90,
             ],
-
-            // Camisetas
             [
                 'name' => 'Nike Dri-FIT Running',
                 'brand' => 'Nike',
@@ -446,8 +416,6 @@ class TestSeeder extends Seeder
                 'cost' => 40.00,
                 'price' => 89.90,
             ],
-
-            // Shorts
             [
                 'name' => 'Nike Flex Stride',
                 'brand' => 'Nike',
@@ -466,8 +434,6 @@ class TestSeeder extends Seeder
                 'cost' => 55.00,
                 'price' => 119.90,
             ],
-
-            // Bonés
             [
                 'name' => 'Nike Featherlight',
                 'brand' => 'Nike',
@@ -486,8 +452,6 @@ class TestSeeder extends Seeder
                 'cost' => 30.00,
                 'price' => 69.90,
             ],
-
-            // Mochilas
             [
                 'name' => 'Nike Brasilia',
                 'brand' => 'Nike',
@@ -506,8 +470,6 @@ class TestSeeder extends Seeder
                 'cost' => 85.00,
                 'price' => 189.90,
             ],
-
-            // Óculos
             [
                 'name' => 'Oakley Sutro',
                 'brand' => 'Oakley',
@@ -517,8 +479,6 @@ class TestSeeder extends Seeder
                 'cost' => 250.00,
                 'price' => 499.90,
             ],
-
-            // Bolas
             [
                 'name' => 'Nike Strike',
                 'brand' => 'Nike',
@@ -537,8 +497,6 @@ class TestSeeder extends Seeder
                 'cost' => 120.00,
                 'price' => 249.90,
             ],
-
-            // Raquetes
             [
                 'name' => 'Wilson Pro Staff',
                 'brand' => 'Wilson',
@@ -747,12 +705,10 @@ class TestSeeder extends Seeder
     private function createPaymentMethods(Tenant $tenant, User $user): array
     {
         $paymentMethods = [
-            ['name' => 'Dinheiro', 'type' => 'cash'],
-            ['name' => 'Cartão de Débito', 'type' => 'debit'],
-            ['name' => 'Cartão de Crédito', 'type' => 'credit'],
-            ['name' => 'Pix', 'type' => 'pix'],
-            ['name' => 'Boleto', 'type' => 'billet'],
-            ['name' => 'Transferência Bancária', 'type' => 'transfer'],
+            ['name' => 'À VISTA', 'type' => 'cash'],
+            ['name' => 'A PRAZO', 'type' => 'credit'],
+            ['name' => 'CHEQUE PRAZO', 'type' => 'check'],
+            ['name' => 'BOLETO', 'type' => 'billet'],
         ];
 
         $createdPaymentMethods = [];
@@ -831,58 +787,47 @@ class TestSeeder extends Seeder
         array $accounts,
         ?string $defaultChartAccountId
     ): void {
-        // Check for default chart account
         if (! $defaultChartAccountId) {
             $this->command->warn('Default Purchase ChartAccount not found. Payables might cause errors.');
 
             return;
         }
 
-        // Define a date range for purchases (last 90 days)
         $startDate = Carbon::now()->subDays(90);
         $endDate = Carbon::now();
 
-        // Create multiple purchases
         for ($i = 0; $i < 30; $i++) {
-            // Randomly select a supplier
             $supplier = $suppliers[array_rand($suppliers)];
-
-            // Generate a random date within the range
             $purchaseDate = Carbon::createFromTimestamp(
                 rand($startDate->timestamp, $endDate->timestamp)
             );
 
-            // Create the purchase
             DB::transaction(function () use ($tenant, $user, $supplier, $purchaseDate, $products, $paymentMethods, $i, $defaultChartAccountId) {
-                // Calculate totals
                 $totalCost = 0;
                 $discount = rand(0, 50);
                 $fees = rand(0, 30);
 
-                // Create the purchase
                 $purchase = Purchase::create([
                     'tenant_id' => $tenant->id,
                     'supplier_id' => $supplier->id,
                     'issue_date' => $purchaseDate,
                     'discount' => $discount,
                     'fees' => $fees,
-                    'total_cost' => 0, // Will be updated after items are added
+                    'total_cost' => 0,
                     'observation' => "Compra de produtos #{$i} - ".$supplier->legal_name,
                     'created_by' => $user->id,
                 ]);
 
-                // Randomly determine how many products to include (2-5)
                 $numItems = rand(2, 5);
                 $selectedProducts = array_rand($products, $numItems);
                 if (! is_array($selectedProducts)) {
                     $selectedProducts = [$selectedProducts];
                 }
 
-                // Add purchase items
                 foreach ($selectedProducts as $productIndex) {
                     $product = $products[$productIndex];
                     $quantity = rand(1, 10);
-                    $unitCost = $product->cost * (rand(90, 110) / 100); // Vary cost by ±10%
+                    $unitCost = $product->cost * (rand(90, 110) / 100);
                     $itemDiscount = rand(0, 20);
                     $itemFees = rand(0, 10);
                     $itemTotalCost = ($unitCost * $quantity) - $itemDiscount + $itemFees;
@@ -902,73 +847,50 @@ class TestSeeder extends Seeder
                     $totalCost += $itemTotalCost;
                 }
 
-                // Update purchase total cost
                 $finalTotalCost = $totalCost - $discount + $fees;
                 $purchase->update([
                     'total_cost' => $finalTotalCost,
                 ]);
 
-                // Create payables
-                // Determine if the payment will be split (30% chance)
-                $splitPayment = (rand(1, 100) <= 30);
+                $paymentType = rand(0, 1);
+                $paymentMethod = null;
 
-                if ($splitPayment) {
-                    // Split into 2-3 payments
-                    $numPayments = rand(2, 3);
-                    $paymentAmount = round($finalTotalCost / $numPayments, 2);
-
-                    for ($j = 0; $j < $numPayments; $j++) {
-                        // Last payment takes any remaining amount to ensure exact total
-                        $amount = ($j == $numPayments - 1)
-                            ? $finalTotalCost - ($paymentAmount * ($numPayments - 1))
-                            : $paymentAmount;
-
-                        $dueDate = $purchaseDate->copy()->addDays(30 * ($j + 1));
-                        $paymentMethod = $paymentMethods[array_rand($paymentMethods)];
-
-                        Payable::create([
-                            'tenant_id' => $tenant->id,
-                            'purchase_id' => $purchase->id,
-                            'chart_account_id' => $defaultChartAccountId, // Set the chart account ID
-                            'supplier_id' => $supplier->id,
-                            'payment_method_id' => $paymentMethod->id,
-                            'is_manual' => false,
-                            'issue_date' => $purchaseDate,
-                            'due_date' => $dueDate,
-                            'total_amount' => $amount,
-                            'paid_amount' => 0,
-                            'fees' => 0,
-                            'discount' => 0,
-                            'remaining_amount' => $amount,
-                            'status' => 'pending',
-                            'description' => 'Parcela '.($j + 1).' de '.$numPayments,
-                            'created_by' => $user->id,
-                        ]);
+                if ($paymentType == 0) {
+                    foreach ($paymentMethods as $method) {
+                        if ($method->name === 'CHEQUE PRAZO') {
+                            $paymentMethod = $method;
+                            break;
+                        }
                     }
                 } else {
-                    // Single payment
-                    $dueDate = $purchaseDate->copy()->addDays(30);
-                    $paymentMethod = $paymentMethods[array_rand($paymentMethods)];
-
-                    Payable::create([
-                        'tenant_id' => $tenant->id,
-                        'purchase_id' => $purchase->id,
-                        'chart_account_id' => $defaultChartAccountId, // Set the chart account ID
-                        'supplier_id' => $supplier->id,
-                        'payment_method_id' => $paymentMethod->id,
-                        'is_manual' => false,
-                        'issue_date' => $purchaseDate,
-                        'due_date' => $dueDate,
-                        'total_amount' => $finalTotalCost,
-                        'paid_amount' => 0,
-                        'fees' => 0,
-                        'discount' => 0,
-                        'remaining_amount' => $finalTotalCost,
-                        'status' => 'pending',
-                        'description' => 'Pagamento à vista',
-                        'created_by' => $user->id,
-                    ]);
+                    foreach ($paymentMethods as $method) {
+                        if ($method->name === 'BOLETO') {
+                            $paymentMethod = $method;
+                            break;
+                        }
+                    }
                 }
+
+                $dueDate = $purchaseDate->copy()->addDays(30);
+
+                Payable::create([
+                    'tenant_id' => $tenant->id,
+                    'purchase_id' => $purchase->id,
+                    'chart_account_id' => $defaultChartAccountId,
+                    'supplier_id' => $supplier->id,
+                    'payment_method_id' => $paymentMethod->id,
+                    'is_manual' => false,
+                    'issue_date' => $purchaseDate,
+                    'due_date' => $dueDate,
+                    'total_amount' => $finalTotalCost,
+                    'paid_amount' => 0,
+                    'fees' => 0,
+                    'discount' => 0,
+                    'remaining_amount' => $finalTotalCost,
+                    'status' => 'pending',
+                    'description' => 'Pagamento via '.$paymentMethod->name,
+                    'created_by' => $user->id,
+                ]);
             });
         }
     }
@@ -982,56 +904,45 @@ class TestSeeder extends Seeder
         array $accounts,
         ?string $defaultChartAccountId
     ): void {
-        // Check for default chart account
         if (! $defaultChartAccountId) {
             $this->command->warn('Default Receivable ChartAccount not found. Receivables might cause errors.');
 
             return;
         }
 
-        // Define a date range for orders (last 60 days)
         $startDate = Carbon::now()->subDays(60);
         $endDate = Carbon::now();
 
-        // Create multiple orders
         for ($i = 0; $i < 50; $i++) {
-            // Randomly select a customer
             $customer = $customers[array_rand($customers)];
-
-            // Generate a random date within the range
             $orderDate = Carbon::createFromTimestamp(
                 rand($startDate->timestamp, $endDate->timestamp)
             );
 
-            // Create the order
             DB::transaction(function () use ($tenant, $user, $customer, $orderDate, $products, $paymentMethods, $i, $defaultChartAccountId) {
-                // Calculate totals
                 $totalCost = 0;
                 $totalPrice = 0;
                 $discount = rand(0, 100);
                 $fees = rand(0, 50);
 
-                // Create the order
                 $order = Order::create([
                     'tenant_id' => $tenant->id,
                     'customer_id' => $customer->id,
                     'issue_date' => $orderDate,
                     'discount' => $discount,
                     'fees' => $fees,
-                    'total_cost' => 0, // Will be updated after items are added
-                    'total_price' => 0, // Will be updated after items are added
+                    'total_cost' => 0,
+                    'total_price' => 0,
                     'observation' => "PEDIDO CLIENTE #{$i} - ".$customer->first_name.' '.$customer->last_name,
                     'created_by' => $user->id,
                 ]);
 
-                // Randomly determine how many products to include (1-4)
                 $numItems = rand(1, 4);
                 $selectedProducts = array_rand($products, $numItems);
                 if (! is_array($selectedProducts)) {
                     $selectedProducts = [$selectedProducts];
                 }
 
-                // Add order items
                 foreach ($selectedProducts as $productIndex) {
                     $product = $products[$productIndex];
                     $quantity = rand(1, 3);
@@ -1061,74 +972,53 @@ class TestSeeder extends Seeder
                     $totalPrice += $itemTotalPrice;
                 }
 
-                // Update order totals
                 $finalTotalPrice = $totalPrice - $discount + $fees;
                 $order->update([
                     'total_cost' => $totalCost,
                     'total_price' => $finalTotalPrice,
                 ]);
 
-                // Create receivables
-                // Determine if the payment will be split (40% chance)
-                $splitPayment = (rand(1, 100) <= 40);
+                $paymentType = rand(0, 1);
+                $paymentMethod = null;
 
-                if ($splitPayment) {
-                    // Split into 2-4 payments
-                    $numPayments = rand(2, 4);
-                    $paymentAmount = round($finalTotalPrice / $numPayments, 2);
-
-                    for ($j = 0; $j < $numPayments; $j++) {
-                        // Last payment takes any remaining amount to ensure exact total
-                        $amount = ($j == $numPayments - 1)
-                            ? $finalTotalPrice - ($paymentAmount * ($numPayments - 1))
-                            : $paymentAmount;
-
-                        $dueDate = $orderDate->copy()->addDays(30 * ($j + 1));
-                        $paymentMethod = $paymentMethods[array_rand($paymentMethods)];
-
-                        Receivable::create([
-                            'tenant_id' => $tenant->id,
-                            'order_id' => $order->id,
-                            'customer_id' => $customer->id,
-                            'chart_account_id' => $defaultChartAccountId, // Set the chart account ID
-                            'payment_method_id' => $paymentMethod->id,
-                            'is_manual' => false,
-                            'issue_date' => $orderDate,
-                            'due_date' => $dueDate,
-                            'total_amount' => $amount,
-                            'paid_amount' => 0,
-                            'fees' => 0,
-                            'discount' => 0,
-                            'remaining_amount' => $amount,
-                            'status' => 'pending',
-                            'description' => 'Parcela '.($j + 1).' de '.$numPayments,
-                            'created_by' => $user->id,
-                        ]);
+                if ($paymentType == 0) {
+                    foreach ($paymentMethods as $method) {
+                        if ($method->name === 'À VISTA') {
+                            $paymentMethod = $method;
+                            break;
+                        }
                     }
                 } else {
-                    // Single payment
-                    $dueDate = $orderDate->copy()->addDays(rand(0, 15));
-                    $paymentMethod = $paymentMethods[array_rand($paymentMethods)];
-
-                    Receivable::create([
-                        'tenant_id' => $tenant->id,
-                        'order_id' => $order->id,
-                        'customer_id' => $customer->id,
-                        'chart_account_id' => $defaultChartAccountId, // Set the chart account ID
-                        'payment_method_id' => $paymentMethod->id,
-                        'is_manual' => false,
-                        'issue_date' => $orderDate,
-                        'due_date' => $dueDate,
-                        'total_amount' => $finalTotalPrice,
-                        'paid_amount' => 0,
-                        'fees' => 0,
-                        'discount' => 0,
-                        'remaining_amount' => $finalTotalPrice,
-                        'status' => 'pending',
-                        'description' => 'Pagamento à vista',
-                        'created_by' => $user->id,
-                    ]);
+                    foreach ($paymentMethods as $method) {
+                        if ($method->name === 'A PRAZO') {
+                            $paymentMethod = $method;
+                            break;
+                        }
+                    }
                 }
+
+                $dueDate = ($paymentMethod->name === 'À VISTA')
+                    ? $orderDate
+                    : $orderDate->copy()->addDays(30);
+
+                Receivable::create([
+                    'tenant_id' => $tenant->id,
+                    'order_id' => $order->id,
+                    'customer_id' => $customer->id,
+                    'chart_account_id' => $defaultChartAccountId,
+                    'payment_method_id' => $paymentMethod->id,
+                    'is_manual' => false,
+                    'issue_date' => $orderDate,
+                    'due_date' => $dueDate,
+                    'total_amount' => $finalTotalPrice,
+                    'paid_amount' => 0,
+                    'fees' => 0,
+                    'discount' => 0,
+                    'remaining_amount' => $finalTotalPrice,
+                    'status' => 'pending',
+                    'description' => 'Pagamento '.$paymentMethod->name,
+                    'created_by' => $user->id,
+                ]);
             });
         }
     }

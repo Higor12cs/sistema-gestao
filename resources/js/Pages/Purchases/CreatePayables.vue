@@ -38,25 +38,77 @@ const convertToNumber = (value) => {
     return number;
 };
 
+const getCurrentDate = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+};
+
+const getDayFromDateString = (dateString) => {
+    if (!dateString) return 1;
+    return parseInt(dateString.slice(8, 10));
+};
+
+const addMonthsToDateString = (dateString, monthsToAdd) => {
+    if (!dateString) return "";
+
+    const year = parseInt(dateString.slice(0, 4));
+    const month = parseInt(dateString.slice(5, 7)) - 1;
+    const day = parseInt(dateString.slice(8, 10));
+
+    const newMonth = month + monthsToAdd;
+    const newYear = year + Math.floor(newMonth / 12);
+    const adjustedMonth = newMonth % 12;
+
+    const lastDayOfTargetMonth = new Date(
+        newYear,
+        adjustedMonth + 1,
+        0
+    ).getDate();
+    const adjustedDay = Math.min(day, lastDayOfTargetMonth);
+
+    return `${newYear}-${String(adjustedMonth + 1).padStart(2, "0")}-${String(
+        adjustedDay
+    ).padStart(2, "0")}`;
+};
+
+const setDayInDateString = (dateString, newDay) => {
+    if (!dateString) return "";
+
+    const year = parseInt(dateString.slice(0, 4));
+    const month = parseInt(dateString.slice(5, 7)) - 1;
+
+    const lastDayOfMonth = new Date(year, month + 1, 0).getDate();
+    const adjustedDay = Math.min(newDay, lastDayOfMonth);
+
+    return `${year}-${String(month + 1).padStart(2, "0")}-${String(
+        adjustedDay
+    ).padStart(2, "0")}`;
+};
+
 const remainingAmount = ref(props.purchase.total_cost);
 
 const form = useForm({
     payables: [],
 });
 
+const currentDate = getCurrentDate();
+
 const installmentForm = useForm({
     amount: props.purchase.total_cost,
     payment_method_id: "",
-    first_due_date: new Date().toISOString().slice(0, 10),
+    first_due_date: currentDate,
     installments: 1,
-    due_day: new Date().getDate(),
+    due_day: getDayFromDateString(currentDate),
 });
 
 watch(
     () => installmentForm.first_due_date,
     (newValue) => {
         if (newValue) {
-            installmentForm.due_day = new Date(newValue).getDate();
+            installmentForm.due_day = getDayFromDateString(newValue);
         }
     },
     { immediate: true }
@@ -65,7 +117,7 @@ watch(
 const generateInstallments = () => {
     const amount = convertToNumber(installmentForm.amount);
     const paymentMethodId = installmentForm.payment_method_id;
-    const firstDueDate = new Date(installmentForm.first_due_date);
+    const firstDueDate = installmentForm.first_due_date;
     const installmentsCount = installmentForm.installments;
     const dueDay = installmentForm.due_day;
 
@@ -82,22 +134,13 @@ const generateInstallments = () => {
     const newPayables = [];
 
     for (let i = 0; i < installmentsCount; i++) {
-        const dueDate = new Date(firstDueDate);
-        dueDate.setMonth(dueDate.getMonth() + i);
+        let dueDate;
 
-        if (i > 0) {
-            dueDate.setDate(dueDay);
-
-            if (dueDay > 28) {
-                const nextMonth = new Date(
-                    dueDate.getFullYear(),
-                    dueDate.getMonth() + 1,
-                    0
-                );
-                if (dueDay > nextMonth.getDate()) {
-                    dueDate.setDate(nextMonth.getDate());
-                }
-            }
+        if (i === 0) {
+            dueDate = firstDueDate;
+        } else {
+            const nextMonthDate = addMonthsToDateString(firstDueDate, i);
+            dueDate = setDayInDateString(nextMonthDate, dueDay);
         }
 
         const installmentAmount =
@@ -107,7 +150,7 @@ const generateInstallments = () => {
 
         newPayables.push({
             payment_method_id: paymentMethodId,
-            due_date: dueDate.toISOString().slice(0, 10),
+            due_date: dueDate,
             amount: installmentAmount,
             description: `PAGÁVEL COMPRA #${String(
                 props.purchase.sequential_id
@@ -119,25 +162,19 @@ const generateInstallments = () => {
     installmentForm.reset();
     installmentForm.amount =
         remainingAmount.value > 0 ? remainingAmount.value : 0;
-    installmentForm.first_due_date = new Date().toISOString().slice(0, 10);
+    installmentForm.first_due_date = currentDate;
     installmentForm.installments = 1;
-    installmentForm.due_day = new Date().getDate();
+    installmentForm.due_day = getDayFromDateString(currentDate);
 };
 
 const addPayable = () => {
     const newDueDate =
         form.payables.length > 0
-            ? (() => {
-                  const lastDueDate = new Date(
-                      form.payables[form.payables.length - 1].due_date
-                  );
-                  return new Date(
-                      lastDueDate.setDate(lastDueDate.getDate() + 30)
-                  )
-                      .toISOString()
-                      .slice(0, 10);
-              })()
-            : new Date().toISOString().slice(0, 10);
+            ? addMonthsToDateString(
+                  form.payables[form.payables.length - 1].due_date,
+                  1
+              )
+            : currentDate;
 
     form.payables.push({
         payment_method_id: "",
@@ -193,25 +230,12 @@ const submit = () => {
 };
 
 const updateDueDates = (index) => {
-    const selectedDate = new Date(form.payables[index].due_date);
-    const dueDay = selectedDate.getDate();
+    const selectedDate = form.payables[index].due_date;
+    const dueDay = getDayFromDateString(selectedDate);
 
     for (let i = index + 1; i < form.payables.length; i++) {
-        const currentDate = new Date(form.payables[i].due_date);
-        currentDate.setDate(dueDay);
-
-        if (dueDay > 28) {
-            const nextMonth = new Date(
-                currentDate.getFullYear(),
-                currentDate.getMonth() + 1,
-                0
-            );
-            if (dueDay > nextMonth.getDate()) {
-                currentDate.setDate(nextMonth.getDate());
-            }
-        }
-
-        form.payables[i].due_date = currentDate.toISOString().slice(0, 10);
+        const currentDate = form.payables[i].due_date;
+        form.payables[i].due_date = setDayInDateString(currentDate, dueDay);
     }
 };
 

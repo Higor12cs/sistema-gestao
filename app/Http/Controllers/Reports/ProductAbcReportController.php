@@ -17,12 +17,11 @@ class ProductAbcReportController extends Controller
     {
         $startDate = $request->get('start_date');
         $endDate = $request->get('end_date');
-        $analysisType = $request->get('analysis_type', 'value'); // value or quantity
+        $analysisType = $request->get('analysis_type', 'value');
         $brandId = $request->get('brand_id');
         $sectionId = $request->get('section_id');
         $groupId = $request->get('group_id');
 
-        // Construir a query base para obter os dados necessários
         $query = OrderItem::query()
             ->join('products', 'order_items.product_id', '=', 'products.id')
             ->join('orders', 'order_items.order_id', '=', 'orders.id')
@@ -48,7 +47,6 @@ class ProductAbcReportController extends Controller
                 'sections.name'
             );
 
-        // Aplicar filtros
         if ($startDate && $endDate) {
             $query->whereBetween('orders.issue_date', [$startDate, $endDate]);
         }
@@ -65,21 +63,17 @@ class ProductAbcReportController extends Controller
             $query->where('products.group_id', $groupId);
         }
 
-        // Obter todos os produtos com valores
         $products = $query->get();
 
-        // Ordenar os produtos com base no tipo de análise
         if ($analysisType === 'value') {
             $products = $products->sortByDesc('total_value');
         } else {
             $products = $products->sortByDesc('total_quantity');
         }
 
-        // Calcular totais
         $totalValue = $products->sum('total_value');
         $totalQuantity = $products->sum('total_quantity');
 
-        // Calcular os percentuais acumulados e classificar em A, B, C
         $accumulatedPercentage = 0;
         $classifiedProducts = [];
 
@@ -90,7 +84,6 @@ class ProductAbcReportController extends Controller
 
             $accumulatedPercentage += $percentage;
 
-            // Classificar em A, B ou C
             $classification = 'C';
             if ($accumulatedPercentage <= 80) {
                 $classification = 'A';
@@ -113,7 +106,6 @@ class ProductAbcReportController extends Controller
             ];
         }
 
-        // Totais por classificação
         $totalsByClass = [
             'A' => [
                 'count' => collect($classifiedProducts)->where('classification', 'A')->count(),
@@ -132,7 +124,6 @@ class ProductAbcReportController extends Controller
             ],
         ];
 
-        // Preparar percentuais para cada classe
         foreach (['A', 'B', 'C'] as $class) {
             $totalsByClass[$class]['percent_count'] = count($classifiedProducts) > 0
                 ? ($totalsByClass[$class]['count'] / count($classifiedProducts)) * 100
@@ -147,7 +138,6 @@ class ProductAbcReportController extends Controller
                 : 0;
         }
 
-        // Obter detalhes dos filtros aplicados
         $filterDetails = [
             'brand' => $brandId ? Brand::find($brandId)?->name : null,
             'section' => $sectionId ? Section::find($sectionId)?->name : null,
@@ -182,15 +172,19 @@ class ProductAbcReportController extends Controller
 
     private function generatePdf($html)
     {
-        return Browsershot::html($html)
-            ->setNodeBinary('/usr/bin/node')
-            ->setNpmBinary('/usr/bin/npm')
-            ->noSandbox()
+        $browsershot = Browsershot::html($html)
             ->showBackground()
             ->waitUntilNetworkIdle()
             ->timeout(120)
             ->margins(10, 10, 10, 10)
-            ->format('A4')
-            ->pdf();
+            ->format('A4');
+
+        if (config('app.env') === 'production') {
+            $browsershot->setNodeBinary('/usr/bin/node')
+                ->setNpmBinary('/usr/bin/npm')
+                ->noSandbox();
+        }
+
+        return $browsershot->pdf();
     }
 }

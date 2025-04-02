@@ -7,7 +7,9 @@ use App\Models\Permission;
 use App\Models\Role;
 use App\Models\Tenant;
 use Database\Seeders\ChartAccountSeeder;
+use Database\Seeders\DefaultAccountSeeder;
 use Database\Seeders\DefaultCustomerSeeder;
+use Database\Seeders\DefaultPaymentMethodSeeder;
 use Database\Seeders\TestSeeder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -66,8 +68,15 @@ class RegisterController extends Controller
             (new ChartAccountSeeder)->run($tenant);
             (new DefaultCustomerSeeder)->run($tenant);
 
-            if (config('app.env') === 'local') {
+            // if (config('app.env') === 'local') {
+            //     (new (TestSeeder::class))->run($tenant, $user);
+            // }
+
+            if ($user->email === 'test@example.com') {
                 (new (TestSeeder::class))->run($tenant, $user);
+            } else {
+                (new (DefaultAccountSeeder::class))->run($tenant);
+                (new (DefaultPaymentMethodSeeder::class))->run($tenant);
             }
         });
 

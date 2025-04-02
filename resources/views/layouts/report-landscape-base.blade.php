@@ -336,6 +336,13 @@
             color: var(--text-color);
         }
 
+        ul,
+        li {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
         /* Adicionar numeração de página em cada página */
         @page {
             @bottom-center {

@@ -36,16 +36,7 @@ class OrderReportController extends Controller
             'end_date' => $request->get('end_date'),
         ])->render();
 
-        $pdf = Browsershot::html($html)
-            ->setNodeBinary('/usr/bin/node')
-            ->setNpmBinary('/usr/bin/npm')
-            ->noSandbox()
-            ->showBackground()
-            ->waitUntilNetworkIdle()
-            ->timeout(120)
-            ->margins(10, 10, 10, 10)
-            ->format('A4')
-            ->pdf();
+        $pdf = $this->generatePdf($html);
 
         $filename = 'RelatorioPedidosAnalitico';
         if ($request->filled('start_date') && $request->filled('end_date')) {
@@ -60,21 +51,64 @@ class OrderReportController extends Controller
 
     public function synthetic(Request $request)
     {
-        $query = Order::query()
+        $query = $this->buildOrderQuery($request);
+
+        $ordersWithItems = $query->with('items.product')->get();
+
+        $totalOrders = $ordersWithItems->count();
+        $totalSales = $ordersWithItems->sum('total_price');
+        $totalItems = $ordersWithItems->flatMap(fn ($order) => $order->items)->sum('quantity');
+        $avgTicket = $totalOrders > 0 ? $totalSales / $totalOrders : 0;
+
+        $summaryData = $this->getSummaryByPeriod($ordersWithItems, $request->get('group_by', 'day'));
+
+        $topCustomers = $this->getTopCustomers($ordersWithItems);
+        $topSellers = $this->getTopSellers($ordersWithItems);
+
+        $html = view('reports.orders.synthetic', [
+            'orders' => $ordersWithItems,
+            'totalOrders' => $totalOrders,
+            'totalSales' => $totalSales,
+            'totalItems' => $totalItems,
+            'avgTicket' => $avgTicket,
+            'summaryData' => $summaryData,
+            'topCustomers' => $topCustomers,
+            'topSellers' => $topSellers,
+            'groupBy' => $request->get('group_by', 'day'),
+            'start_date' => $request->get('start_date'),
+            'end_date' => $request->get('end_date'),
+        ])->render();
+
+        $pdf = $this->generatePdf($html);
+
+        $filename = 'RelatorioPedidosSintetico';
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $filename .= '_'.$request->get('start_date').'_'.$request->get('end_date');
+        }
+        $filename .= '.pdf';
+
+        return response($pdf)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="'.$filename.'"');
+    }
+
+    private function buildOrderQuery(Request $request)
+    {
+        return Order::query()
             ->with(['customer', 'seller', 'createdBy'])
             ->when($request->filled('customer_id'), fn ($q) => $q->where('customer_id', $request->get('customer_id')))
             ->when($request->filled('seller_id'), fn ($q) => $q->where('seller_id', $request->get('seller_id')))
             ->when($request->filled('created_by'), fn ($q) => $q->where('created_by', $request->get('created_by')))
-            ->when($request->filled('start_date') && $request->filled('end_date'), fn ($q) => $q->whereBetween('issue_date', [$request->get('start_date'), $request->get('end_date')]));
+            ->when(
+                $request->filled('start_date') && $request->filled('end_date'),
+                fn ($q) => $q->whereBetween('issue_date', [$request->get('start_date'), $request->get('end_date')])
+            );
+    }
 
-        $ordersWithItems = $query->with('items.product')->get();
-        $totalOrders = $ordersWithItems->count();
-        $totalSales = $ordersWithItems->sum('total_price');
-        $totalItems = $ordersWithItems->flatMap(fn ($order) => $order->items)->sum('quantity');
-
-        $groupBy = $request->get('group_by', 'day');
+    private function getSummaryByPeriod($orders, $groupBy = 'day')
+    {
         $format = $groupBy === 'day' ? 'Y-m-d' : ($groupBy === 'week' ? 'Y-W' : 'Y-m');
-        $groupedOrders = $ordersWithItems->groupBy(fn ($order) => $order->issue_date->format($format));
+        $groupedOrders = $orders->groupBy(fn ($order) => $order->issue_date->format($format));
 
         $summaryData = [];
         foreach ($groupedOrders as $key => $group) {
@@ -90,7 +124,12 @@ class OrderReportController extends Controller
 
         usort($summaryData, fn ($a, $b) => strcmp($a['period'], $b['period']));
 
-        $topCustomers = $ordersWithItems->groupBy('customer_id')
+        return $summaryData;
+    }
+
+    private function getTopCustomers($orders)
+    {
+        return $orders->groupBy('customer_id')
             ->map(function ($g) {
                 $customer = $g->first()->customer;
 
@@ -100,8 +139,11 @@ class OrderReportController extends Controller
                     'total' => $g->sum('total_price'),
                 ];
             })->sortByDesc('total')->take(10)->values()->toArray();
+    }
 
-        $topSellers = $ordersWithItems->groupBy('seller_id')
+    private function getTopSellers($orders)
+    {
+        return $orders->groupBy('seller_id')
             ->map(function ($g) {
                 return [
                     'seller' => $g->first()->seller ? $g->first()->seller->name : 'N/A',
@@ -109,34 +151,6 @@ class OrderReportController extends Controller
                     'total' => $g->sum('total_price'),
                 ];
             })->sortByDesc('total')->take(10)->values()->toArray();
-
-        $html = view('reports.orders.synthetic', [
-            'orders' => $ordersWithItems,
-            'totalOrders' => $totalOrders,
-            'totalSales' => $totalSales,
-            'totalItems' => $totalItems,
-            'avgTicket' => $totalOrders > 0 ? $totalSales / $totalOrders : 0,
-            'summaryData' => $summaryData,
-            'topCustomers' => $topCustomers,
-            'topSellers' => $topSellers,
-            'groupBy' => $groupBy,
-            'start_date' => $request->get('start_date'),
-            'end_date' => $request->get('end_date'),
-        ])->render();
-
-        $pdf = Browsershot::html($html)
-            ->setNodeBinary('/usr/bin/node')
-            ->setNpmBinary('/usr/bin/npm')
-            ->noSandbox()
-            ->showBackground()
-            ->waitUntilNetworkIdle()
-            ->margins(10, 10, 10, 10)
-            ->format('A4')
-            ->pdf();
-
-        return response($pdf)
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'inline; filename="RelatorioPedidosSintetico_'.$request->get('start_date').'_'.$request->get('end_date').'.pdf"');
     }
 
     private function formatPeriodLabel($period, $groupBy)
@@ -153,5 +167,23 @@ class OrderReportController extends Controller
         }
 
         return Carbon::createFromFormat('Y-m', $period)->format('M/Y');
+    }
+
+    private function generatePdf($html)
+    {
+        $browsershot = Browsershot::html($html)
+            ->showBackground()
+            ->waitUntilNetworkIdle()
+            ->timeout(120)
+            ->margins(10, 10, 10, 10)
+            ->format('A4');
+
+        if (config('app.env') === 'production') {
+            $browsershot->setNodeBinary('/usr/bin/node')
+                ->setNpmBinary('/usr/bin/npm')
+                ->noSandbox();
+        }
+
+        return $browsershot->pdf();
     }
 }
