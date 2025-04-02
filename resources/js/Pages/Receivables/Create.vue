@@ -113,7 +113,7 @@ const updateIssueDateForAll = (newDate) => {
             <div class="card-header">Cadastro de Recebíveis</div>
             <div class="card-body">
                 <form @submit.prevent="handleSubmit">
-                    <div class="row mb-4">
+                    <div class="row">
                         <div class="col-md-6">
                             <Select2
                                 label="Cliente"
@@ -182,7 +182,7 @@ const updateIssueDateForAll = (newDate) => {
                         </div>
                     </div>
 
-                    <div class="table-responsive">
+                    <div class="table-responsive mt-4">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
