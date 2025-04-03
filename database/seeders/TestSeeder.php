@@ -794,7 +794,7 @@ class TestSeeder extends Seeder
         }
 
         $startDate = Carbon::now()->subDays(90);
-        $endDate = Carbon::now();
+        $endDate = Carbon::now()->endOfMonth()->endOfDay();
 
         for ($i = 0; $i < 30; $i++) {
             $supplier = $suppliers[array_rand($suppliers)];
@@ -911,7 +911,7 @@ class TestSeeder extends Seeder
         }
 
         $startDate = Carbon::now()->subDays(60);
-        $endDate = Carbon::now();
+        $endDate = Carbon::now()->endOfMonth()->endOfDay();
 
         for ($i = 0; $i < 50; $i++) {
             $customer = $customers[array_rand($customers)];
