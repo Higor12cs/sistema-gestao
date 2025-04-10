@@ -7,6 +7,7 @@ import DeleteConfirmation from "@/Components/DeleteConfirmation.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import Select2 from "@/Components/Select2.vue";
 import InputField from "@/Components/InputField.vue";
+import { formatCurrency, formatDate, formatSequentialId } from "@/utils";
 
 const props = defineProps({
     payables: Object,
@@ -112,23 +113,6 @@ const cancelDelete = () => {
     deleteIds.value = null;
 };
 
-const formatCurrency = (value) => {
-    return new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-    }).format(value);
-};
-
-const formatDate = (dateString) => {
-    if (dateString.includes('T')) {
-        dateString = dateString.split('T')[0];
-    }
-
-    const [year, month, day] = dateString.split('-');
-
-    return `${day}/${month}/${year}`;
-};
-
 const getStatusClass = (status) => {
     switch (status) {
         case "paid":
@@ -168,10 +152,6 @@ const canDeleteSelected = computed(() => {
         selectedPayables.value.every((r) => !r.purchase_id)
     );
 });
-
-const formatSequentialId = (id) => {
-    return String(id).padStart(6, "0");
-};
 
 const toggleSelectAll = () => {
     if (selectedPayables.value.length === getSelectablePayables().length) {
@@ -503,7 +483,7 @@ const isAllSelected = computed(() => {
                         @click="openPaymentPage"
                         :disabled="selectedPayables.length === 0"
                     >
-                        <i class="fas fa-sm fa-arrow-down"></i>
+                        <i class="fas fa-sm fa-angle-double-down"></i>
                         &nbsp; Baixar Selecionados
                     </button>
                 </div>

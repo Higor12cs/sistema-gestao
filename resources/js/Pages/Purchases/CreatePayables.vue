@@ -5,17 +5,11 @@ import Breadcrumb from "@/Components/Breadcrumb.vue";
 import Select2 from "@/Components/Select2.vue";
 import InputField from "@/Components/InputField.vue";
 import { ref, computed, watch } from "vue";
+import { formatCurrency } from "@/utils";
 
 const props = defineProps({
     purchase: Object,
 });
-
-const formatCurrency = (value) => {
-    return new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-    }).format(value);
-};
 
 const convertToNumber = (value) => {
     if (value === null || value === undefined || value === "") {

@@ -5,18 +5,12 @@ import { Head, Link, router } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import Pagination from "@/Components/Pagination.vue";
 import { ref } from "vue";
+import { formatCurrency } from "@/utils";
 
 const props = defineProps({
     stocks: Object,
     filters: Object,
 });
-
-const formatCurrency = (value) => {
-    return new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-    }).format(value);
-};
 
 const search = ref(props.filters.search || "");
 

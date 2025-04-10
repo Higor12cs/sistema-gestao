@@ -8,6 +8,7 @@ import { Head } from "@inertiajs/vue3";
 import DateRangePicker from "@/Components/DateRangePicker.vue";
 import { Chart } from "chart.js";
 import { registerables } from "chart.js";
+import { formatCurrencyAbbreviated, formatNumber } from "@/utils";
 
 Chart.register(...registerables);
 
@@ -29,43 +30,6 @@ const endDate = ref(page.props.endDate);
 const isLoading = ref(false);
 const chartInstance = ref(null);
 const salesChartCanvas = ref(null);
-
-const formatCurrency = (value) => {
-    const numValue = Number(value);
-
-    if (isNaN(numValue) || value === null || value === undefined)
-        return "R$ 0,00";
-
-    const isNegative = numValue < 0;
-    const absValue = Math.abs(numValue);
-
-    let formattedValue;
-
-    if (absValue >= 1000000) {
-        formattedValue = `R$ ${(absValue / 1000000).toFixed(2)}M`;
-    } else if (absValue >= 100000) {
-        formattedValue = `R$ ${(absValue / 1000).toFixed(0)}K`;
-    } else if (absValue >= 10000) {
-        formattedValue = `R$ ${(absValue / 1000).toFixed(1)}K`;
-    } else if (absValue >= 1000) {
-        formattedValue = `R$ ${(absValue / 1000).toFixed(2)}K`;
-    } else {
-        formattedValue = `R$ ${absValue.toFixed(2).replace(".", ",")}`;
-    }
-
-    return isNegative ? formattedValue.replace("R$", "-R$") : formattedValue;
-};
-
-const formatNumber = (value, decimals = 0) => {
-    const numValue = Number(value);
-    if (isNaN(numValue) || value === null || value === undefined) return "0";
-
-    return new Intl.NumberFormat("pt-BR", {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals,
-    }).format(numValue);
-};
-
 const summary = computed(() => metrics.value.summary || {});
 const salesData = computed(() => metrics.value.salesData || {});
 const purchasesData = computed(() => metrics.value.purchasesData || {});
@@ -254,7 +218,7 @@ onMounted(() => {
                         <span class="info-box-number">{{
                             isLoading
                                 ? "-"
-                                : formatCurrency(salesData.totalSales || 0)
+                                : formatCurrencyAbbreviated(salesData.totalSales || 0)
                         }}</span>
                         <span class="text-muted text-sm">Total no Período</span>
                     </div>
@@ -274,7 +238,7 @@ onMounted(() => {
                         <span class="info-box-number">{{
                             isLoading
                                 ? "-"
-                                : formatCurrency(
+                                : formatCurrencyAbbreviated(
                                       purchasesData.totalPurchases || 0
                                   )
                         }}</span>
@@ -303,7 +267,7 @@ onMounted(() => {
                         <span class="info-box-number">{{
                             isLoading
                                 ? "-"
-                                : formatCurrency(summary.balance || 0)
+                                : formatCurrencyAbbreviated(summary.balance || 0)
                         }}</span>
                         <span class="text-muted text-sm"
                             >Entradas - Saídas</span
@@ -325,7 +289,7 @@ onMounted(() => {
                         <span class="info-box-number">{{
                             isLoading
                                 ? "-"
-                                : formatCurrency(salesData.averageTicket || 0)
+                                : formatCurrencyAbbreviated(salesData.averageTicket || 0)
                         }}</span>
                         <span class="text-muted text-sm"
                             >{{
@@ -383,7 +347,7 @@ onMounted(() => {
                                     {{
                                         isLoading
                                             ? "-"
-                                            : formatCurrency(
+                                            : formatCurrencyAbbreviated(
                                                   financialData.pendingReceivables ||
                                                       0
                                               )
@@ -419,7 +383,7 @@ onMounted(() => {
                                     {{
                                         isLoading
                                             ? "-"
-                                            : formatCurrency(
+                                            : formatCurrencyAbbreviated(
                                                   financialData.pendingPayables ||
                                                       0
                                               )
@@ -455,7 +419,7 @@ onMounted(() => {
                                     {{
                                         isLoading
                                             ? "-"
-                                            : formatCurrency(
+                                            : formatCurrencyAbbreviated(
                                                   financialData.overdueReceivables ||
                                                       0
                                               )
@@ -493,7 +457,7 @@ onMounted(() => {
                                     {{
                                         isLoading
                                             ? "-"
-                                            : formatCurrency(
+                                            : formatCurrencyAbbreviated(
                                                   financialData.overduePayables ||
                                                       0
                                               )
@@ -548,7 +512,7 @@ onMounted(() => {
                                         </td>
                                         <td class="text-right">
                                             {{
-                                                formatCurrency(
+                                                formatCurrencyAbbreviated(
                                                     product.total_revenue
                                                 )
                                             }}
@@ -607,7 +571,7 @@ onMounted(() => {
                                         </td>
                                         <td class="text-right">
                                             {{
-                                                formatCurrency(
+                                                formatCurrencyAbbreviated(
                                                     customer.total_spent
                                                 )
                                             }}
@@ -667,7 +631,7 @@ onMounted(() => {
                                         </td>
                                         <td class="text-right">
                                             {{
-                                                formatCurrency(
+                                                formatCurrencyAbbreviated(
                                                     seller.total_spent
                                                 )
                                             }}

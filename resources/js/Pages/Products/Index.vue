@@ -6,18 +6,12 @@ import { debounce } from "lodash";
 import Pagination from "@/Components/Pagination.vue";
 import DeleteConfirmation from "@/Components/DeleteConfirmation.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
+import { formatCurrency } from "@/utils";
 
 const props = defineProps({
     products: Object,
     filters: Object,
 });
-
-const formatCurrency = (value) => {
-    return new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-    }).format(value);
-};
 
 const searchForm = useForm({
     search: props.filters?.search || "",

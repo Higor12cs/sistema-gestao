@@ -6,6 +6,12 @@ import { ref, onMounted } from "vue";
 import Pagination from "@/Components/Pagination.vue";
 import DeleteConfirmation from "@/Components/DeleteConfirmation.vue";
 import FilterModal from "@/Pages/Orders/FilterModal.vue";
+import {
+    formatCurrency,
+    formatDate,
+    formatSequentialId,
+} from "@/utils";
+import { formatIsoDate } from "../../Utils/formatters";
 
 const props = defineProps({
     orders: Object,
@@ -20,13 +26,9 @@ const getLastSevenDays = () => {
     const endDate = new Date();
     const startDate = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
 
-    const formatDate = (date) => {
-        return date.toISOString().split("T")[0];
-    };
-
     return {
-        start: formatDate(startDate),
-        end: formatDate(endDate),
+        start: formatIsoDate(startDate),
+        end: formatIsoDate(endDate),
     };
 };
 
@@ -95,27 +97,6 @@ const handleDelete = () => {
 const cancelDelete = () => {
     showDeleteModal.value = false;
     deleteId.value = null;
-};
-
-const formatCurrency = (value) => {
-    return new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-    }).format(value);
-};
-
-const formatDate = (dateString) => {
-    if (dateString.includes('T')) {
-        dateString = dateString.split('T')[0];
-    }
-
-    const [year, month, day] = dateString.split('-');
-
-    return `${day}/${month}/${year}`;
-};
-
-const formatSequentialId = (id) => {
-    return String(id).padStart(6, "0");
 };
 
 onMounted(() => {

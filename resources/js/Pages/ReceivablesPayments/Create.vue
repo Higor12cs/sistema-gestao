@@ -5,6 +5,7 @@ import InputField from "@/Components/InputField.vue";
 import Select2 from "@/Components/Select2.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
+import { formatCurrency, formatSequentialId } from "@/utils";
 
 const props = defineProps({
     receivables: {
@@ -115,19 +116,6 @@ const calculateEffectiveAmount = (payment, index) => {
     const discount = parseLocaleNumber(payment.discount || 0);
 
     payment.effective_amount = paid + fees - discount;
-};
-
-const formatCurrency = (value) => {
-    if (!value) return "R$ 0,00";
-
-    return new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-    }).format(value);
-};
-
-const formatSequentialId = (id) => {
-    return String(id).padStart(6, "0");
 };
 </script>
 

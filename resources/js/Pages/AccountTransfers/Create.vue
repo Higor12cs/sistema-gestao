@@ -4,6 +4,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm, Link } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import InputField from "@/Components/InputField.vue";
+import { formatCurrency } from "@/utils";
 
 const props = defineProps({
     accounts: Array,
@@ -33,13 +34,6 @@ const destinationAccount = computed(() => {
 
 const handleSubmit = () => {
     form.post(route("account-transfers.store"));
-};
-
-const formatCurrency = (value) => {
-    return new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-    }).format(value);
 };
 </script>
 

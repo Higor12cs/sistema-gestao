@@ -79,7 +79,7 @@ class SupplierController extends Controller
                 'data' => $suppliers->map(function (Supplier $supplier) {
                     return [
                         'id' => $supplier->id,
-                        'name' => $supplier->first_name . ' ' . $supplier->last_name,
+                        'name' => $supplier->first_name.' '.$supplier->last_name,
                     ];
                 }),
             ]);

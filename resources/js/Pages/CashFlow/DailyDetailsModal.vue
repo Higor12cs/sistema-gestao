@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
+import { formatCurrency, formatDate } from "@/utils";
 
 const props = defineProps({
     visible: Boolean,
@@ -38,28 +39,6 @@ watch(
 const closeModal = () => {
     if (window.$) $("#dailyDetailsModal").modal("hide");
     emit("close");
-};
-
-const formatCurrency = (value) => {
-    const numValue = Number(value);
-
-    if (isNaN(numValue) || value === null || value === undefined)
-        return "R$ 0,00";
-
-    return new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-    }).format(numValue);
-};
-
-const formatDate = (dateString) => {
-    if (dateString.includes("T")) {
-        dateString = dateString.split("T")[0];
-    }
-
-    const [year, month, day] = dateString.split("-");
-
-    return `${day}/${month}/${year}`;
 };
 
 onMounted(() => {
@@ -143,76 +122,6 @@ onMounted(() => {
                         <div class="tab-content mt-3">
                             <div
                                 class="tab-pane fade show active"
-                                id="transactions"
-                                role="tabpanel"
-                            >
-                                <div
-                                    v-if="transactions.length === 0"
-                                    class="alert alert-info"
-                                >
-                                    Nenhuma transação realizada neste dia.
-                                </div>
-                                <div v-else class="table-responsive">
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Descrição</th>
-                                                <th>Conta</th>
-                                                <th>Tipo</th>
-                                                <th class="text-right">
-                                                    Valor
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr
-                                                v-for="transaction in transactions"
-                                                :key="transaction.id"
-                                            >
-                                                <td>
-                                                    {{
-                                                        transaction.description
-                                                    }}
-                                                </td>
-                                                <td>
-                                                    {{
-                                                        transaction.account
-                                                            ?.name
-                                                    }}
-                                                </td>
-                                                <td>
-                                                    <span
-                                                        class="badge"
-                                                        :class="
-                                                            transaction.type ===
-                                                            'income'
-                                                                ? 'bg-success'
-                                                                : 'bg-danger'
-                                                        "
-                                                    >
-                                                        {{
-                                                            transaction.type ===
-                                                            "income"
-                                                                ? "Entrada"
-                                                                : "Saída"
-                                                        }}
-                                                    </span>
-                                                </td>
-                                                <td class="text-right">
-                                                    {{
-                                                        formatCurrency(
-                                                            transaction.amount
-                                                        )
-                                                    }}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <div
-                                class="tab-pane fade"
                                 id="receivables"
                                 role="tabpanel"
                             >
@@ -366,6 +275,76 @@ onMounted(() => {
                                                     {{
                                                         formatCurrency(
                                                             payable.remaining_amount
+                                                        )
+                                                    }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div
+                                class="tab-pane"
+                                id="transactions"
+                                role="tabpanel"
+                            >
+                                <div
+                                    v-if="transactions.length === 0"
+                                    class="alert alert-info"
+                                >
+                                    Nenhuma transação realizada neste dia.
+                                </div>
+                                <div v-else class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Descrição</th>
+                                                <th>Conta</th>
+                                                <th>Tipo</th>
+                                                <th class="text-right">
+                                                    Valor
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                                v-for="transaction in transactions"
+                                                :key="transaction.id"
+                                            >
+                                                <td>
+                                                    {{
+                                                        transaction.description
+                                                    }}
+                                                </td>
+                                                <td>
+                                                    {{
+                                                        transaction.account
+                                                            ?.name
+                                                    }}
+                                                </td>
+                                                <td>
+                                                    <span
+                                                        class="badge"
+                                                        :class="
+                                                            transaction.type ===
+                                                            'income'
+                                                                ? 'bg-success'
+                                                                : 'bg-danger'
+                                                        "
+                                                    >
+                                                        {{
+                                                            transaction.type ===
+                                                            "income"
+                                                                ? "Entrada"
+                                                                : "Saída"
+                                                        }}
+                                                    </span>
+                                                </td>
+                                                <td class="text-right">
+                                                    {{
+                                                        formatCurrency(
+                                                            transaction.amount
                                                         )
                                                     }}
                                                 </td>

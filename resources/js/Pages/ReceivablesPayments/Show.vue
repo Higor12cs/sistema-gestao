@@ -2,31 +2,11 @@
 import { Head, Link } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
+import { formatCurrency, formatDate, formatSequentialId } from "@/utils";
 
 const props = defineProps({
     payment: Object,
 });
-
-const formatCurrency = (value) => {
-    return new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-    }).format(value);
-};
-
-const formatDate = (dateString) => {
-    if (dateString.includes('T')) {
-        dateString = dateString.split('T')[0];
-    }
-
-    const [year, month, day] = dateString.split('-');
-
-    return `${day}/${month}/${year}`;
-};
-
-const formatSequentialId = (id) => {
-    return String(id).padStart(6, "0");
-};
 </script>
 
 <template>

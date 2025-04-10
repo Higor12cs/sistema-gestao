@@ -5,6 +5,7 @@ import { Head, useForm, router } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import InputField from "@/Components/InputField.vue";
 import Pagination from "@/Components/Pagination.vue";
+import { formatCurrency, formatDate, formatSequentialId } from "@/utils";
 
 const props = defineProps({
     account: Object,
@@ -121,27 +122,6 @@ const updateSelectedTransactions = () => {
             bulkEditForm.reconciled = null;
         },
     });
-};
-
-const formatCurrency = (value) => {
-    return new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-    }).format(value);
-};
-
-const formatDate = (dateString) => {
-    if (dateString.includes('T')) {
-        dateString = dateString.split('T')[0];
-    }
-
-    const [year, month, day] = dateString.split('-');
-
-    return `${day}/${month}/${year}`;
-};
-
-const formatSequentialId = (id) => {
-    return String(id).padStart(6, "0");
 };
 
 const getTransactionOrigin = (transaction) => {

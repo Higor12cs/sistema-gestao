@@ -39,13 +39,48 @@ export const sidebarItems = [
                 label: "Fornecedores",
                 permission: "suppliers.index",
             },
+            {
+                type: "link",
+                routeName: "products.index",
+                iconClass: "fas fa-box",
+                label: "Produtos",
+                permission: "products.index",
+            },
+            {
+                type: "collapsible",
+                iconClass: "fas fa-tags",
+                label: "Atributos",
+                subItems: [
+                    {
+                        type: "link",
+                        routeName: "sections.index",
+                        iconClass: "fas fa-circle",
+                        label: "Seções",
+                        permission: "sections.index",
+                    },
+                    {
+                        type: "link",
+                        routeName: "groups.index",
+                        iconClass: "fas fa-circle",
+                        label: "Grupos",
+                        permission: "groups.index",
+                    },
+                    {
+                        type: "link",
+                        routeName: "brands.index",
+                        iconClass: "fas fa-circle",
+                        label: "Marcas",
+                        permission: "brands.index",
+                    },
+                ],
+            },
         ],
     },
 
-    // Vendas
+    // Operações
     {
         type: "header",
-        label: "Vendas",
+        label: "Operações",
         items: [
             {
                 type: "collapsible",
@@ -54,28 +89,20 @@ export const sidebarItems = [
                 subItems: [
                     {
                         type: "link",
-                        routeName: "orders.index",
-                        iconClass: "fas fa-shopping-basket",
-                        label: "Pedidos",
-                        permission: "orders.index",
-                    },
-                    {
-                        type: "link",
                         routeName: "orders.create",
-                        iconClass: "fas fa-shopping-basket",
+                        iconClass: "fas fa-circle",
                         label: "Novo Pedido",
                         permission: "orders.create",
                     },
+                    {
+                        type: "link",
+                        routeName: "orders.index",
+                        iconClass: "fas fa-circle",
+                        label: "Listar Pedidos",
+                        permission: "orders.index",
+                    },
                 ],
             },
-        ],
-    },
-
-    // Compras
-    {
-        type: "header",
-        label: "Compras",
-        items: [
             {
                 type: "collapsible",
                 iconClass: "fas fa-truck-loading",
@@ -83,105 +110,28 @@ export const sidebarItems = [
                 subItems: [
                     {
                         type: "link",
-                        routeName: "purchases.index",
-                        iconClass: "fas fa-truck-loading",
-                        label: "Compras",
-                        permission: "purchases.index",
-                    },
-                    {
-                        type: "link",
                         routeName: "purchases.create",
-                        iconClass: "fas fa-truck-loading",
+                        iconClass: "fas fa-circle",
                         label: "Nova Compra",
                         permission: "purchases.create",
                     },
+                    {
+                        type: "link",
+                        routeName: "purchases.index",
+                        iconClass: "fas fa-circle",
+                        label: "Listar Compras",
+                        permission: "purchases.index",
+                    },
                 ],
             },
         ],
     },
 
-    // Financeiro
-    {
-        type: "header",
-        label: "Financeiro",
-        items: [
-            {
-                type: "collapsible",
-                iconClass: "fas fa-university",
-                label: "Financeiro",
-                subItems: [
-                    {
-                        type: "link",
-                        routeName: "receivables.index",
-                        iconClass: "fas fa-arrow-down",
-                        label: "Recebíveis",
-                        permission: "receivables.index",
-                    },
-                    {
-                        type: "link",
-                        routeName: "payables.index",
-                        iconClass: "fas fa-arrow-up",
-                        label: "Pagáveis",
-                        permission: "payables.index",
-                    },
-                    {
-                        type: "link",
-                        routeName: "accounts.index",
-                        iconClass: "fas fa-university",
-                        label: "Contas",
-                        permission: "accounts.index",
-                    },
-                    {
-                        type: "link",
-                        routeName: "account-transfers.index",
-                        iconClass: "fas fa-exchange-alt",
-                        label: "Transferências",
-                        permission: "accounts.index",
-                    },
-                    {
-                        type: "link",
-                        routeName: "account-reconciliation.select",
-                        iconClass: "fas fa-check-double",
-                        label: "Conciliação Bancária",
-                        permission: "accounts.index",
-                    },
-                    {
-                        type: "link",
-                        routeName: "payment-methods.index",
-                        iconClass: "fas fa-wallet",
-                        label: "Métodos de Pagamento",
-                        permission: "payment-methods.index",
-                    },
-                    {
-                        type: "link",
-                        routeName: "chart-accounts.index",
-                        iconClass: "fas fa-chart-pie",
-                        label: "Planos de Contas",
-                        permission: "chart-accounts.index",
-                    },
-                ],
-            },
-            {
-                type: "link",
-                routeName: "cash-flow.index",
-                iconClass: "fas fa-chart-area",
-                label: "Fluxo de Caixa",
-            },
-        ],
-    },
-
-    // Estoque
+    // Estoque (simplificado e reorganizado)
     {
         type: "header",
         label: "Estoque",
         items: [
-            {
-                type: "link",
-                routeName: "products.index",
-                iconClass: "fas fa-box",
-                label: "Produtos",
-                permission: "products.index",
-            },
             {
                 type: "link",
                 routeName: "stocks.index",
@@ -196,32 +146,87 @@ export const sidebarItems = [
                 label: "Kardex",
                 permission: "kardex.index",
             },
+        ],
+    },
+
+    // Financeiro (reorganizado para agrupar funcionalidades relacionadas)
+    {
+        type: "header",
+        label: "Financeiro",
+        items: [
+            {
+                type: "link",
+                routeName: "cash-flow.index",
+                iconClass: "fas fa-chart-area",
+                label: "Fluxo de Caixa",
+            },
             {
                 type: "collapsible",
-                iconClass: "fas fa-tags",
-                label: "Atributos",
-                permission: "atributos.index",
+                iconClass: "fas fa-piggy-bank",
+                label: "Financeiro",
                 subItems: [
                     {
                         type: "link",
-                        routeName: "sections.index",
-                        iconClass: "fas fa-tag",
-                        label: "Seções",
-                        permission: "sections.index",
+                        routeName: "receivables.index",
+                        iconClass: "fas fa-circle",
+                        label: "Recebíveis",
+                        permission: "receivables.index",
                     },
                     {
                         type: "link",
-                        routeName: "groups.index",
-                        iconClass: "fas fa-tag",
-                        label: "Grupos",
-                        permission: "groups.index",
+                        routeName: "payables.index",
+                        iconClass: "fas fa-circle",
+                        label: "Pagáveis",
+                        permission: "payables.index",
+                    },
+                ],
+            },
+            {
+                type: "collapsible",
+                iconClass: "fas fa-university",
+                label: "Contas Bancárias",
+                subItems: [
+                    {
+                        type: "link",
+                        routeName: "accounts.index",
+                        iconClass: "fas fa-circle",
+                        label: "Contas",
+                        permission: "accounts.index",
                     },
                     {
                         type: "link",
-                        routeName: "brands.index",
-                        iconClass: "fas fa-tag",
-                        label: "Marcas",
-                        permission: "brands.index",
+                        routeName: "account-transfers.index",
+                        iconClass: "fas fa-circle",
+                        label: "Transferências",
+                        permission: "accounts.index",
+                    },
+                    {
+                        type: "link",
+                        routeName: "account-reconciliation.select",
+                        iconClass: "fas fa-circle",
+                        label: "Conciliação Bancária",
+                        permission: "accounts.index",
+                    },
+                ],
+            },
+            {
+                type: "collapsible",
+                iconClass: "fas fa-cog",
+                label: "Configurações",
+                subItems: [
+                    {
+                        type: "link",
+                        routeName: "payment-methods.index",
+                        iconClass: "fas fa-circle",
+                        label: "Métodos de Pagamento",
+                        permission: "payment-methods.index",
+                    },
+                    {
+                        type: "link",
+                        routeName: "chart-accounts.index",
+                        iconClass: "fas fa-circle",
+                        label: "Planos de Contas",
+                        permission: "chart-accounts.index",
                     },
                 ],
             },
@@ -331,7 +336,7 @@ export const sidebarItems = [
         ],
     },
 
-    // Configurações
+    // Configurações (movido para o final como é convencional em sistemas)
     {
         type: "header",
         label: "Configurações",
@@ -353,7 +358,7 @@ export const sidebarItems = [
             {
                 type: "link",
                 routeName: "roles.index",
-                iconClass: "fas fa-lock",
+                iconClass: "fas fa-user-lock",
                 label: "Papéis",
                 permission: "roles.index",
             },

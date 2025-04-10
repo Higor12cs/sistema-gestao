@@ -73,7 +73,7 @@ class AccountReconciliationController extends Controller
                 ? ($updateData['reconciled'] ? 'conciliadas' : 'desconciliadas')
                 : 'atualizadas';
 
-            return back()->with('success', count($data['transaction_ids']).' transações '.$actionMessage.' com sucesso!');
+            return back()->with('success', 'Transações '.$actionMessage.' com sucesso!');
         });
     }
 

@@ -72,15 +72,15 @@ const getPermissionBadges = (permissions) => {
 </script>
 
 <template>
-    <Head title="Permissões" />
+    <Head title="Papéis" />
     <AuthenticatedLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
-                <h4>Permissões</h4>
+                <h4>Papéis</h4>
                 <Breadcrumb
                     :breadcrumb="[
                         { label: 'Home', routeName: 'home.index' },
-                        { label: 'Permissões' },
+                        { label: 'Papéis' },
                     ]"
                 />
             </div>
@@ -92,7 +92,7 @@ const getPermissionBadges = (permissions) => {
         </div>
 
         <div class="card">
-            <div class="card-header">Lista de Permissões</div>
+            <div class="card-header">Lista de Papéis</div>
             <div class="card-body">
                 <!-- Search Box -->
                 <div class="mb-3">
@@ -120,7 +120,7 @@ const getPermissionBadges = (permissions) => {
                             <tr>
                                 <th class="col-1">Código</th>
                                 <th class="col-5">Nome</th>
-                                <th class="col-5">Permissões</th>
+                                <th class="col-5">Papéis</th>
                                 <th class="col-1">Ações</th>
                             </tr>
                         </thead>

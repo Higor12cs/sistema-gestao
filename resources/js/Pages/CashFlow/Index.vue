@@ -9,6 +9,14 @@ import DateRangePicker from "@/Components/DateRangePicker.vue";
 import DailyDetailsModal from "@/Pages/CashFlow/DailyDetailsModal.vue";
 import { Chart } from "chart.js";
 import { registerables } from "chart.js";
+import {
+    formatCurrency,
+    formatCurrencyAbbreviated,
+    formatDateTime,
+    formatDate,
+    formatNumber,
+    formatSequentialId,
+} from "@/utils";
 
 Chart.register(...registerables);
 
@@ -33,42 +41,6 @@ const dailyDetails = ref({
     payables: [],
     date: null,
 });
-
-const formatCurrency = (value) => {
-    const numValue = Number(value);
-
-    if (isNaN(numValue) || value === null || value === undefined)
-        return "R$ 0,00";
-
-    const isNegative = numValue < 0;
-    const absValue = Math.abs(numValue);
-
-    let formattedValue;
-
-    if (absValue >= 1000000) {
-        formattedValue = `R$ ${(absValue / 1000000).toFixed(2)}M`;
-    } else if (absValue >= 100000) {
-        formattedValue = `R$ ${(absValue / 1000).toFixed(0)}K`;
-    } else if (absValue >= 10000) {
-        formattedValue = `R$ ${(absValue / 1000).toFixed(1)}K`;
-    } else if (absValue >= 1000) {
-        formattedValue = `R$ ${(absValue / 1000).toFixed(2)}K`;
-    } else {
-        formattedValue = `R$ ${absValue.toFixed(2).replace(".", ",")}`;
-    }
-
-    return isNegative ? formattedValue.replace("R$", "-R$") : formattedValue;
-};
-
-const formatNumber = (value, decimals = 0) => {
-    const numValue = Number(value);
-    if (isNaN(numValue) || value === null || value === undefined) return "0";
-
-    return new Intl.NumberFormat("pt-BR", {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals,
-    }).format(numValue);
-};
 
 const cashFlowData = computed(() => metrics.value.cashFlowData || []);
 const summaryData = computed(() => metrics.value.summaryData || {});
@@ -183,7 +155,9 @@ const renderChart = () => {
                                     label += ": ";
                                 }
                                 if (context.parsed.y !== null) {
-                                    label += formatCurrency(context.parsed.y);
+                                    label += formatCurrencyAbbreviated(
+                                        context.parsed.y
+                                    );
                                 }
                                 return label;
                             },
@@ -199,7 +173,7 @@ const renderChart = () => {
                         grid: {
                             display: false,
                         },
-                        stacked: true,
+                        stacked: false,
                     },
                     y: {
                         beginAtZero: true,
@@ -209,7 +183,7 @@ const renderChart = () => {
                         stacked: false,
                         ticks: {
                             callback: function (value) {
-                                return formatCurrency(value);
+                                return formatCurrencyAbbreviated(value);
                             },
                         },
                     },
@@ -252,16 +226,6 @@ const fetchDailyDetails = (date) => {
 
 const closeDailyDetailsModal = () => {
     showDailyDetailsModal.value = false;
-};
-
-const formatDate = (dateString) => {
-    if (dateString.includes("T")) {
-        dateString = dateString.split("T")[0];
-    }
-
-    const [year, month, day] = dateString.split("-");
-
-    return `${day}/${month}/${year}`;
 };
 
 onMounted(() => {
@@ -307,7 +271,7 @@ onMounted(() => {
                         <span class="info-box-number">{{
                             isLoading
                                 ? "-"
-                                : formatCurrency(
+                                : formatCurrencyAbbreviated(
                                       summaryData.totalReceivables || 0
                                   )
                         }}</span>
@@ -329,7 +293,9 @@ onMounted(() => {
                         <span class="info-box-number">{{
                             isLoading
                                 ? "-"
-                                : formatCurrency(summaryData.totalPayables || 0)
+                                : formatCurrencyAbbreviated(
+                                      summaryData.totalPayables || 0
+                                  )
                         }}</span>
                         <span class="text-muted text-sm">Total no Período</span>
                     </div>
@@ -356,7 +322,7 @@ onMounted(() => {
                         <span class="info-box-number">{{
                             isLoading
                                 ? "-"
-                                : formatCurrency(
+                                : formatCurrencyAbbreviated(
                                       summaryData.expectedBalance || 0
                                   )
                         }}</span>
@@ -380,7 +346,7 @@ onMounted(() => {
                         <span class="info-box-number">{{
                             isLoading
                                 ? "-"
-                                : formatCurrency(
+                                : formatCurrencyAbbreviated(
                                       summaryData.overdueReceivables -
                                           summaryData.overduePayables || 0
                                   )
@@ -401,6 +367,13 @@ onMounted(() => {
                 title="Clique em uma data no gráfico para ver os detalhes dos lançamentos daquele dia."
             ></i>
         </h5>
+
+        <div class="alert alert-primary" role="alert">
+            <i class="fas fa-info-circle"></i>
+            &nbsp;Clique em uma data no gráfico para ver os detalhes dos
+            lançamentos daquele dia.
+        </div>
+
         <div class="row">
             <div class="col-12">
                 <div class="card position-relative">
@@ -434,7 +407,9 @@ onMounted(() => {
                                 </h6>
                                 <h4 class="mb-0">
                                     {{
-                                        formatCurrency(account.current_balance)
+                                        formatCurrencyAbbreviated(
+                                            account.current_balance
+                                        )
                                     }}
                                 </h4>
                             </div>

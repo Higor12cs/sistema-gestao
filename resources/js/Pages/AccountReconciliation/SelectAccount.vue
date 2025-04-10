@@ -2,25 +2,19 @@
 import { Head, Link } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
+import { formatCurrency } from "@/utils";
 
 const props = defineProps({
     accounts: Array,
 });
-
-const formatCurrency = (value) => {
-    return new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-    }).format(value);
-};
 </script>
 
 <template>
-    <Head title="Selecionar Conta para Conciliação" />
+    <Head title="Conciliação" />
     <AuthenticatedLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
-                <h4>Selecionar Conta para Conciliação</h4>
+                <h4>Conciliação</h4>
                 <Breadcrumb
                     :breadcrumb="[
                         { label: 'Home', routeName: 'home.index' },

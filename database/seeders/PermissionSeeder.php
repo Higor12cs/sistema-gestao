@@ -60,6 +60,11 @@ class PermissionSeeder extends Seeder
                 'permissions' => ['index', 'create', 'edit', 'destroy'],
             ],
 
+            'cash_flow' => [
+                'name' => 'Fluxo de Caixa',
+                'permissions' => ['index'],
+            ],
+
             'products' => [
                 'name' => 'Produtos',
                 'permissions' => ['index', 'create', 'edit', 'destroy'],

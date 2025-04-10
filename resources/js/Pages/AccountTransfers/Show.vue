@@ -2,41 +2,16 @@
 import { Head, Link } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
+import {
+    formatCurrency,
+    formatDateTime,
+    formatDate,
+    formatSequentialId,
+} from "@/utils";
 
 const props = defineProps({
     transfer: Object,
 });
-
-const formatCurrency = (value) => {
-    return new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-    }).format(value);
-};
-
-const formatDate = (dateString) => {
-    if (dateString.includes('T')) {
-        dateString = dateString.split('T')[0];
-    }
-
-    const [year, month, day] = dateString.split('-');
-
-    return `${day}/${month}/${year}`;
-};
-
-const formatDateTime = (dateString) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    return (
-        date.toLocaleDateString("pt-BR") +
-        " " +
-        date.toLocaleTimeString("pt-BR")
-    );
-};
-
-const formatSequentialId = (id) => {
-    return String(id).padStart(6, "0");
-};
 </script>
 
 <template>

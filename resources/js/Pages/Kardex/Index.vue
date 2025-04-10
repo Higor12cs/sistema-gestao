@@ -5,6 +5,7 @@ import Breadcrumb from "@/Components/Breadcrumb.vue";
 import Pagination from "@/Components/Pagination.vue";
 import Select2 from "@/Components/Select2.vue";
 import { ref } from "vue";
+import { formatDate } from "@/utils";
 
 const props = defineProps({
     product: Object,
@@ -15,24 +16,6 @@ const props = defineProps({
 const productId = ref(props.filters.product_id || null);
 const startDate = ref(props.filters.start_date || null);
 const endDate = ref(props.filters.end_date || null);
-
-const formatCurrency = (value) => {
-    return new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-    }).format(value);
-};
-
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-    });
-};
 
 const getTypeLabel = (type) => {
     switch (type) {

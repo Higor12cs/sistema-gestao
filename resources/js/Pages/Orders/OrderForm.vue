@@ -4,6 +4,7 @@ import { useForm } from "@inertiajs/vue3";
 import Select2 from "@/Components/Select2.vue";
 import InputField from "@/Components/InputField.vue";
 import axios from "axios";
+import { formatCurrency } from "@/utils";
 
 const props = defineProps({
     order: Object,
@@ -16,16 +17,6 @@ const parseLocaleNumber = (value) => {
         return parseFloat(value.replace(",", ".")) || 0;
     }
     return parseFloat(value) || 0;
-};
-
-const formatCurrency = (value) => {
-    const numValue = parseFloat(value) || 0;
-    return numValue.toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    });
 };
 
 const discountValue = ref(parseLocaleNumber(props.order?.discount || 0));

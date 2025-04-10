@@ -31,6 +31,10 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    autocomplete: {
+        type: Boolean,
+        default: false,
+    },
     error: {
         type: String,
         default: "",
@@ -147,6 +151,7 @@ const handleInput = (event) => {
             :placeholder="placeholder"
             :required="required"
             :autofocus="autofocus"
+            :autocomplete="autocomplete ? 'on' : 'off'"
         />
 
         <div v-if="error" class="invalid-feedback">

@@ -4,6 +4,7 @@ import { Head, Link } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import { ref, onMounted } from "vue";
 import axios from "axios";
+import { formatCurrency, formatDate } from "@/utils";
 
 const props = defineProps({
     purchase: Object,
@@ -11,23 +12,6 @@ const props = defineProps({
 
 const supplier = ref(null);
 const productInfo = ref({});
-
-const formatCurrency = (value) => {
-    return new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-    }).format(value);
-};
-
-const formatDate = (dateString) => {
-    if (dateString.includes('T')) {
-        dateString = dateString.split('T')[0];
-    }
-
-    const [year, month, day] = dateString.split('-');
-
-    return `${day}/${month}/${year}`;
-};
 
 const fetchSupplierDetails = async () => {
     if (props.purchase.supplier_id) {
