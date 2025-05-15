@@ -156,30 +156,24 @@ export const sidebarItems = [
         items: [
             {
                 type: "link",
+                routeName: "receivables.index",
+                iconClass: "fas fa-arrow-down",
+                label: "Recebíveis",
+                permission: "receivables.index",
+            },
+            {
+                type: "link",
+                routeName: "payables.index",
+                iconClass: "fas fa-arrow-up",
+                label: "Pagáveis",
+                permission: "payables.index",
+            },
+            {
+                type: "link",
                 routeName: "cash-flow.index",
                 iconClass: "fas fa-chart-area",
                 label: "Fluxo de Caixa",
-            },
-            {
-                type: "collapsible",
-                iconClass: "fas fa-piggy-bank",
-                label: "Financeiro",
-                subItems: [
-                    {
-                        type: "link",
-                        routeName: "receivables.index",
-                        iconClass: "fas fa-circle",
-                        label: "Recebíveis",
-                        permission: "receivables.index",
-                    },
-                    {
-                        type: "link",
-                        routeName: "payables.index",
-                        iconClass: "fas fa-circle",
-                        label: "Pagáveis",
-                        permission: "payables.index",
-                    },
-                ],
+                permission: "cash-flow.index",
             },
             {
                 type: "collapsible",

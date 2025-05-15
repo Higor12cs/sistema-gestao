@@ -11,13 +11,21 @@ export const formatCurrencyAbbreviated = (value) => {
     const absValue = Math.abs(numValue);
     let formattedValue;
     if (absValue >= 1000000) {
-        formattedValue = `R$ ${(absValue / 1000000).toFixed(2).replace(".", ",")}M`;
+        formattedValue = `R$ ${(absValue / 1000000)
+            .toFixed(2)
+            .replace(".", ",")}M`;
     } else if (absValue >= 100000) {
-        formattedValue = `R$ ${(absValue / 1000).toFixed(0).replace(".", ",")}K`;
+        formattedValue = `R$ ${(absValue / 1000)
+            .toFixed(0)
+            .replace(".", ",")}K`;
     } else if (absValue >= 10000) {
-        formattedValue = `R$ ${(absValue / 1000).toFixed(1).replace(".", ",")}K`;
+        formattedValue = `R$ ${(absValue / 1000)
+            .toFixed(1)
+            .replace(".", ",")}K`;
     } else if (absValue >= 1000) {
-        formattedValue = `R$ ${(absValue / 1000).toFixed(2).replace(".", ",")}K`;
+        formattedValue = `R$ ${(absValue / 1000)
+            .toFixed(2)
+            .replace(".", ",")}K`;
     } else {
         formattedValue = `R$ ${absValue.toFixed(2).replace(".", ",")}`;
     }
@@ -64,7 +72,7 @@ export const formatNumber = (value, decimals = 0) => {
 export const formatDateTime = (dateString) => {
     if (!dateString) return "";
 
-    const [datePart, timePart] = dateString.split('T');
+    const [datePart, timePart] = dateString.split("T");
 
     if (!datePart) return "";
 
@@ -73,7 +81,7 @@ export const formatDateTime = (dateString) => {
 
     if (!timePart) return formattedDate;
 
-    const time = timePart.split('.')[0].split('Z')[0];
+    const time = timePart.split(".")[0].split("Z")[0];
 
     return `${formattedDate} ${time}`;
 };
@@ -117,7 +125,6 @@ export const formatIsoDate = (input) => {
         return "";
     }
 
-    // Retorna em formato ISO YYYY-MM-DD
     return date.toISOString().split("T")[0];
 };
 
