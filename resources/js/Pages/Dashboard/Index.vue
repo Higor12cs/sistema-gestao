@@ -2,13 +2,13 @@
 import { ref, computed, onMounted, nextTick } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import { router } from "@inertiajs/vue3";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import { Head } from "@inertiajs/vue3";
 import DateRangePicker from "@/Components/DateRangePicker.vue";
 import { Chart } from "chart.js";
 import { registerables } from "chart.js";
-import { formatCurrencyAbbreviated, formatNumber } from "@/utils";
+import { formatCurrencyAbbreviated, formatNumber } from "@/Utils/Formatters";
 
 Chart.register(...registerables);
 
@@ -185,7 +185,7 @@ onMounted(() => {
 <template>
     <Head title="Dashboard" />
 
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="mb-auto">
                 <h4>Dashboard</h4>
@@ -218,7 +218,9 @@ onMounted(() => {
                         <span class="info-box-number">{{
                             isLoading
                                 ? "-"
-                                : formatCurrencyAbbreviated(salesData.totalSales || 0)
+                                : formatCurrencyAbbreviated(
+                                      salesData.totalSales || 0
+                                  )
                         }}</span>
                         <span class="text-muted text-sm">Total no Período</span>
                     </div>
@@ -267,7 +269,9 @@ onMounted(() => {
                         <span class="info-box-number">{{
                             isLoading
                                 ? "-"
-                                : formatCurrencyAbbreviated(summary.balance || 0)
+                                : formatCurrencyAbbreviated(
+                                      summary.balance || 0
+                                  )
                         }}</span>
                         <span class="text-muted text-sm"
                             >Entradas - Saídas</span
@@ -289,7 +293,9 @@ onMounted(() => {
                         <span class="info-box-number">{{
                             isLoading
                                 ? "-"
-                                : formatCurrencyAbbreviated(salesData.averageTicket || 0)
+                                : formatCurrencyAbbreviated(
+                                      salesData.averageTicket || 0
+                                  )
                         }}</span>
                         <span class="text-muted text-sm"
                             >{{
@@ -663,5 +669,5 @@ onMounted(() => {
                 </div>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

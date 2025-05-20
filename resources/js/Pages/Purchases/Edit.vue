@@ -1,5 +1,5 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import PurchaseForm from "@/Pages/Purchases/PurchaseForm.vue";
@@ -18,7 +18,7 @@ const handleSubmit = (form) => {
 
 <template>
     <Head title="Editar Compra" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Editar Compra</h4>
@@ -48,5 +48,5 @@ const handleSubmit = (form) => {
                 />
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

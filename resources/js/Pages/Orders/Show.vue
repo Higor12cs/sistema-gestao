@@ -1,10 +1,10 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import { ref, onMounted } from "vue";
 import axios from "axios";
-import { formatCurrency, formatDate } from "@/utils";
+import { formatCurrency, formatDate } from "@/Utils/Formatters";
 
 const props = defineProps({
     order: Object,
@@ -57,7 +57,7 @@ onMounted(() => {
 
 <template>
     <Head title="Visualizar Pedido" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>
@@ -382,5 +382,5 @@ onMounted(() => {
                 </div>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

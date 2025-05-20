@@ -1,11 +1,11 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import Select2 from "@/Components/Select2.vue";
 import InputField from "@/Components/InputField.vue";
 import { ref, computed, watch } from "vue";
-import { formatCurrency } from "@/utils";
+import { formatCurrency } from "@/Utils/Formatters";
 
 const props = defineProps({
     purchase: Object,
@@ -249,7 +249,7 @@ const adjustLastPayable = () => {
 
 <template>
     <Head title="Finalizar Compra" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>
@@ -635,5 +635,5 @@ const adjustLastPayable = () => {
                 </span>
             </button>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

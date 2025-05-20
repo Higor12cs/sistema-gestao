@@ -1,8 +1,8 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, usePage } from "@inertiajs/vue3";
 import { computed, ref, onMounted, onBeforeUnmount } from "vue";
-import { sidebarItems, hasPermission } from "@/menu";
+import { sidebarItems, hasPermission } from "@/Utils/Menu";
 
 const page = usePage();
 const currentHour = ref(new Date().getHours());
@@ -130,7 +130,7 @@ onBeforeUnmount(() => {
 <template>
     <Head title="Home" />
 
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between">
             <div>
                 <h4>{{ greeting }}, {{ $page.props.auth.user.name }}!</h4>
@@ -183,5 +183,5 @@ onBeforeUnmount(() => {
                 </div>
             </template>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

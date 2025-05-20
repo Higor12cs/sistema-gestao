@@ -1,5 +1,5 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import DateRangePicker from "@/Components/DateRangePicker.vue";
 import Select2 from "@/Components/Select2.vue";
@@ -43,7 +43,7 @@ const handleSubmit = () => {
 
 <template>
     <Head title="Relatório Sintético de Recebíveis" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <h4>Relatório Sintético de Recebíveis</h4>
         </div>
@@ -199,5 +199,5 @@ const handleSubmit = () => {
                 </form>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

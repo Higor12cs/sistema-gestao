@@ -1,13 +1,17 @@
 <script setup>
 import { ref } from "vue";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, useForm, router, Link } from "@inertiajs/vue3";
 import Pagination from "@/Components/Pagination.vue";
 import DeleteConfirmation from "@/Components/DeleteConfirmation.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import Select2 from "@/Components/Select2.vue";
 import InputField from "@/Components/InputField.vue";
-import { formatCurrency, formatDate, formatSequentialId } from "@/utils";
+import {
+    formatCurrency,
+    formatDate,
+    formatSequentialId,
+} from "@/Utils/Formatters";
 
 const props = defineProps({
     payments: Object,
@@ -61,7 +65,7 @@ const cancelDelete = () => {
 
 <template>
     <Head title="Pagamentos de Recebíveis" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Pagamentos de Recebíveis</h4>
@@ -260,5 +264,5 @@ const cancelDelete = () => {
             success-redirect="receivables.payments.index"
             success-message="Pagamento excluído e saldo do recebível restaurado com sucesso!"
         />
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

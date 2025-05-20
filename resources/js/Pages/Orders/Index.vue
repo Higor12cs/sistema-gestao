@@ -1,5 +1,5 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import { ref, onMounted } from "vue";
@@ -10,8 +10,8 @@ import {
     formatCurrency,
     formatDate,
     formatSequentialId,
-} from "@/utils";
-import { formatIsoDate } from "../../Utils/formatters";
+} from "@/Utils/Formatters";
+import { formatIsoDate } from "@/Utils/Formatters";
 
 const props = defineProps({
     orders: Object,
@@ -108,7 +108,7 @@ onMounted(() => {
 
 <template>
     <Head title="Pedidos" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Pedidos</h4>
@@ -269,5 +269,5 @@ onMounted(() => {
             success-redirect="orders.index"
             success-message="Pedido excluído com sucesso!"
         />
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import ConfigurationForm from "@/Pages/Configurations/ConfigurationForm.vue";
@@ -18,14 +18,17 @@ const handleSubmit = (form) => {
 
 <template>
     <Head title="Editar Configuração" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Editar Configuração</h4>
                 <Breadcrumb
                     :breadcrumb="[
                         { label: 'Home', routeName: 'home.index' },
-                        { label: 'Configuraçãos', routeName: 'configurations.index' },
+                        {
+                            label: 'Configuraçãos',
+                            routeName: 'configurations.index',
+                        },
                         { label: 'Editar' },
                     ]"
                 />
@@ -49,5 +52,5 @@ const handleSubmit = (form) => {
                 />
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

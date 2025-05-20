@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, useForm, Link } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import Select2 from "@/Components/Select2.vue";
@@ -20,7 +20,7 @@ const submit = () => {
 
 <template>
     <Head title="Criar Usuário" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Criar Usuário</h4>
@@ -145,5 +145,5 @@ const submit = () => {
                 </form>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

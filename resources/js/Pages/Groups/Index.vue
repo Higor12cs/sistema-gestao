@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, useForm, router, Link } from "@inertiajs/vue3";
 import { debounce } from "lodash";
 import Pagination from "@/Components/Pagination.vue";
@@ -52,7 +52,7 @@ const cancelDelete = () => {
 
 <template>
     <Head title="Grupos" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Grupos</h4>
@@ -179,5 +179,5 @@ const cancelDelete = () => {
             success-redirect="groups.index"
             success-message="Grupo excluído com sucesso!"
         />
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

@@ -1,12 +1,16 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import { ref, onMounted } from "vue";
 import Pagination from "@/Components/Pagination.vue";
 import DeleteConfirmation from "@/Components/DeleteConfirmation.vue";
 import FilterModal from "@/Pages/Purchases/FilterModal.vue";
-import { formatCurrency, formatDate, formatSequentialId } from "@/utils";
+import {
+    formatCurrency,
+    formatDate,
+    formatSequentialId,
+} from "@/Utils/Formatters";
 
 const props = defineProps({
     purchases: Object,
@@ -100,7 +104,7 @@ onMounted(() => {
 
 <template>
     <Head title="Compras" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Compras</h4>
@@ -268,5 +272,5 @@ onMounted(() => {
             success-redirect="purchases.index"
             success-message="Compra excluída com sucesso!"
         />
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

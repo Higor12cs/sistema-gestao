@@ -1,5 +1,5 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import DateRangePicker from "@/Components/DateRangePicker.vue";
 import { ref } from "vue";
@@ -32,7 +32,7 @@ const handleSubmit = () => {
 
 <template>
     <Head title="Relatório Curva ABC - Clientes" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <h4>Relatório Curva ABC - Clientes</h4>
         </div>
@@ -138,5 +138,5 @@ const handleSubmit = () => {
                 </p>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

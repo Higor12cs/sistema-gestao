@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import InputField from "@/Components/InputField.vue";
@@ -89,7 +89,7 @@ const updateIssueDateForAll = (newDate) => {
 
 <template>
     <Head title="Criar Recebíveis" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Criar Recebíveis</h4>
@@ -304,5 +304,5 @@ const updateIssueDateForAll = (newDate) => {
                 </form>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

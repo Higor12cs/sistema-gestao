@@ -1,11 +1,15 @@
 <script setup>
 import { ref, computed, watch } from "vue";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, useForm, router } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import InputField from "@/Components/InputField.vue";
 import Pagination from "@/Components/Pagination.vue";
-import { formatCurrency, formatDate, formatSequentialId } from "@/utils";
+import {
+    formatCurrency,
+    formatDate,
+    formatSequentialId,
+} from "@/Utils/Formatters";
 
 const props = defineProps({
     account: Object,
@@ -161,7 +165,7 @@ const getTransactionOrigin = (transaction) => {
 
 <template>
     <Head title="Conciliação Bancária" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Conciliação Bancária - {{ account.name }}</h4>
@@ -466,7 +470,7 @@ const getTransactionOrigin = (transaction) => {
                 </div>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>
 
 <style scoped>

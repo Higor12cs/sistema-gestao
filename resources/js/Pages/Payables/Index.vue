@@ -1,13 +1,17 @@
 <script setup>
 import { ref, computed } from "vue";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, useForm, router, Link } from "@inertiajs/vue3";
 import Pagination from "@/Components/Pagination.vue";
 import DeleteConfirmation from "@/Components/DeleteConfirmation.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import Select2 from "@/Components/Select2.vue";
 import InputField from "@/Components/InputField.vue";
-import { formatCurrency, formatDate, formatSequentialId } from "@/utils";
+import {
+    formatCurrency,
+    formatDate,
+    formatSequentialId,
+} from "@/Utils/Formatters";
 
 const props = defineProps({
     payables: Object,
@@ -191,7 +195,7 @@ const isAllSelected = computed(() => {
 
 <template>
     <Head title="Pagáveis" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Pagáveis</h4>
@@ -503,5 +507,5 @@ const isAllSelected = computed(() => {
             success-redirect="payables.index"
             success-message="Pagáveis excluídos com sucesso!"
         />
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

@@ -1,12 +1,16 @@
 <script setup>
 import { ref } from "vue";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, useForm, router, Link } from "@inertiajs/vue3";
 import Pagination from "@/Components/Pagination.vue";
 import DeleteConfirmation from "@/Components/DeleteConfirmation.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import InputField from "@/Components/InputField.vue";
-import { formatCurrency, formatDate, formatSequentialId } from "@/utils";
+import {
+    formatCurrency,
+    formatDate,
+    formatSequentialId,
+} from "@/Utils/Formatters";
 
 const props = defineProps({
     transfers: Object,
@@ -67,7 +71,7 @@ const cancelDelete = () => {
 
 <template>
     <Head title="Transferências" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Transferências</h4>
@@ -225,5 +229,5 @@ const cancelDelete = () => {
             success-redirect="account-transfers.index"
             success-message="Transferência excluída com sucesso!"
         />
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import SectionForm from "@/Pages/Sections/SectionForm.vue";
@@ -18,7 +18,7 @@ const handleSubmit = (form) => {
 
 <template>
     <Head title="Editar Seção" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Editar Seção</h4>
@@ -49,5 +49,5 @@ const handleSubmit = (form) => {
                 />
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

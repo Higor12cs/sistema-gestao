@@ -1,91 +1,38 @@
-import { createApp, h } from "vue";
+import "../css/app.css";
+import "./bootstrap";
+
 import { createInertiaApp, router } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
+import { createApp, h } from "vue";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy";
-import { setupPlugins } from "./plugins";
-import { setupThirdParty } from "./bootstrap";
 import { toast } from "vue3-toastify";
 
-import "../css/app.css";
-import "../css/toastify.css";
-import "icheck-bootstrap/icheck-bootstrap.min.css";
-import "select2/dist/css/select2.css";
-import "admin-lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css";
-import "vue3-toastify/dist/index.css";
+const appName = import.meta.env.VITE_APP_NAME || "";
 
-setupThirdParty();
-
-const appName = import.meta.env.VITE_APP_NAME || "Laravel";
+router.on("finish", () => document.body.classList.remove("sidebar-open"));
 
 router.on("invalid", (event) => {
     const responseBody = event.detail.response?.data;
     if (responseBody?.error_message) {
-        toast.error(responseBody.error_message, {
-            autoClose: 3000,
-            position: toast.POSITION.TOP_RIGHT,
-        });
+        toast.error(responseBody.error_message);
         event.preventDefault();
     }
 });
 
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
+    title: (title) => `${title} | ${appName}`,
     resolve: (name) =>
         resolvePageComponent(
             `./Pages/${name}.vue`,
             import.meta.glob("./Pages/**/*.vue")
         ),
     setup({ el, App, props, plugin }) {
-        const app = createApp({ render: () => h(App, props) })
+        return createApp({ render: () => h(App, props) })
             .use(plugin)
-            .use(ZiggyVue);
-
-        setupPlugins(app);
-
-        app.mount(el);
-
-        initTreeview();
-
-        return app;
+            .use(ZiggyVue)
+            .mount(el);
     },
-    scrollRegions: [".main-sidebar .sidebar"],
     progress: {
-        color: "#007BFF",
+        color: "#007bff",
     },
 });
-
-function initTreeview() {
-    jQuery(function () {
-        try {
-            $('[data-widget="treeview"]').Treeview("destroy");
-        } catch (e) {}
-
-        setTimeout(function () {
-            $('[data-widget="treeview"]').Treeview("init");
-
-            try {
-                $('[data-widget="pushmenu"]').PushMenu("destroy");
-            } catch (e) {}
-
-            $('[data-widget="pushmenu"]').PushMenu({
-                autoCollapseSize: 992,
-                enableRemember: false,
-                collapseScreenSize: 992,
-            });
-
-            $(document).on("click", function (e) {
-                if (
-                    $(window).width() < 992 &&
-                    $("body").hasClass("sidebar-open")
-                ) {
-                    if (
-                        !$(e.target).closest(".main-sidebar").length &&
-                        !$(e.target).closest('[data-widget="pushmenu"]').length
-                    ) {
-                        $('[data-widget="pushmenu"]').PushMenu("collapse");
-                    }
-                }
-            });
-        }, 200);
-    });
-}

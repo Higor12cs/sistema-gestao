@@ -1,10 +1,14 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import InputField from "@/Components/InputField.vue";
 import { ref } from "vue";
-import { formatCurrency, formatDate, formatSequentialId } from "@/utils";
+import {
+    formatCurrency,
+    formatDate,
+    formatSequentialId,
+} from "@/Utils/Formatters";
 
 const props = defineProps({
     payable: Object,
@@ -31,7 +35,7 @@ const handleSubmit = () => {
 
 <template>
     <Head title="Editar Pagável" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Editar Pagável</h4>
@@ -179,5 +183,5 @@ const handleSubmit = () => {
                 </form>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

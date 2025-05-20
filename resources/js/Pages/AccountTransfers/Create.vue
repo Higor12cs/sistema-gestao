@@ -1,10 +1,10 @@
 <script setup>
 import { ref, computed } from "vue";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, useForm, Link } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import InputField from "@/Components/InputField.vue";
-import { formatCurrency } from "@/utils";
+import { formatCurrency } from "@/Utils/Formatters";
 
 const props = defineProps({
     accounts: Array,
@@ -39,7 +39,7 @@ const handleSubmit = () => {
 
 <template>
     <Head title="Nova Transferência" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Nova Transferência</h4>
@@ -243,5 +243,5 @@ const handleSubmit = () => {
                 </form>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

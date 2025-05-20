@@ -4,54 +4,31 @@ import { Link, usePage } from "@inertiajs/vue3";
 import { onMounted } from "vue";
 import NavItem from "@/Components/NavItem.vue";
 import NavItemCollapsible from "@/Components/NavItemCollapsible.vue";
-import { sidebarItems, hasPermission } from "@/menu";
+import { sidebarItems, hasPermission } from "@/Utils/Menu";
 import { toast } from "vue3-toastify";
 
 const appName = import.meta.env.VITE_APP_NAME || "";
-const currentTime = ref("");
 const page = usePage();
 const darkMode = ref(false);
 
+// Toasts
 const showFlashMessages = () => {
-    const props = usePage().props;
+    const { flash, success, error, info, warning } = usePage().props;
 
-    if (props.flash) {
-        if (props.flash.success) {
-            toast.success(props.flash.success);
-        }
-
-        if (props.flash.error) {
-            toast.error(props.flash.error);
-        }
-
-        if (props.flash.info) {
-            toast.info(props.flash.info);
-        }
-
-        if (props.flash.warning) {
-            toast.warning(props.flash.warning);
-        }
-    }
-
-    if (props.success) {
-        toast.success(props.success);
-    }
-
-    if (props.error) {
-        toast.error(props.error);
-    }
-
-    if (props.info) {
-        toast.info(props.info);
-    }
-
-    if (props.warning) {
-        toast.warning(props.warning);
-    }
+    [flash?.success, success].forEach((msg) => msg && toast.success(msg));
+    [flash?.error, error].forEach((msg) => msg && toast.error(msg));
+    [flash?.info, info].forEach((msg) => msg && toast.info(msg));
+    [flash?.warning, warning].forEach((msg) => msg && toast.warning(msg));
 };
 
 onMounted(() => {
     showFlashMessages();
+    const savedDarkMode = localStorage.getItem("darkMode");
+
+    if (savedDarkMode === "true") {
+        darkMode.value = true;
+        document.body.classList.add("dark-mode");
+    }
 });
 
 watch(
@@ -94,25 +71,6 @@ const visibleMenuItems = computed(() => {
         return visibleItems.length > 0;
     });
 });
-
-const updateTime = () => {
-    const now = new Date();
-    const hours = String(now.getHours()).padStart(2, "0");
-    const minutes = String(now.getMinutes()).padStart(2, "0");
-    const seconds = String(now.getSeconds()).padStart(2, "0");
-    currentTime.value = `${hours}:${minutes}:${seconds}`;
-};
-
-onMounted(() => {
-    updateTime();
-    setInterval(updateTime, 1000);
-
-    const savedDarkMode = localStorage.getItem("darkMode");
-    if (savedDarkMode === "true") {
-        darkMode.value = true;
-        document.body.classList.add("dark-mode");
-    }
-});
 </script>
 
 <template>
@@ -129,9 +87,7 @@ onMounted(() => {
                         <i class="fas fa-bars"></i>
                     </a>
                 </li>
-                <li class="nav-item d-flex align-items-center">
-                    {{ currentTime }}
-                </li>
+                <li class="nav-item d-flex align-items-center"></li>
             </ul>
 
             <ul class="navbar-nav ml-auto">

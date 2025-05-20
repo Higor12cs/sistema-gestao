@@ -1,5 +1,5 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import PaymentMethodForm from "@/Pages/PaymentMethods/PaymentMethodForm.vue";
@@ -14,14 +14,17 @@ const handleSubmit = (form) => {
 
 <template>
     <Head title="Criar Método de Pagamento" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Criar Método de Pagamento</h4>
                 <Breadcrumb
                     :breadcrumb="[
                         { label: 'Home', routeName: 'home.index' },
-                        { label: 'Métodos de Pagamento', routeName: 'payment-methods.index' },
+                        {
+                            label: 'Métodos de Pagamento',
+                            routeName: 'payment-methods.index',
+                        },
                         { label: 'Criar' },
                     ]"
                 />
@@ -44,5 +47,5 @@ const handleSubmit = (form) => {
                 />
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

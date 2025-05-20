@@ -1,11 +1,11 @@
 <!-- resources/js/Pages/Stocks/Index.vue -->
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import Pagination from "@/Components/Pagination.vue";
 import { ref } from "vue";
-import { formatCurrency } from "@/utils";
+import { formatCurrency } from "@/Utils/Formatters";
 
 const props = defineProps({
     stocks: Object,
@@ -25,7 +25,7 @@ const submit = () => {
 
 <template>
     <Head title="Estoque" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Estoque</h4>
@@ -131,5 +131,5 @@ const submit = () => {
                 <Pagination :links="stocks.links" />
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

@@ -1,8 +1,8 @@
 <script setup>
 import { Head, Link } from "@inertiajs/vue3";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
-import { formatCurrency } from "@/utils";
+import { formatCurrency } from "@/Utils/Formatters";
 
 const props = defineProps({
     accounts: Array,
@@ -11,7 +11,7 @@ const props = defineProps({
 
 <template>
     <Head title="Conciliação" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Conciliação</h4>
@@ -77,5 +77,5 @@ const props = defineProps({
                 </div>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

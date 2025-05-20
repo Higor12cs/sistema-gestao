@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import InputField from "@/Components/InputField.vue";
@@ -89,7 +89,7 @@ const updateIssueDateForAll = (newDate) => {
 
 <template>
     <Head title="Criar Pagáveis" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Criar Pagáveis</h4>
@@ -135,9 +135,7 @@ const updateIssueDateForAll = (newDate) => {
                                 :error="
                                     form.errors['payables.0.chart_account_id']
                                 "
-                                :search-url="
-                                    route('api.chart-accounts.search')
-                                "
+                                :search-url="route('api.chart-accounts.search')"
                                 value-key="id"
                                 label-key="name"
                                 placeholder="Pesquisar"
@@ -299,5 +297,5 @@ const updateIssueDateForAll = (newDate) => {
                 </form>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

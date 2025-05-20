@@ -1,5 +1,5 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 
@@ -13,7 +13,7 @@ const props = defineProps({
 
 <template>
     <Head title="Configurações" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Configurações</h4>
@@ -59,7 +59,8 @@ const props = defineProps({
                                     <Link
                                         :href="
                                             route('configurations.edit', {
-                                                configuration: configuration.sequential_id,
+                                                configuration:
+                                                    configuration.sequential_id,
                                             })
                                         "
                                         class="btn btn-sm btn-secondary"
@@ -73,5 +74,5 @@ const props = defineProps({
                 </div>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

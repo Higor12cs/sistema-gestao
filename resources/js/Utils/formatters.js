@@ -1,9 +1,4 @@
-/**
- * Formata um valor numérico para moeda brasileira (R$) com abreviações para valores grandes
- * @param {number|string} value - Valor a ser formatado
- * @returns {string} - Valor formatado como moeda abreviada
- */
-export const formatCurrencyAbbreviated = (value) => {
+export function formatCurrencyAbbreviated(value) {
     const numValue = Number(value);
     if (isNaN(numValue) || value === null || value === undefined)
         return "R$ 0,00";
@@ -30,14 +25,9 @@ export const formatCurrencyAbbreviated = (value) => {
         formattedValue = `R$ ${absValue.toFixed(2).replace(".", ",")}`;
     }
     return isNegative ? formattedValue.replace("R$", "-R$") : formattedValue;
-};
+}
 
-/**
- * Formata um valor numérico para moeda brasileira (R$) usando o formato padrão
- * @param {number|string} value - Valor a ser formatado
- * @returns {string} - Valor formatado como moeda
- */
-export const formatCurrency = (value) => {
+export function formatCurrency(value) {
     const numValue = Number(value);
     if (isNaN(numValue) || value === null || value === undefined)
         return "R$ 0,00";
@@ -46,15 +36,9 @@ export const formatCurrency = (value) => {
         style: "currency",
         currency: "BRL",
     }).format(numValue);
-};
+}
 
-/**
- * Formata um valor numérico com separadores de milhares
- * @param {number|string} value - Valor a ser formatado
- * @param {number} decimals - Número de casas decimais (padrão: 0)
- * @returns {string} - Valor formatado com separadores
- */
-export const formatNumber = (value, decimals = 0) => {
+export function formatNumber(value, decimals = 0) {
     const numValue = Number(value);
     if (isNaN(numValue) || value === null || value === undefined) return "0";
 
@@ -62,14 +46,9 @@ export const formatNumber = (value, decimals = 0) => {
         minimumFractionDigits: decimals,
         maximumFractionDigits: decimals,
     }).format(numValue);
-};
+}
 
-/**
- * Formata uma string de data e hora no padrão brasileiro (DD/MM/YYYY HH:MM:SS)
- * @param {string} dateString - String de data e hora (formato ISO "YYYY-MM-DDThh:mm:ss...")
- * @returns {string} - Data e hora formatada como DD/MM/YYYY HH:MM:SS
- */
-export const formatDateTime = (dateString) => {
+export function formatDateTime(dateString) {
     if (!dateString) return "";
 
     const [datePart, timePart] = dateString.split("T");
@@ -84,14 +63,9 @@ export const formatDateTime = (dateString) => {
     const time = timePart.split(".")[0].split("Z")[0];
 
     return `${formattedDate} ${time}`;
-};
+}
 
-/**
- * Formata uma data no padrão brasileiro (DD/MM/YYYY)
- * @param {string} dateString - String de data (formato ISO "YYYY-MM-DD" ou "YYYY-MM-DDT...")
- * @returns {string} - Data formatada como DD/MM/YYYY
- */
-export const formatDate = (dateString) => {
+export function formatDate(dateString) {
     if (!dateString) return "";
 
     if (dateString.includes("T")) {
@@ -101,14 +75,9 @@ export const formatDate = (dateString) => {
     const [year, month, day] = dateString.split("-");
 
     return `${day}/${month}/${year}`;
-};
+}
 
-/**
- * Formata uma data no padrão brasileiro (DD/MM/YYYY) com hora
- * @param {string} dateString - String de data (formato ISO "YYYY-MM-DD" ou "YYYY-MM-DDT...")
- * @returns {string} - Data formatada como DD/MM/YYYY
- */
-export const formatIsoDate = (input) => {
+export function formatIsoDate(input) {
     if (!input) return "";
 
     let date;
@@ -126,13 +95,8 @@ export const formatIsoDate = (input) => {
     }
 
     return date.toISOString().split("T")[0];
-};
+}
 
-/**
- * Formata uma data no padrão brasileiro (DD/MM/YYYY) com hora
- * @param {string} dateString - String de data (formato ISO "YYYY-MM-DD" ou "YYYY-MM-DDT...")
- * @returns {string} - Data formatada como DD/MM/YYYY
- */
-export const formatSequentialId = (id) => {
+export function formatSequentialId(id) {
     return String(id).padStart(6, "0");
-};
+}

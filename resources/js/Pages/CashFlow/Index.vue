@@ -2,7 +2,7 @@
 import { ref, computed, onMounted, nextTick } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import { router } from "@inertiajs/vue3";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import { Head } from "@inertiajs/vue3";
 import DateRangePicker from "@/Components/DateRangePicker.vue";
@@ -16,7 +16,7 @@ import {
     formatDate,
     formatNumber,
     formatSequentialId,
-} from "@/utils";
+} from "@/Utils/Formatters";
 
 Chart.register(...registerables);
 
@@ -238,7 +238,7 @@ onMounted(() => {
 <template>
     <Head title="Fluxo de Caixa" />
 
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="mb-auto">
                 <h4>Fluxo de Caixa</h4>
@@ -441,5 +441,5 @@ onMounted(() => {
             :is-loading="isLoading"
             @close="closeDailyDetailsModal"
         />
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

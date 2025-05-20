@@ -1,5 +1,5 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import OrderForm from "@/Pages/Orders/OrderForm.vue";
@@ -14,7 +14,7 @@ const handleSubmit = (form) => {
 
 <template>
     <Head title="Criar Pedido" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Criar Pedido</h4>
@@ -40,5 +40,5 @@ const handleSubmit = (form) => {
                 <OrderForm ref="formRef" @submit="handleSubmit" />
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

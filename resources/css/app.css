@@ -1,9 +1,10 @@
-/* @import "bootstrap/dist/css/bootstrap.min.css"; */
 @import "admin-lte/dist/css/adminlte.min.css";
 @import "admin-lte/plugins/fontawesome-free/css/all.css";
+@import "admin-lte/plugins/icheck-bootstrap/icheck-bootstrap.min.css";
+@import "vue3-toastify/dist/index.css";
+@import "./toastify.css";
 
 .card-header::after {
     content: "";
     position: absolute;
 }
-

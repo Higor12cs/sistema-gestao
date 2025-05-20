@@ -1,5 +1,10 @@
 <script setup>
 import { ref, onMounted, watch, onBeforeUnmount } from "vue";
+import Select2 from "select2";
+import "admin-lte/plugins/select2/css/select2.min.css";
+import "admin-lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css";
+
+Select2($);
 
 const props = defineProps({
     modelValue: {

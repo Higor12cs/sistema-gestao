@@ -1,11 +1,11 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 </script>
 
 <template>
     <Head title="Relatórios de Pagáveis" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <h4>Relatórios de Pagáveis</h4>
         </div>
@@ -53,5 +53,5 @@ import { Head, Link } from "@inertiajs/vue3";
                 </div>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import GroupForm from "@/Pages/Groups/GroupForm.vue";
@@ -14,7 +14,7 @@ const handleSubmit = (form) => {
 
 <template>
     <Head title="Criar Grupos" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Criar Grupos</h4>
@@ -40,5 +40,5 @@ const handleSubmit = (form) => {
                 <GroupForm ref="formRef" @submit="handleSubmit" />
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

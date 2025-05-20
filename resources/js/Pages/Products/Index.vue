@@ -1,12 +1,12 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, useForm, router, Link } from "@inertiajs/vue3";
 import { debounce } from "lodash";
 import Pagination from "@/Components/Pagination.vue";
 import DeleteConfirmation from "@/Components/DeleteConfirmation.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
-import { formatCurrency } from "@/utils";
+import { formatCurrency } from "@/Utils/Formatters";
 
 const props = defineProps({
     products: Object,
@@ -53,7 +53,7 @@ const cancelDelete = () => {
 
 <template>
     <Head title="Produtos" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Produtos</h4>
@@ -189,5 +189,5 @@ const cancelDelete = () => {
             success-redirect="products.index"
             success-message="Produto excluído com sucesso!"
         />
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

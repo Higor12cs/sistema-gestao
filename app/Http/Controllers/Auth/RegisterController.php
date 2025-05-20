@@ -14,7 +14,6 @@ use Database\Seeders\TestSeeder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Spatie\Permission\PermissionRegistrar;
 
 class RegisterController extends Controller
@@ -27,16 +26,12 @@ class RegisterController extends Controller
                 'trial_ends_at' => now()->addDays(7),
             ]);
 
-            DB::table('users')->insert([
-                'id' => Str::uuid(),
-                'tenant_id' => $tenant->id,
+            $user = $tenant->users()->create([
                 'sequential_id' => 1,
                 'name' => $request->name,
                 'email' => $request->email,
                 'email_verified_at' => now(),
                 'password' => bcrypt($request->password),
-                'created_at' => now(),
-                'updated_at' => now(),
             ]);
 
             DB::table('tenant_sequences')->insert([
@@ -45,10 +40,9 @@ class RegisterController extends Controller
                 'last_sequence_value' => 1,
             ]);
 
-            $user = $tenant->users()->first();
             app(PermissionRegistrar::class)->setPermissionsTeamId($user->tenant_id);
 
-            $adminRole = Role::firstOrCreate([
+            $admin = Role::firstOrCreate([
                 'sequential_id' => 1,
                 'name' => 'Administrador',
                 'tenant_id' => $user->tenant_id,
@@ -60,17 +54,13 @@ class RegisterController extends Controller
                 'last_sequence_value' => 1,
             ]);
 
-            $adminRole->syncPermissions(Permission::all());
-            $user->assignRole($adminRole);
+            $admin->syncPermissions(Permission::all());
+            $user->assignRole($admin);
 
             Auth::login($user);
 
-            (new ChartAccountSeeder)->run($tenant);
             (new DefaultCustomerSeeder)->run($tenant);
-
-            // if (config('app.env') === 'local') {
-            //     (new (TestSeeder::class))->run($tenant, $user);
-            // }
+            (new ChartAccountSeeder)->run($tenant);
 
             if ($user->email === 'test@example.com') {
                 (new (TestSeeder::class))->run($tenant, $user);
@@ -80,7 +70,6 @@ class RegisterController extends Controller
             }
         });
 
-        // return to_route('home.index');
         return response()->make('', 409, ['X-Inertia-Location' => route('home.index')]);
     }
 }

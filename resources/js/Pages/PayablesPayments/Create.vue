@@ -3,9 +3,9 @@ import { ref, computed, onMounted } from "vue";
 import { useForm, Link, Head } from "@inertiajs/vue3";
 import InputField from "@/Components/InputField.vue";
 import Select2 from "@/Components/Select2.vue";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
-import { formatCurrency, formatSequentialId } from "@/utils";
+import { formatCurrency, formatSequentialId } from "@/Utils/Formatters";
 
 const props = defineProps({
     payables: {
@@ -121,7 +121,7 @@ const calculateEffectiveAmount = (payment, index) => {
 
 <template>
     <Head title="Registrar Pagamento" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Registrar Pagamento</h4>
@@ -391,5 +391,5 @@ const calculateEffectiveAmount = (payment, index) => {
                 </form>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

@@ -1,11 +1,11 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import Pagination from "@/Components/Pagination.vue";
 import Select2 from "@/Components/Select2.vue";
 import { ref } from "vue";
-import { formatDate } from "@/utils";
+import { formatDate } from "@/Utils/Formatters";
 
 const props = defineProps({
     product: Object,
@@ -80,7 +80,7 @@ const resetFilters = () => {
 
 <template>
     <Head title="Kardex" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Kardex - Movimentações de Estoque</h4>
@@ -229,5 +229,5 @@ const resetFilters = () => {
         <div v-else class="alert alert-info">
             Por favor, selecione um produto para visualizar suas movimentações.
         </div>
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>

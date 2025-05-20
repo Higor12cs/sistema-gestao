@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from "vue";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, useForm, router, Link } from "@inertiajs/vue3";
 import { debounce } from "lodash";
 import Pagination from "@/Components/Pagination.vue";
@@ -73,7 +73,7 @@ const getPermissionBadges = (permissions) => {
 
 <template>
     <Head title="Papéis" />
-    <AuthenticatedLayout>
+    <AppLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>Papéis</h4>
@@ -206,7 +206,7 @@ const getPermissionBadges = (permissions) => {
             success-redirect="roles.index"
             success-message="Papel excluído com sucesso!"
         />
-    </AuthenticatedLayout>
+    </AppLayout>
 </template>
 
 <style scoped>
