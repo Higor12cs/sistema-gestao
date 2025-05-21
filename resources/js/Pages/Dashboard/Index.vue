@@ -8,7 +8,7 @@ import { Head } from "@inertiajs/vue3";
 import DateRangePicker from "@/Components/DateRangePicker.vue";
 import { Chart } from "chart.js";
 import { registerables } from "chart.js";
-import { formatCurrencyAbbreviated, formatNumber } from "@/Utils/Formatters";
+import { formatCurrencyAbbreviated, formatNumber } from "@/Utils/Formatters.js";
 
 Chart.register(...registerables);
 

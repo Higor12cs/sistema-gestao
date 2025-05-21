@@ -7,7 +7,7 @@ import {
     formatDateTime,
     formatDate,
     formatSequentialId,
-} from "@/Utils/Formatters";
+} from "@/Utils/Formatters.js";
 
 const props = defineProps({
     transfer: Object,

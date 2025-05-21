@@ -4,7 +4,7 @@ import { useForm } from "@inertiajs/vue3";
 import Select2 from "@/Components/Select2.vue";
 import InputField from "@/Components/InputField.vue";
 import axios from "axios";
-import { formatCurrency } from "@/Utils/Formatters";
+import { formatCurrency } from "@/Utils/Formatters.js";
 
 const props = defineProps({
     order: Object,

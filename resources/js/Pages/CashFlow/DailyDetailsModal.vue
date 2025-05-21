@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
-import { formatCurrency, formatDate } from "@/Utils/Formatters";
+import { formatCurrency, formatDate } from "@/Utils/Formatters.js";
 
 const props = defineProps({
     visible: Boolean,

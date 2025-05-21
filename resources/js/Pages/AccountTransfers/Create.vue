@@ -4,7 +4,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, useForm, Link } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import InputField from "@/Components/InputField.vue";
-import { formatCurrency } from "@/Utils/Formatters";
+import { formatCurrency } from "@/Utils/Formatters.js";
 
 const props = defineProps({
     accounts: Array,

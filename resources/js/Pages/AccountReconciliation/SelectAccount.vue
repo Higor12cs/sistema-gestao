@@ -2,7 +2,7 @@
 import { Head, Link } from "@inertiajs/vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
-import { formatCurrency } from "@/Utils/Formatters";
+import { formatCurrency } from "@/Utils/Formatters.js";
 
 const props = defineProps({
     accounts: Array,

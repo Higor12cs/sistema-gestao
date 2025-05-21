@@ -5,7 +5,7 @@ import InputField from "@/Components/InputField.vue";
 import Select2 from "@/Components/Select2.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
-import { formatCurrency, formatSequentialId } from "@/Utils/Formatters";
+import { formatCurrency, formatSequentialId } from "@/Utils/Formatters.js";
 
 const props = defineProps({
     payables: {

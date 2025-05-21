@@ -4,7 +4,7 @@ import { Head, Link } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import { ref, onMounted } from "vue";
 import axios from "axios";
-import { formatCurrency, formatDate } from "@/Utils/Formatters";
+import { formatCurrency, formatDate } from "@/Utils/Formatters.js";
 
 const props = defineProps({
     purchase: Object,

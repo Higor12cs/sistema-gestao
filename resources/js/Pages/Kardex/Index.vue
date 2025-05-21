@@ -5,7 +5,7 @@ import Breadcrumb from "@/Components/Breadcrumb.vue";
 import Pagination from "@/Components/Pagination.vue";
 import Select2 from "@/Components/Select2.vue";
 import { ref } from "vue";
-import { formatDate } from "@/Utils/Formatters";
+import { formatDate } from "@/Utils/Formatters.js";
 
 const props = defineProps({
     product: Object,

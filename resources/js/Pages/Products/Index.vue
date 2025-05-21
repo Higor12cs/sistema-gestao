@@ -6,7 +6,7 @@ import { debounce } from "lodash";
 import Pagination from "@/Components/Pagination.vue";
 import DeleteConfirmation from "@/Components/DeleteConfirmation.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
-import { formatCurrency } from "@/Utils/Formatters";
+import { formatCurrency } from "@/Utils/Formatters.js";
 
 const props = defineProps({
     products: Object,

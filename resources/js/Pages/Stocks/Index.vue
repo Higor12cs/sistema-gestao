@@ -5,7 +5,7 @@ import { Head, Link, router } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import Pagination from "@/Components/Pagination.vue";
 import { ref } from "vue";
-import { formatCurrency } from "@/Utils/Formatters";
+import { formatCurrency } from "@/Utils/Formatters.js";
 
 const props = defineProps({
     stocks: Object,

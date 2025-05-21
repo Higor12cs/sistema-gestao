@@ -10,7 +10,7 @@ import {
     formatCurrency,
     formatDate,
     formatSequentialId,
-} from "@/Utils/Formatters";
+} from "@/Utils/Formatters.js";
 
 const props = defineProps({
     purchases: Object,

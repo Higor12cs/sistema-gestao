@@ -16,7 +16,7 @@ import {
     formatDate,
     formatNumber,
     formatSequentialId,
-} from "@/Utils/Formatters";
+} from "@/Utils/Formatters.js";
 
 Chart.register(...registerables);
 

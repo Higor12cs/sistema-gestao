@@ -5,7 +5,7 @@ import Breadcrumb from "@/Components/Breadcrumb.vue";
 import Select2 from "@/Components/Select2.vue";
 import InputField from "@/Components/InputField.vue";
 import { ref, computed, watch } from "vue";
-import { formatCurrency } from "@/Utils/Formatters";
+import { formatCurrency } from "@/Utils/Formatters.js";
 
 const props = defineProps({
     order: Object,
