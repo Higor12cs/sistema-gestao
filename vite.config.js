@@ -12,7 +12,11 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            "@": "/resources/js",
+            "@": fileURLToPath(new URL("./resources/js", import.meta.url)),
+            "~": fileURLToPath(new URL("./resources", import.meta.url)),
         },
+    },
+    build: {
+        sourcemap: true,
     },
 });
