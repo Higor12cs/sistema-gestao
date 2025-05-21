@@ -20,28 +20,5 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        $exceptions->respond(function (RedirectResponse|Response $response, Throwable $exception, Request $request) {
-            $isServerError = in_array($response->getStatusCode(), [500, 503], true);
-            $isInertia = $request->headers->get('X-Inertia') === 'true';
-
-            if ($isServerError && $isInertia) {
-                $errorMessage = 'Ocorreu um erro interno, por favor tente novamente. Se o problema persistir, entre em contato com o suporte. Código do erro: '.$response->getStatusCode().'.';
-
-                if (app()->isLocal()) {
-                    $errorMessage .= sprintf("\n%s: %s", get_class($exception), $exception->getMessage());
-                }
-
-                return response()->json([
-                    'error_message' => $errorMessage,
-                ], $response->getStatusCode());
-            }
-
-            if ($response->getStatusCode() === 419) {
-                return back()->with([
-                    'flash.banner' => 'A página expirou, por favor tente novamente.',
-                ]);
-            }
-
-            return $response;
-        });
+        //
     })->create();

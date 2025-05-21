@@ -5,19 +5,10 @@ import { createInertiaApp, router } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createApp, h } from "vue";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy";
-import { toast } from "vue3-toastify";
 
 const appName = import.meta.env.VITE_APP_NAME || "";
 
 router.on("finish", () => document.body.classList.remove("sidebar-open"));
-
-router.on("invalid", (event) => {
-    const responseBody = event.detail.response?.data;
-    if (responseBody?.error_message) {
-        toast.error(responseBody.error_message);
-        event.preventDefault();
-    }
-});
 
 createInertiaApp({
     title: (title) => `${title} | ${appName}`,

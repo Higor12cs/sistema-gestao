@@ -11,7 +11,6 @@ const appName = import.meta.env.VITE_APP_NAME || "";
 const page = usePage();
 const darkMode = ref(false);
 
-// Toasts
 const showFlashMessages = () => {
     const { flash, success, error, info, warning } = usePage().props;
 
@@ -29,12 +28,28 @@ onMounted(() => {
         darkMode.value = true;
         document.body.classList.add("dark-mode");
     }
+
+    initializeAdminLTE();
 });
+
+const initializeAdminLTE = () => {
+    if (window.$ && window.$.fn.treeview) {
+        window.$('[data-widget="treeview"]').treeview({
+            accordion: true,
+            animationSpeed: 300,
+            expandSidebar: false,
+            sidebarButtonSelector: '[data-widget="pushmenu"]'
+        });
+    } else {
+        setTimeout(initializeAdminLTE, 500);
+    }
+};
 
 watch(
     () => page.props,
     (newProps) => {
         showFlashMessages();
+        setTimeout(initializeAdminLTE, 100);
     },
     { deep: true }
 );
