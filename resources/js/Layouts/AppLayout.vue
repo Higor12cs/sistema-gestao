@@ -28,28 +28,12 @@ onMounted(() => {
         darkMode.value = true;
         document.body.classList.add("dark-mode");
     }
-
-    initializeAdminLTE();
 });
-
-const initializeAdminLTE = () => {
-    if (window.$ && window.$.fn.treeview) {
-        window.$('[data-widget="treeview"]').treeview({
-            accordion: true,
-            animationSpeed: 300,
-            expandSidebar: false,
-            sidebarButtonSelector: '[data-widget="pushmenu"]'
-        });
-    } else {
-        setTimeout(initializeAdminLTE, 500);
-    }
-};
 
 watch(
     () => page.props,
     (newProps) => {
         showFlashMessages();
-        setTimeout(initializeAdminLTE, 100);
     },
     { deep: true }
 );
@@ -160,17 +144,14 @@ const visibleMenuItems = computed(() => {
                             v-for="(section, sectionIndex) in visibleMenuItems"
                             :key="sectionIndex"
                         >
-                            <!-- Header -->
                             <li class="nav-header">{{ section.label }}</li>
 
-                            <!-- Menu Items -->
                             <template
                                 v-for="(
                                     item, itemIndex
                                 ) in section.visibleItems"
                                 :key="`${sectionIndex}-${itemIndex}`"
                             >
-                                <!-- Regular Link -->
                                 <NavItem
                                     v-if="item.type === 'link'"
                                     :route-name="item.routeName"
@@ -178,7 +159,6 @@ const visibleMenuItems = computed(() => {
                                     :label="item.label"
                                 />
 
-                                <!-- Collapsible Menu -->
                                 <NavItemCollapsible
                                     v-else-if="item.type === 'collapsible'"
                                     :icon-class="item.iconClass"
