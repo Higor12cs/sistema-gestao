@@ -8,7 +8,18 @@ import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 
 const appName = import.meta.env.VITE_APP_NAME || "";
 
-router.on("finish", () => document.body.classList.remove("sidebar-open"));
+router.on("finish", () => {
+    document.body.classList.remove("sidebar-open");
+
+    setTimeout(() => {
+        $('[data-widget="treeview"]').Treeview?.("init");
+        $('[data-widget="pushmenu"]').PushMenu?.({
+            autoCollapseSize: 992,
+            enableRemember: false,
+            collapseScreenSize: 992,
+        });
+    }, 100);
+});
 
 createInertiaApp({
     title: (title) => `${title} | ${appName}`,
