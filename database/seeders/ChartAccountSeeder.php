@@ -552,7 +552,7 @@ class ChartAccountSeeder extends Seeder
     private function createAccount(array $data): ChartAccount
     {
         $account = new ChartAccount;
-        $account->id = Str::uuid();
+        $account->id = Str::ulid();
 
         // Buscar sequential_id específico para este tenant
         $maxSequential = ChartAccount::where('tenant_id', $data['tenant_id'])

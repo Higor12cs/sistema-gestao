@@ -161,7 +161,7 @@ const cancelDelete = () => {
                                             :href="
                                                 route(
                                                     'customers.edit',
-                                                    customer.sequential_id
+                                                    customer.id
                                                 )
                                             "
                                             class="btn btn-sm btn-secondary mr-1"

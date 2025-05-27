@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Traits\BelongsToTenant;
 use App\Traits\Sequential;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
-    use BelongsToTenant, HasFactory, HasUuids, Sequential;
+    use BelongsToTenant, HasFactory, HasUlids, Sequential;
 
     protected $fillable = [
         'tenant_id',

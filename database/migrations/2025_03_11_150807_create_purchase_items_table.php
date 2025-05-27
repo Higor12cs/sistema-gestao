@@ -12,17 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('purchase_items', function (Blueprint $table) {
-            $table->uuid('id')->primary()->unique();
-            $table->foreignUuid('tenant_id')->index()->nullable()->constrained();
+            $table->ulid('id')->primary()->unique();
+            $table->foreignUlid('tenant_id')->index()->nullable()->constrained();
             $table->unsignedBigInteger('sequential_id')->index();
-            $table->foreignUuid('purchase_id')->constrained();
-            $table->foreignUuid('product_id')->constrained();
+            $table->foreignUlid('purchase_id')->constrained();
+            $table->foreignUlid('product_id')->constrained();
             $table->decimal('quantity', 10, 2)->default(0);
             $table->decimal('unit_cost', 10, 2)->default(0);
             $table->decimal('discount', 10, 2)->default(0);
             $table->decimal('fees', 10, 2)->default(0);
             $table->decimal('total_cost', 10, 2)->default(0);
-            $table->foreignUuid('created_by')->constrained('users');
+            $table->foreignUlid('created_by')->constrained('users');
             $table->timestamps();
         });
     }

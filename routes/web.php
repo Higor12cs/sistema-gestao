@@ -38,10 +38,8 @@ use App\Http\Middleware\SetCurrentTenantPermissionMiddleware;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-// Redirecionamento da raiz
 Route::redirect('/', '/home');
 
-// Rotas de autenticação
 Route::middleware('guest')->group(function () {
     Route::get('/login', fn () => Inertia::render('Auth/Login'))->name('login');
     Route::post('/login', LoginController::class)->name('login.attempt');
@@ -51,9 +49,7 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', LogoutController::class)->name('logout')->middleware('auth');
 
-// Rotas protegidas
 Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRoutePermissionMiddleware::class])->group(function () {
-    // API routes
     Route::prefix('/api')->as('api.')->group(function () {
         Route::get('/customers/search', [CustomerController::class, 'search'])->name('customers.search');
         Route::get('/suppliers/search', [SupplierController::class, 'search'])->name('suppliers.search');
@@ -69,211 +65,181 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
         Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
     });
 
-    // 1. INÍCIO
     Route::get('/home', fn () => Inertia::render('Home/Index'))->name('home.index');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
-    // 2. CADASTROS
-    // Clientes
     Route::controller(CustomerController::class)->prefix('clientes')->name('customers.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/criar', 'create')->name('create');
         Route::post('/', 'store')->name('store');
-        Route::get('/{customer:sequential_id}/editar', 'edit')->name('edit');
+        Route::get('/{customer}/editar', 'edit')->name('edit');
         Route::put('/{customer}', 'update')->name('update');
         Route::delete('/{customer}', 'destroy')->name('destroy');
     });
 
-    // Fornecedores
     Route::controller(SupplierController::class)->prefix('fornecedores')->name('suppliers.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/criar', 'create')->name('create');
         Route::post('/', 'store')->name('store');
-        Route::get('/{supplier:sequential_id}/editar', 'edit')->name('edit');
+        Route::get('/{supplier}/editar', 'edit')->name('edit');
         Route::put('/{supplier}', 'update')->name('update');
         Route::delete('/{supplier}', 'destroy')->name('destroy');
     });
 
-    // 3. VENDAS
-    // Pedidos
     Route::controller(OrderController::class)->prefix('pedidos')->name('orders.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/criar', 'create')->name('create');
         Route::post('/', 'store')->name('store');
-        Route::get('/{order:sequential_id}/editar', 'edit')->name('edit');
-        Route::get('/{order:sequential_id}', 'show')->name('show');
+        Route::get('/{order}/editar', 'edit')->name('edit');
+        Route::get('/{order}', 'show')->name('show');
         Route::put('/{order}', 'update')->name('update');
         Route::delete('/{order}', 'destroy')->name('destroy');
-        Route::get('/{order:sequential_id}/recebiveis/criar', 'createReceivables')->name('create-receivables');
+        Route::get('/{order}/recebiveis/criar', 'createReceivables')->name('create-receivables');
         Route::post('/{order}/recebiveis', 'storeReceivables')->name('store-receivables');
-        Route::get('/imprimir/{order:sequential_id}', 'print')->name('print');
+        Route::get('/imprimir/{order}', 'print')->name('print');
     });
 
-    // 4. COMPRAS
     Route::controller(PurchaseController::class)->prefix('compras')->name('purchases.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/criar', 'create')->name('create');
         Route::post('/', 'store')->name('store');
-        Route::get('/{purchase:sequential_id}/editar', 'edit')->name('edit');
-        Route::get('/{purchase:sequential_id}', 'show')->name('show');
+        Route::get('/{purchase}/editar', 'edit')->name('edit');
+        Route::get('/{purchase}', 'show')->name('show');
         Route::put('/{purchase}', 'update')->name('update');
         Route::delete('/{purchase}', 'destroy')->name('destroy');
-        Route::get('/{purchase:sequential_id}/pagaveis/criar', 'createPayables')->name('create-payables');
+        Route::get('/{purchase}/pagaveis/criar', 'createPayables')->name('create-payables');
         Route::post('/{purchase}/pagaveis', 'storePayables')->name('store-payables');
     });
 
-    // 5. FINANCEIRO
-    // Recebíveis e seus pagamentos
     Route::prefix('recebiveis')->group(function () {
-        // Pagamentos de recebíveis
         Route::controller(ReceivablePaymentController::class)->prefix('pagamentos')->name('receivables.payments.')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/novo', 'create')->name('create');
             Route::post('/', 'store')->name('store');
-            Route::get('/{payment:sequential_id}', 'show')->name('show');
+            Route::get('/{payment}', 'show')->name('show');
             Route::delete('/{payment}', 'destroy')->name('destroy');
         });
 
-        // Recebíveis
         Route::controller(ReceivableController::class)->name('receivables.')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/criar', 'create')->name('create');
             Route::post('/', 'store')->name('store');
             Route::delete('/', 'destroy')->name('destroy');
-            Route::get('/{receivable:sequential_id}/editar', 'edit')->name('edit');
+            Route::get('/{receivable}/editar', 'edit')->name('edit');
             Route::post('/{receivable}', 'update')->name('update');
         });
     });
 
-    // Pagáveis e seus pagamentos
     Route::prefix('pagaveis')->group(function () {
-        // Pagamentos de pagáveis
         Route::controller(PayablePaymentController::class)->prefix('pagamentos')->name('payables.payments.')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/novo', 'create')->name('create');
             Route::post('/', 'store')->name('store');
-            Route::get('/{payment:sequential_id}', 'show')->name('show');
+            Route::get('/{payment}', 'show')->name('show');
             Route::delete('/{payment}', 'destroy')->name('destroy');
         });
 
-        // Pagáveis
         Route::controller(PayableController::class)->name('payables.')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/criar', 'create')->name('create');
             Route::post('/', 'store')->name('store');
             Route::delete('/', 'destroy')->name('destroy');
-            Route::get('/{payable:sequential_id}/editar', 'edit')->name('edit');
+            Route::get('/{payable}/editar', 'edit')->name('edit');
             Route::post('/{payable}', 'update')->name('update');
         });
     });
 
-    // Contas
     Route::controller(AccountController::class)->prefix('contas')->name('accounts.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/criar', 'create')->name('create');
         Route::post('/', 'store')->name('store');
-        Route::get('/{account:sequential_id}/editar', 'edit')->name('edit');
+        Route::get('/{account}/editar', 'edit')->name('edit');
         Route::put('/{account}', 'update')->name('update');
         Route::delete('/{account}', 'destroy')->name('destroy');
     });
 
-    // Transferências entre contas
     Route::controller(AccountTransferController::class)->prefix('transferencias')->name('account-transfers.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/criar', 'create')->name('create');
         Route::post('/', 'store')->name('store');
-        Route::get('/{accountTransfer:sequential_id}', 'show')->name('show');
+        Route::get('/{accountTransfer}', 'show')->name('show');
         Route::delete('/{accountTransfer}', 'destroy')->name('destroy');
     });
 
-    // Conciliação bancária
     Route::controller(AccountReconciliationController::class)->prefix('conciliacao')->name('account-reconciliation.')->group(function () {
         Route::get('/', 'selectAccount')->name('select');
-        Route::get('/{account:sequential_id}', 'index')->name('index');
-        Route::post('/{transaction:sequential_id}', 'update')->name('update');
+        Route::get('/{account}', 'index')->name('index');
+        Route::post('/{transaction}', 'update')->name('update');
         Route::post('/', 'bulkUpdate')->name('bulk-update');
     });
 
-    // Métodos de Pagamento
     Route::controller(PaymentMethodController::class)->prefix('metodos-pagamento')->name('payment-methods.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/criar', 'create')->name('create');
         Route::post('/', 'store')->name('store');
-        Route::get('/{paymentMethod:sequential_id}/editar', 'edit')->name('edit');
+        Route::get('/{paymentMethod}/editar', 'edit')->name('edit');
         Route::put('/{paymentMethod}', 'update')->name('update');
         Route::delete('/{paymentMethod}', 'destroy')->name('destroy');
     });
 
-    // Planos de Contas
     Route::controller(ChartAccountController::class)->prefix('plano-contas')->name('chart-accounts.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/criar', 'create')->name('create');
         Route::post('/', 'store')->name('store');
-        Route::get('/{chartAccount:sequential_id}/editar', 'edit')->name('edit');
+        Route::get('/{chartAccount}/editar', 'edit')->name('edit');
         Route::put('/{chartAccount}', 'update')->name('update');
         Route::delete('/{chartAccount}', 'destroy')->name('destroy');
     });
 
-    // Fluxo de Caixa
     Route::controller(CashFlowController::class)->prefix('fluxo-caixa')->name('cash-flow.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/detalhes-diarios', 'getDailyDetails')->name('daily-details');
     });
 
-    // 6. ESTOQUE
-    // Produtos
     Route::controller(ProductController::class)->prefix('produtos')->name('products.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/criar', 'create')->name('create');
         Route::post('/', 'store')->name('store');
-        Route::get('/{product:sequential_id}/editar', 'edit')->name('edit');
+        Route::get('/{product}/editar', 'edit')->name('edit');
         Route::put('/{product}', 'update')->name('update');
         Route::delete('/{product}', 'destroy')->name('destroy');
     });
 
-    // Estoque
     Route::controller(StockController::class)->prefix('estoque')->name('stocks.')->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/{stock:sequential_id}/ajuste', 'adjust')->name('adjust');
+        Route::get('/{stock}/ajuste', 'adjust')->name('adjust');
         Route::post('/{stock}/ajuste', 'storeAdjustment')->name('store-adjustment');
     });
 
-    // Kardex
     Route::get('/kardex', [KardexController::class, 'index'])->name('kardex.index');
 
-    // Atributos
-    // Marcas
     Route::controller(BrandController::class)->prefix('marcas')->name('brands.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/criar', 'create')->name('create');
         Route::post('/', 'store')->name('store');
-        Route::get('/{brand:sequential_id}/editar', 'edit')->name('edit');
+        Route::get('/{brand}/editar', 'edit')->name('edit');
         Route::put('/{brand}', 'update')->name('update');
         Route::delete('/{brand}', 'destroy')->name('destroy');
     });
 
-    // Seções
     Route::controller(SectionController::class)->prefix('secoes')->name('sections.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/criar', 'create')->name('create');
         Route::post('/', 'store')->name('store');
-        Route::get('/{section:sequential_id}/editar', 'edit')->name('edit');
+        Route::get('/{section}/editar', 'edit')->name('edit');
         Route::put('/{section}', 'update')->name('update');
         Route::delete('/{section}', 'destroy')->name('destroy');
     });
 
-    // Grupos
     Route::controller(GroupController::class)->prefix('grupos')->name('groups.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/criar', 'create')->name('create');
         Route::post('/', 'store')->name('store');
-        Route::get('/{group:sequential_id}/editar', 'edit')->name('edit');
+        Route::get('/{group}/editar', 'edit')->name('edit');
         Route::put('/{group}', 'update')->name('update');
         Route::delete('/{group}', 'destroy')->name('destroy');
     });
 
-    // 7. RELATÓRIOS
-    // Relatórios de pedidos
     Route::prefix('relatorios')->name('reports.')->group(function () {
         Route::prefix('pedidos')->name('orders.')->group(function () {
             Route::get('/', fn () => Inertia::render('Reports/Orders/Index'))->name('index');
@@ -308,8 +274,6 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
         Route::get('/curva-abc/produtos/gerar', [ProductAbcReportController::class, 'generate'])->name('product-abc.generate');
     });
 
-    // 8. CONFIGURAÇÕES
-    // Usuários
     Route::controller(UserController::class)->prefix('usuarios')->name('users.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/criar', 'create')->name('create');
@@ -319,17 +283,15 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
         Route::delete('/{user}', 'destroy')->name('destroy');
     });
 
-    // Vendedores
     Route::controller(SellerController::class)->prefix('vendedores')->name('sellers.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/criar', 'create')->name('create');
         Route::post('/', 'store')->name('store');
-        Route::get('/{seller:sequential_id}/editar', 'edit')->name('edit');
+        Route::get('/{seller}/editar', 'edit')->name('edit');
         Route::put('/{seller}', 'update')->name('update');
         Route::delete('/{seller}', 'destroy')->name('destroy');
     });
 
-    // Papéis (Roles)
     Route::controller(RoleController::class)->prefix('papeis')->name('roles.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/criar', 'create')->name('create');
@@ -341,7 +303,7 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
 
     Route::controller(ConfigurationController::class)->prefix('configuracoes')->name('configurations.')->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/{configuration:sequential_id}/editar', 'edit')->name('edit');
+        Route::get('/{configuration}/editar', 'edit')->name('edit');
         Route::put('/{configuration}', 'update')->name('update');
     });
 });

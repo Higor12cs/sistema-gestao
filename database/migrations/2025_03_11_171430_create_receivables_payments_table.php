@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('receivables_payments', function (Blueprint $table) {
-            $table->uuid('id')->primary()->unique();
-            $table->foreignUuid('tenant_id')->index()->nullable()->constrained();
+            $table->ulid('id')->primary()->unique();
+            $table->foreignUlid('tenant_id')->index()->nullable()->constrained();
             $table->unsignedBigInteger('sequential_id')->index();
-            $table->foreignUuid('receivable_id')->constrained();
-            $table->foreignUuid('payment_method_id')->constrained();
-            $table->foreignUuid('account_id')->constrained();
-            $table->foreignUuid('transaction_id')->nullable()->constrained('transactions');
+            $table->foreignUlid('receivable_id')->constrained();
+            $table->foreignUlid('payment_method_id')->constrained();
+            $table->foreignUlid('account_id')->constrained();
+            $table->foreignUlid('transaction_id')->nullable()->constrained('transactions');
             $table->timestamp('payment_date');
             $table->decimal('total_amount', 10, 2);
             $table->decimal('paid_amount', 10, 2)->default(0);
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->decimal('discount', 10, 2)->default(0);
             $table->decimal('remaining_amount', 10, 2);
             $table->text('notes')->nullable();
-            $table->foreignUuid('created_by')->constrained('users');
+            $table->foreignUlid('created_by')->constrained('users');
             $table->timestamps();
         });
     }

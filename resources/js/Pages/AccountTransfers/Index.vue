@@ -185,7 +185,7 @@ const cancelDelete = () => {
                                             :href="
                                                 route(
                                                     'account-transfers.show',
-                                                    transfer.sequential_id
+                                                    transfer.id
                                                 )
                                             "
                                             class="btn btn-sm btn-secondary mr-1"

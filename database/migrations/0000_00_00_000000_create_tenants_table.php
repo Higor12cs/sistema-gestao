@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tenants', function (Blueprint $table) {
-            $table->uuid('id')->primary()->unique();
+            $table->ulid('id')->primary()->unique();
             $table->string('name');
             $table->timestamp('trial_ends_at')->nullable();
             $table->timestamp('subscription_ends_at')->nullable();

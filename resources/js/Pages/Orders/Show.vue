@@ -91,7 +91,7 @@ onMounted(() => {
                         <a
                             class="dropdown-item"
                             :href="
-                                route('orders.print', order.sequential_id) +
+                                route('orders.print', order.id) +
                                 '?type=a4'
                             "
                             target="_blank"
@@ -101,7 +101,7 @@ onMounted(() => {
                         <a
                             class="dropdown-item"
                             :href="
-                                route('orders.print', order.sequential_id) +
+                                route('orders.print', order.id) +
                                 '?type=thermal'
                             "
                             target="_blank"
@@ -310,7 +310,7 @@ onMounted(() => {
                                     :href="
                                         route(
                                             'orders.create-receivables',
-                                            order.sequential_id
+                                            order.id
                                         )
                                     "
                                     class="btn btn-sm btn-primary ml-2"

@@ -264,7 +264,7 @@ const adjustLastReceivable = () => {
             </div>
 
             <Link
-                :href="route('orders.show', order.sequential_id)"
+                :href="route('orders.show', order.id)"
                 class="btn btn-secondary mb-auto"
             >
                 <i class="fas fa-sm fa-arrow-left"></i>

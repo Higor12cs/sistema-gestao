@@ -12,16 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('purchases', function (Blueprint $table) {
-            $table->uuid('id')->primary()->unique();
-            $table->foreignUuid('tenant_id')->index()->nullable()->constrained();
+            $table->ulid('id')->primary()->unique();
+            $table->foreignUlid('tenant_id')->index()->nullable()->constrained();
             $table->unsignedBigInteger('sequential_id')->index();
-            $table->foreignUuid('supplier_id')->constrained();
+            $table->foreignUlid('supplier_id')->constrained();
             $table->timestamp('issue_date');
             $table->decimal('discount', 10, 2)->default(0);
             $table->decimal('fees', 10, 2)->default(0);
             $table->decimal('total_cost', 10, 2)->default(0);
             $table->text('observation')->nullable();
-            $table->foreignUuid('created_by')->constrained('users');
+            $table->foreignUlid('created_by')->constrained('users');
             $table->timestamps();
         });
     }

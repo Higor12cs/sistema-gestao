@@ -12,18 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->uuid('id')->primary()->unique();
-            $table->foreignUuid('tenant_id')->index()->nullable()->constrained();
+            $table->ulid('id')->primary()->unique();
+            $table->foreignUlid('tenant_id')->index()->nullable()->constrained();
             $table->unsignedBigInteger('sequential_id')->index();
-            $table->foreignUuid('account_id')->constrained();
-            $table->foreignUuid('receivable_id')->nullable()->constrained();
-            $table->foreignUuid('payable_id')->nullable()->constrained();
+            $table->foreignUlid('account_id')->constrained();
+            $table->foreignUlid('receivable_id')->nullable()->constrained();
+            $table->foreignUlid('payable_id')->nullable()->constrained();
             $table->string('type');
             $table->decimal('amount', 10, 2);
             $table->timestamp('transaction_date');
             $table->string('description')->nullable();
             $table->boolean('reconciled')->default(false);
-            $table->foreignUuid('created_by')->constrained('users');
+            $table->foreignUlid('created_by')->constrained('users');
             $table->timestamps();
         });
     }

@@ -188,7 +188,7 @@ onMounted(() => {
                                         :href="
                                             route(
                                                 'orders.show',
-                                                order.sequential_id
+                                                order.id
                                             )
                                         "
                                         class="btn btn-sm btn-secondary mr-1"
@@ -205,7 +205,7 @@ onMounted(() => {
                                         :href="
                                             route(
                                                 'orders.edit',
-                                                order.sequential_id
+                                                order.id
                                             )
                                         "
                                         class="btn btn-sm btn-secondary mr-1"
@@ -222,7 +222,7 @@ onMounted(() => {
                                         :href="
                                             route(
                                                 'orders.create-receivables',
-                                                order.sequential_id
+                                                order.id
                                             )
                                         "
                                         class="btn btn-sm btn-primary mr-1"

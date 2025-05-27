@@ -267,7 +267,7 @@ const adjustLastPayable = () => {
             </div>
 
             <Link
-                :href="route('purchases.show', purchase.sequential_id)"
+                :href="route('purchases.show', purchase.id)"
                 class="btn btn-secondary mb-auto"
             >
                 <i class="fas fa-sm fa-arrow-left"></i>

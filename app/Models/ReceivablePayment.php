@@ -4,13 +4,13 @@ namespace App\Models;
 
 use App\Traits\BelongsToTenant;
 use App\Traits\Sequential;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ReceivablePayment extends Model
 {
-    use BelongsToTenant, HasUuids, Sequential;
+    use BelongsToTenant, HasUlids, Sequential;
 
     protected $table = 'receivables_payments';
 

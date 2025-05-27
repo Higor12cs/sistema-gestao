@@ -455,7 +455,7 @@ const isAllSelected = computed(() => {
                                             :href="
                                                 route(
                                                     'receivables.edit',
-                                                    receivable.sequential_id
+                                                    receivable.id
                                                 )
                                             "
                                             class="btn btn-sm btn-secondary mr-1"

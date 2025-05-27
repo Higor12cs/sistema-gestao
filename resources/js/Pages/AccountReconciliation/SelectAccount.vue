@@ -53,7 +53,7 @@ const props = defineProps({
                                     :href="
                                         route(
                                             'account-reconciliation.index',
-                                            account.sequential_id
+                                            account.id
                                         )
                                     "
                                     class="btn btn-primary"

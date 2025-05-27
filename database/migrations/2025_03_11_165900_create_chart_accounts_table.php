@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('chart_accounts', function (Blueprint $table) {
-            $table->uuid('id')->primary()->unique();
-            $table->foreignUuid('tenant_id')->index()->nullable()->constrained();
+            $table->ulid('id')->primary()->unique();
+            $table->foreignUlid('tenant_id')->index()->nullable()->constrained();
             $table->unsignedBigInteger('sequential_id')->index();
-            $table->uuid('parent_id')->nullable()->index();
+            $table->ulid('parent_id')->nullable()->index();
             $table->string('code')->index();
             $table->string('name');
             $table->text('description')->nullable();
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->integer('order')->default(0);
             $table->boolean('default_receivable')->default(false);
             $table->boolean('default_purchase')->default(false);
-            $table->foreignUuid('created_by')->constrained('users');
+            $table->foreignUlid('created_by')->constrained('users');
             $table->timestamps();
 
             $table->index(['tenant_id', 'parent_id', 'order']);

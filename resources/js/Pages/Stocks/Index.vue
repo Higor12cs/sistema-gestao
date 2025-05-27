@@ -101,7 +101,7 @@ const submit = () => {
                                         :href="
                                             route(
                                                 'stocks.adjust',
-                                                stock.sequential_id
+                                                stock.id
                                             )
                                         "
                                         class="btn btn-sm btn-primary mr-1"

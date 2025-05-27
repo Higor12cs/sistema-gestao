@@ -135,7 +135,7 @@ const cancelDelete = () => {
                                             :href="
                                                 route(
                                                     'groups.edit',
-                                                    group.sequential_id
+                                                    group.id
                                                 )
                                             "
                                             class="btn btn-sm btn-secondary mr-1"

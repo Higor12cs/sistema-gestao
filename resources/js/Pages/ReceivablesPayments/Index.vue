@@ -221,7 +221,7 @@ const cancelDelete = () => {
                                             :href="
                                                 route(
                                                     'receivables.payments.show',
-                                                    payment.sequential_id
+                                                    payment.id
                                                 )
                                             "
                                             class="btn btn-sm btn-secondary mr-1"

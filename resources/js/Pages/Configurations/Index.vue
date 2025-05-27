@@ -60,7 +60,7 @@ const props = defineProps({
                                         :href="
                                             route('configurations.edit', {
                                                 configuration:
-                                                    configuration.sequential_id,
+                                                    configuration.id,
                                             })
                                         "
                                         class="btn btn-sm btn-secondary"

@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('customers', function (Blueprint $table) {
-            $table->uuid('id')->primary()->unique();
-            $table->foreignUuid('tenant_id')->index()->nullable()->constrained();
+            $table->ulid('id')->primary()->unique();
+            $table->foreignUlid('tenant_id')->index()->nullable()->constrained();
             $table->unsignedBigInteger('sequential_id')->index();
             $table->string('first_name');
             $table->string('last_name')->nullable();
@@ -34,7 +34,7 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('country')->nullable();
             $table->boolean('active')->default(true);
-            $table->foreignUuid('created_by')->constrained('users');
+            $table->foreignUlid('created_by')->constrained('users');
             $table->timestamps();
         });
     }

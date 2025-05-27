@@ -12,18 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->uuid('id')->primary()->unique();
-            $table->foreignUuid('tenant_id')->index()->nullable()->constrained();
+            $table->ulid('id')->primary()->unique();
+            $table->foreignUlid('tenant_id')->index()->nullable()->constrained();
             $table->unsignedBigInteger('sequential_id')->index();
-            $table->foreignUuid('brand_id')->nullable()->constrained();
-            $table->foreignUuid('group_id')->nullable()->constrained();
+            $table->foreignUlid('brand_id')->nullable()->constrained();
+            $table->foreignUlid('group_id')->nullable()->constrained();
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('sku')->nullable();
             $table->decimal('cost', 10, 2)->default(0);
             $table->decimal('price', 10, 2)->default(0);
             $table->boolean('active')->default(true);
-            $table->foreignUuid('created_by')->constrained('users');
+            $table->foreignUlid('created_by')->constrained('users');
             $table->timestamps();
         });
     }

@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('order_items', function (Blueprint $table) {
-            $table->uuid('id')->primary()->unique();
-            $table->foreignUuid('tenant_id')->index()->nullable()->constrained();
+            $table->ulid('id')->primary()->unique();
+            $table->foreignUlid('tenant_id')->index()->nullable()->constrained();
             $table->unsignedBigInteger('sequential_id')->index();
-            $table->foreignUuid('order_id')->constrained();
-            $table->foreignUuid('product_id')->constrained();
+            $table->foreignUlid('order_id')->constrained();
+            $table->foreignUlid('product_id')->constrained();
             $table->decimal('quantity', 10, 2)->default(0);
             $table->decimal('unit_cost', 10, 2)->default(0);
             $table->decimal('unit_price', 10, 2)->default(0);
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->decimal('fees', 10, 2)->default(0);
             $table->decimal('total_cost', 10, 2)->default(0);
             $table->decimal('total_price', 10, 2)->default(0);
-            $table->foreignUuid('created_by')->constrained('users');
+            $table->foreignUlid('created_by')->constrained('users');
             $table->timestamps();
         });
     }

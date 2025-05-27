@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tenant_sequences', function (Blueprint $table) {
-            $table->foreignUuid('tenant_id')->index()->nullable()->constrained();
+            $table->foreignUlid('tenant_id')->index()->nullable()->constrained();
             $table->string('entity_type')->index();
             $table->unsignedBigInteger('last_sequence_value')->default(0);
             $table->primary(['tenant_id', 'entity_type']);

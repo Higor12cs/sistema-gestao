@@ -221,7 +221,7 @@ const createWithParent = (parentId = null) => {
                                             :href="
                                                 route(
                                                     'chart-accounts.edit',
-                                                    account.sequential_id
+                                                    account.id
                                                 )
                                             "
                                             class="btn btn-sm btn-secondary mr-1"

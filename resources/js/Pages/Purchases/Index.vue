@@ -192,7 +192,7 @@ onMounted(() => {
                                         :href="
                                             route(
                                                 'purchases.show',
-                                                purchase.sequential_id
+                                                purchase.id
                                             )
                                         "
                                         class="btn btn-sm btn-secondary mr-1"
@@ -209,7 +209,7 @@ onMounted(() => {
                                         :href="
                                             route(
                                                 'purchases.edit',
-                                                purchase.sequential_id
+                                                purchase.id
                                             )
                                         "
                                         class="btn btn-sm btn-secondary mr-1"
@@ -226,7 +226,7 @@ onMounted(() => {
                                         :href="
                                             route(
                                                 'purchases.create-payables',
-                                                purchase.sequential_id
+                                                purchase.id
                                             )
                                         "
                                         class="btn btn-sm btn-primary mr-1"

@@ -442,7 +442,7 @@ const isAllSelected = computed(() => {
                                             :href="
                                                 route(
                                                     'payables.edit',
-                                                    payable.sequential_id
+                                                    payable.id
                                                 )
                                             "
                                             class="btn btn-sm btn-secondary mr-1"
