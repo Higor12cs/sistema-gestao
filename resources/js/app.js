@@ -33,30 +33,19 @@ createInertiaApp({
 });
 
 function initTreeview() {
-    jQuery(() => {
-        try {
-            $('[data-widget="treeview"]').Treeview("destroy");
-        } catch {}
-        setTimeout(() => {
-            $('[data-widget="treeview"]').Treeview("init");
-            try {
-                $('[data-widget="pushmenu"]').PushMenu("destroy");
-            } catch {}
-            $('[data-widget="pushmenu"]').PushMenu({
-                autoCollapseSize: 992,
-                enableRemember: false,
-                collapseScreenSize: 992,
-            });
+    $(() => {
+        const $treeview = $('[data-widget="treeview"]');
+        const $pushmenu = $('[data-widget="pushmenu"]');
+
+        if ($treeview.length) $treeview.Treeview("destroy").Treeview("init");
+        if ($pushmenu.length) {
+            $pushmenu.PushMenu("destroy").PushMenu({ autoCollapseSize: 1024, enableRemember: false, collapseScreenSize: 1024 });
             $(document).on("click", (e) => {
-                if (
-                    $(window).width() < 992 &&
-                    $("body").hasClass("sidebar-open") &&
-                    !$(e.target).closest(".main-sidebar").length &&
-                    !$(e.target).closest('[data-widget="pushmenu"]').length
-                ) {
-                    $('[data-widget="pushmenu"]').PushMenu("collapse");
+                if ($(window).width() < 1024 && $("body").hasClass("sidebar-open") &&
+                    !$(e.target).closest(".main-sidebar, [data-widget='pushmenu']").length) {
+                    $pushmenu.PushMenu("collapse");
                 }
             });
-        }, 200);
+        }
     });
 }

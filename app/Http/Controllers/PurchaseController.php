@@ -92,7 +92,7 @@ class PurchaseController extends Controller
     {
         $purchase = $this->purchaseService->createPurchase($request->validated());
 
-        return to_route('purchases.create-payables', $purchase->sequential_id)->with('success', 'Compra criada com sucesso!');
+        return to_route('purchases.create-payables', $purchase->id)->with('success', 'Compra criada com sucesso!');
     }
 
     public function show(Purchase $purchase)
@@ -142,7 +142,7 @@ class PurchaseController extends Controller
     public function createPayables(Purchase $purchase)
     {
         if ($purchase->hasPayables()) {
-            return to_route('purchases.show', $purchase->sequential_id)
+            return to_route('purchases.show', $purchase->id)
                 ->with('error', 'Esta compra já possui pagáveis.');
         }
 
@@ -167,7 +167,7 @@ class PurchaseController extends Controller
 
             $this->purchaseService->createPayables($purchase, $payablesData);
 
-            return to_route('purchases.show', $purchase->sequential_id)
+            return to_route('purchases.show', $purchase->id)
                 ->with('success', 'Pagáveis criados com sucesso!');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
@@ -184,7 +184,7 @@ class PurchaseController extends Controller
                 'data' => $purchases->map(function (Purchase $purchase) {
                     return [
                         'id' => $purchase->id,
-                        'name' => 'Compra #'.$purchase->sequential_id.' - '.$purchase->issue_date->format('d/m/Y'),
+                        'name' => 'Compra #' . $purchase->sequential_id . ' - ' . $purchase->issue_date->format('d/m/Y'),
                         'total' => $purchase->total_cost,
                     ];
                 }),
@@ -200,7 +200,7 @@ class PurchaseController extends Controller
             'data' => $purchases->map(function (Purchase $purchase) {
                 return [
                     'id' => $purchase->id,
-                    'name' => 'Compra #'.$purchase->sequential_id.' - '.$purchase->issue_date->format('d/m/Y'),
+                    'name' => 'Compra #' . $purchase->sequential_id . ' - ' . $purchase->issue_date->format('d/m/Y'),
                     'total' => $purchase->total_cost,
                 ];
             }),

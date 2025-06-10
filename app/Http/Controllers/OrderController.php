@@ -100,7 +100,7 @@ class OrderController extends Controller
     {
         $order = $this->orderService->createOrder($request->validated());
 
-        return to_route('orders.create-receivables', $order->sequential_id)
+        return to_route('orders.create-receivables', $order->id)
             ->with('success', 'Pedido criado com sucesso!');
     }
 
@@ -116,7 +116,7 @@ class OrderController extends Controller
     public function edit(Order $order)
     {
         if ($order->hasReceivables()) {
-            return to_route('orders.show', $order->sequential_id)
+            return to_route('orders.show', $order->id)
                 ->with('error', 'Pedidos com recebíveis não podem ser editados.');
         }
 
@@ -130,7 +130,7 @@ class OrderController extends Controller
     public function update(OrderUpdateRequest $request, Order $order)
     {
         if ($order->hasReceivables()) {
-            return to_route('orders.show', $order->sequential_id)
+            return to_route('orders.show', $order->id)
                 ->with('error', 'Pedidos com recebíveis não podem ser editados.');
         }
 
