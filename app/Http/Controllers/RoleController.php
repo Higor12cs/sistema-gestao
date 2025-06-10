@@ -6,7 +6,7 @@ use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
 
 class RoleController extends Controller
 {

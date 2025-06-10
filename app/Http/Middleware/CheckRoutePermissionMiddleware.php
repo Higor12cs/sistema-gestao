@@ -51,7 +51,15 @@ class CheckRoutePermissionMiddleware
             return $next($request);
         }
 
-        if (! Auth::user()->hasPermissionTo($permission)) {
+        $user = Auth::user();
+
+        if (!$user) {
+            throw UnauthorizedException::forPermissions([$permission]);
+        }
+
+        $userPermissions = $user->getAllPermissions()->pluck('name')->toArray();
+
+        if (!in_array($permission, $userPermissions)) {
             throw UnauthorizedException::forPermissions([$permission]);
         }
 

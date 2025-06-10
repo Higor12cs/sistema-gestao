@@ -48,11 +48,11 @@ class UserController extends Controller
         return to_route('users.index')->with('success', 'Usuário criado com sucesso!');
     }
 
-    public function edit(int $sequential_id): Response
+    public function edit(string $id): Response
     {
         $user = User::query()
             ->where('tenant_id', Auth::user()->tenant_id)
-            ->where('sequential_id', $sequential_id)
+            ->where('id', $id)
             ->firstOrFail();
 
         $userRoleId = $user->roles->first() ? $user->roles->first()->id : null;

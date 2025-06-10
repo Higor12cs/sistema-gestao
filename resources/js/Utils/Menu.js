@@ -127,7 +127,7 @@ export const sidebarItems = [
         ],
     },
 
-    // Estoque (simplificado e reorganizado)
+    // Estoque
     {
         type: "header",
         label: "Estoque",
@@ -149,7 +149,7 @@ export const sidebarItems = [
         ],
     },
 
-    // Financeiro (reorganizado para agrupar funcionalidades relacionadas)
+    // Financeiro
     {
         type: "header",
         label: "Financeiro",
@@ -330,7 +330,7 @@ export const sidebarItems = [
         ],
     },
 
-    // Configurações (movido para o final como é convencional em sistemas)
+    // Configurações
     {
         type: "header",
         label: "Configurações",
