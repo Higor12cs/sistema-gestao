@@ -18,6 +18,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PayableController;
 use App\Http\Controllers\PayablePaymentController;
 use App\Http\Controllers\PaymentMethodController;
+use App\Http\Controllers\POSController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ReceivableController;
@@ -41,9 +42,9 @@ use Inertia\Inertia;
 Route::redirect('/', '/home');
 
 Route::middleware('guest')->group(function () {
-    Route::get('/login', fn () => Inertia::render('Auth/Login'))->name('login');
+    Route::get('/login', fn() => inertia('Auth/Login'))->name('login');
     Route::post('/login', LoginController::class)->name('login.attempt');
-    Route::get('/registrar', fn () => Inertia::render('Auth/Register'))->name('register');
+    Route::get('/registrar', fn() => inertia('Auth/Register'))->name('register');
     Route::post('/registrar', RegisterController::class)->name('register.attempt');
 });
 
@@ -65,7 +66,7 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
         Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
     });
 
-    Route::get('/home', fn () => Inertia::render('Home/Index'))->name('home.index');
+    Route::get('/home', fn() => inertia('Home/Index'))->name('home.index');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     Route::controller(CustomerController::class)->prefix('clientes')->name('customers.')->group(function () {
@@ -84,6 +85,14 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
         Route::get('/{supplier}/editar', 'edit')->name('edit');
         Route::put('/{supplier}', 'update')->name('update');
         Route::delete('/{supplier}', 'destroy')->name('destroy');
+    });
+
+    Route::controller(POSController::class)->prefix('/pdv')->name('pos.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/process-sale', 'processSale')->name('process-sale');
+        Route::get('/search-products', 'searchProducts')->name('search-products');
+        Route::get('/barcode', 'getProductByBarcode')->name('barcode');
+        Route::get('/receipt/{order}', 'printReceipt')->name('receipt');
     });
 
     Route::controller(OrderController::class)->prefix('pedidos')->name('orders.')->group(function () {
@@ -242,32 +251,32 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
 
     Route::prefix('relatorios')->name('reports.')->group(function () {
         Route::prefix('pedidos')->name('orders.')->group(function () {
-            Route::get('/', fn () => Inertia::render('Reports/Orders/Index'))->name('index');
-            Route::get('/analiticos', fn () => Inertia::render('Reports/Orders/Analytical'))->name('analyticals');
+            Route::get('/', fn() => inertia('Reports/Orders/Index'))->name('index');
+            Route::get('/analiticos', fn() => inertia('Reports/Orders/Analytical'))->name('analyticals');
             Route::get('/analiticos/imprimir', [OrderReportController::class, 'analytical'])->name('analyticals.print');
-            Route::get('/sinteticos', fn () => Inertia::render('Reports/Orders/Synthetic'))->name('synthetics');
+            Route::get('/sinteticos', fn() => inertia('Reports/Orders/Synthetic'))->name('synthetics');
             Route::get('/sinteticos/imprimir', [OrderReportController::class, 'synthetic'])->name('synthetics.print');
         });
 
         Route::prefix('recebiveis')->name('receivables.')->group(function () {
-            Route::get('/', fn () => Inertia::render('Reports/Receivables/Index'))->name('index');
-            Route::get('/analiticos', fn () => Inertia::render('Reports/Receivables/Analytical'))->name('analyticals');
+            Route::get('/', fn() => inertia('Reports/Receivables/Index'))->name('index');
+            Route::get('/analiticos', fn() => inertia('Reports/Receivables/Analytical'))->name('analyticals');
             Route::get('/analiticos/imprimir', [ReceivableReportController::class, 'analytical'])->name('analyticals.print');
-            Route::get('/sinteticos', fn () => Inertia::render('Reports/Receivables/Synthetic'))->name('synthetics');
+            Route::get('/sinteticos', fn() => inertia('Reports/Receivables/Synthetic'))->name('synthetics');
             Route::get('/sinteticos/imprimir', [ReceivableReportController::class, 'synthetic'])->name('synthetics.print');
         });
 
         Route::prefix('pagaveis')->name('payables.')->group(function () {
-            Route::get('/', fn () => Inertia::render('Reports/Payables/Index'))->name('index');
-            Route::get('/analiticos', fn () => Inertia::render('Reports/Payables/Analytical'))->name('analyticals');
+            Route::get('/', fn() => inertia('Reports/Payables/Index'))->name('index');
+            Route::get('/analiticos', fn() => inertia('Reports/Payables/Analytical'))->name('analyticals');
             Route::get('/analiticos/imprimir', [PayableReportController::class, 'analytical'])->name('analyticals.print');
-            Route::get('/sinteticos', fn () => Inertia::render('Reports/Payables/Synthetic'))->name('synthetics');
+            Route::get('/sinteticos', fn() => inertia('Reports/Payables/Synthetic'))->name('synthetics');
             Route::get('/sinteticos/imprimir', [PayableReportController::class, 'synthetic'])->name('synthetics.print');
         });
 
         Route::prefix('curva-abc')->name('abc.')->group(function () {
-            Route::get('/clientes', fn () => Inertia::render('Reports/CustomerAbc/Index'))->name('customers');
-            Route::get('/produtos', fn () => Inertia::render('Reports/ProductAbc/Index'))->name('products');
+            Route::get('/clientes', fn() => inertia('Reports/CustomerAbc/Index'))->name('customers');
+            Route::get('/produtos', fn() => inertia('Reports/ProductAbc/Index'))->name('products');
         });
 
         Route::get('/curva-abc/clientes/gerar', [CustomerAbcReportController::class, 'generate'])->name('customer-abc.generate');

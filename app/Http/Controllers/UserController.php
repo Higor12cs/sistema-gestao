@@ -26,7 +26,7 @@ class UserController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return Inertia::render('Users/Index', [
+        return inertia('Users/Index', [
             'users' => $users,
             'filters' => request()->only(['search']),
         ]);
@@ -34,7 +34,7 @@ class UserController extends Controller
 
     public function create(): Response
     {
-        return Inertia::render('Users/Create');
+        return inertia('Users/Create');
     }
 
     public function store(UserRequest $request): RedirectResponse
@@ -57,7 +57,7 @@ class UserController extends Controller
 
         $userRoleId = $user->roles->first() ? $user->roles->first()->id : null;
 
-        return Inertia::render('Users/Edit', [
+        return inertia('Users/Edit', [
             'user' => $user,
             'userRoleId' => $userRoleId,
         ]);

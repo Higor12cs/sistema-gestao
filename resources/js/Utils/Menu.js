@@ -83,6 +83,12 @@ export const sidebarItems = [
         label: "Operações",
         items: [
             {
+                type: "link",
+                routeName: "pos.index",
+                iconClass: "fas fa-cash-register",
+                label: "PDV",
+            },
+            {
                 type: "collapsible",
                 iconClass: "fas fa-shopping-basket",
                 label: "Pedidos",

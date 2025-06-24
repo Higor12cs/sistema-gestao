@@ -10,14 +10,14 @@ class ConfigurationController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Configurations/Index', [
+        return inertia('Configurations/Index', [
             'configurations' => Configuration::all(),
         ]);
     }
 
     public function edit(Configuration $configuration)
     {
-        return Inertia::render('Configurations/Edit', [
+        return inertia('Configurations/Edit', [
             'configuration' => $configuration,
         ]);
     }

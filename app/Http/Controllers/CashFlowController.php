@@ -24,7 +24,7 @@ class CashFlowController extends Controller
             ? Carbon::parse($request->input('end_date'))->endOfDay()
             : Carbon::now()->endOfWeek()->endOfDay();
 
-        return Inertia::render('CashFlow/Index', [
+        return inertia('CashFlow/Index', [
             'metrics' => $this->getMetrics($startDate, $endDate),
             'startDate' => $startDate->format('Y-m-d'),
             'endDate' => $endDate->format('Y-m-d'),

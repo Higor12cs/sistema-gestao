@@ -69,7 +69,7 @@ class PurchaseController extends Controller
         $selectedSupplier = $request->filled('supplier_id') ? Supplier::find($request->supplier_id) : null;
         $selectedCreatedBy = $request->filled('created_by') ? User::find($request->created_by) : null;
 
-        return Inertia::render('Purchases/Index', [
+        return inertia('Purchases/Index', [
             'purchases' => $purchases,
             'filters' => array_merge(
                 $request->only(['sequential_id', 'supplier_id', 'created_by', 'status']),
@@ -83,7 +83,7 @@ class PurchaseController extends Controller
 
     public function create()
     {
-        return Inertia::render('Purchases/Create', [
+        return inertia('Purchases/Create', [
             'purchase' => null,
         ]);
     }
@@ -99,7 +99,7 @@ class PurchaseController extends Controller
     {
         $purchase->load(['items.product', 'createdBy', 'payables.paymentMethod']);
 
-        return Inertia::render('Purchases/Show', [
+        return inertia('Purchases/Show', [
             'purchase' => $purchase,
         ]);
     }
@@ -112,7 +112,7 @@ class PurchaseController extends Controller
 
         $purchase->load(['items.product', 'createdBy']);
 
-        return Inertia::render('Purchases/Edit', [
+        return inertia('Purchases/Edit', [
             'purchase' => $purchase,
         ]);
     }
@@ -146,7 +146,7 @@ class PurchaseController extends Controller
                 ->with('error', 'Esta compra já possui pagáveis.');
         }
 
-        return Inertia::render('Purchases/CreatePayables', [
+        return inertia('Purchases/CreatePayables', [
             'purchase' => $purchase->load(['supplier']),
         ]);
     }
