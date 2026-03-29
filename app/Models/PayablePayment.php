@@ -2,21 +2,15 @@
 
 namespace App\Models;
 
-use App\Traits\BelongsToTenant;
-use App\Traits\Sequential;
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PayablePayment extends Model
 {
-    use BelongsToTenant, HasUlids, Sequential;
-
     protected $table = 'payables_payments';
 
     protected $fillable = [
-        'tenant_id',
-        'sequential_id',
+        'id',
         'payable_id',
         'payment_method_id',
         'account_id',

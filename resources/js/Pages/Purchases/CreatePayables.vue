@@ -59,12 +59,12 @@ const addMonthsToDateString = (dateString, monthsToAdd) => {
     const lastDayOfTargetMonth = new Date(
         newYear,
         adjustedMonth + 1,
-        0
+        0,
     ).getDate();
     const adjustedDay = Math.min(day, lastDayOfTargetMonth);
 
     return `${newYear}-${String(adjustedMonth + 1).padStart(2, "0")}-${String(
-        adjustedDay
+        adjustedDay,
     ).padStart(2, "0")}`;
 };
 
@@ -78,7 +78,7 @@ const setDayInDateString = (dateString, newDay) => {
     const adjustedDay = Math.min(newDay, lastDayOfMonth);
 
     return `${year}-${String(month + 1).padStart(2, "0")}-${String(
-        adjustedDay
+        adjustedDay,
     ).padStart(2, "0")}`;
 };
 
@@ -105,7 +105,7 @@ watch(
             installmentForm.due_day = getDayFromDateString(newValue);
         }
     },
-    { immediate: true }
+    { immediate: true },
 );
 
 const generateInstallments = () => {
@@ -146,9 +146,10 @@ const generateInstallments = () => {
             payment_method_id: paymentMethodId,
             due_date: dueDate,
             amount: installmentAmount,
-            description: `PAGÁVEL COMPRA #${String(
-                props.purchase.sequential_id
-            ).padStart(6, "0")} - ${i + 1}/${installmentsCount}`,
+            description: `PAGÁVEL COMPRA #${String(props.purchase.id).padStart(
+                6,
+                "0",
+            )} - ${i + 1}/${installmentsCount}`,
         });
     }
 
@@ -166,7 +167,7 @@ const addPayable = () => {
         form.payables.length > 0
             ? addMonthsToDateString(
                   form.payables[form.payables.length - 1].due_date,
-                  1
+                  1,
               )
             : currentDate;
 
@@ -174,9 +175,10 @@ const addPayable = () => {
         payment_method_id: "",
         due_date: newDueDate,
         amount: remainingAmount.value > 0 ? remainingAmount.value : 0,
-        description: `PAGÁVEL COMPRA #${String(
-            props.purchase.sequential_id
-        ).padStart(6, "0")}`,
+        description: `PAGÁVEL COMPRA #${String(props.purchase.id).padStart(
+            6,
+            "0",
+        )}`,
     });
 };
 
@@ -206,17 +208,17 @@ watch(
     (newTotal) => {
         remainingAmount.value = Math.max(
             0,
-            props.purchase.total_cost - newTotal
+            props.purchase.total_cost - newTotal,
         );
         installmentForm.amount = remainingAmount.value;
     },
-    { immediate: true }
+    { immediate: true },
 );
 
 const submit = () => {
     if (!isValid.value) {
         alert(
-            "O valor total dos pagáveis deve ser exatamente igual ao valor da compra."
+            "O valor total dos pagáveis deve ser exatamente igual ao valor da compra.",
         );
         return;
     }
@@ -237,7 +239,7 @@ const adjustLastPayable = () => {
     if (form.payables.length > 0) {
         const lastIndex = form.payables.length - 1;
         const currentLastAmount = convertToNumber(
-            form.payables[lastIndex].amount
+            form.payables[lastIndex].amount,
         );
         const adjustedAmount =
             Math.round((currentLastAmount - difference.value) * 100) / 100;
@@ -253,9 +255,7 @@ const adjustLastPayable = () => {
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>
-                    Finalizar Compra #{{
-                        String(purchase.sequential_id).padStart(6, "0")
-                    }}
+                    Finalizar Compra #{{ String(purchase.id).padStart(6, "0") }}
                 </h4>
                 <Breadcrumb
                     :breadcrumb="[
@@ -445,7 +445,7 @@ const adjustLastPayable = () => {
                                             v-model="payable.payment_method_id"
                                             :search-url="
                                                 route(
-                                                    'api.payment-methods.search'
+                                                    'api.payment-methods.search',
                                                 )
                                             "
                                             :class="{

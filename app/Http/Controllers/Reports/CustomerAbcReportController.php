@@ -4,12 +4,19 @@ namespace App\Http\Controllers\Reports;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Services\Reports\BaseReportService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Spatie\Browsershot\Browsershot;
 
 class CustomerAbcReportController extends Controller
 {
+    protected BaseReportService $reportService;
+
+    public function __construct(BaseReportService $reportService)
+    {
+        $this->reportService = $reportService;
+    }
+
     public function generate(Request $request)
     {
         $startDate = $request->get('start_date');
@@ -20,7 +27,6 @@ class CustomerAbcReportController extends Controller
             ->join('customers', 'orders.customer_id', '=', 'customers.id')
             ->select(
                 'customers.id',
-                'customers.sequential_id',
                 'customers.first_name',
                 'customers.last_name',
                 DB::raw('COUNT(orders.id) as order_count'),
@@ -62,7 +68,6 @@ class CustomerAbcReportController extends Controller
 
             $classifiedCustomers[] = [
                 'id' => $customer->id,
-                'sequential_id' => $customer->sequential_id,
                 'name' => $customer->first_name.' '.$customer->last_name,
                 'order_count' => $customer->order_count,
                 'total_value' => $customer->total_value,
@@ -104,7 +109,14 @@ class CustomerAbcReportController extends Controller
                 : 0;
         }
 
-        $html = view('reports.customer-abc', [
+        $analysisTypeName = $analysisType === 'value' ? 'Valor' : 'Quantidade';
+        $filename = "RelatorioCurvaABC_Clientes_{$analysisTypeName}";
+        if ($startDate && $endDate) {
+            $filename .= "_{$startDate}_{$endDate}";
+        }
+        $filename .= '.pdf';
+
+        return $this->reportService->streamPdf('reports.abc.customers.abc', [
             'customers' => $classifiedCustomers,
             'totalsByClass' => $totalsByClass,
             'totalValue' => $totalValue,
@@ -113,37 +125,6 @@ class CustomerAbcReportController extends Controller
             'analysisType' => $analysisType,
             'startDate' => $startDate,
             'endDate' => $endDate,
-        ])->render();
-
-        $pdf = $this->generatePdf($html);
-
-        $analysisTypeName = $analysisType === 'value' ? 'Valor' : 'Quantidade';
-        $filename = "RelatorioCurvaABC_Clientes_{$analysisTypeName}";
-        if ($startDate && $endDate) {
-            $filename .= "_{$startDate}_{$endDate}";
-        }
-        $filename .= '.pdf';
-
-        return response($pdf)
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'inline; filename="'.$filename.'"');
-    }
-
-    private function generatePdf($html)
-    {
-        $browsershot = Browsershot::html($html)
-            ->showBackground()
-            ->waitUntilNetworkIdle()
-            ->timeout(120)
-            ->margins(10, 10, 10, 10)
-            ->format('A4');
-
-        if (config('app.env') === 'production') {
-            $browsershot->setNodeBinary('/usr/bin/node')
-                ->setNpmBinary('/usr/bin/npm')
-                ->noSandbox();
-        }
-
-        return $browsershot->pdf();
+        ], $filename, 'landscape');
     }
 }

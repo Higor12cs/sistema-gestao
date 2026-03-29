@@ -66,7 +66,7 @@ const submit = () => {
             start_date: startDate.value,
             end_date: endDate.value,
         },
-        { preserveState: true }
+        { preserveState: true },
     );
 };
 
@@ -163,7 +163,7 @@ const resetFilters = () => {
                 <strong>
                     {{ product.name }}
                     (Código:
-                    {{ String(product.sequential_id).padStart(6, "0") }})
+                    {{ String(product.id).padStart(6, "0") }})
                 </strong>
             </div>
             <div class="card-body">

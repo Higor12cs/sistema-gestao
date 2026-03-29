@@ -29,9 +29,9 @@ watch(
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
-    }, 300)
+    }, 300),
 );
 
 const confirmDelete = (brand) => {
@@ -109,12 +109,7 @@ const cancelDelete = () => {
                         <tbody>
                             <tr v-for="brand in brands.data" :key="brand.id">
                                 <td>
-                                    {{
-                                        String(brand.sequential_id).padStart(
-                                            6,
-                                            "0"
-                                        )
-                                    }}
+                                    {{ String(brand.id).padStart(6, "0") }}
                                 </td>
                                 <td>{{ brand.name }}</td>
                                 <td>
@@ -132,10 +127,7 @@ const cancelDelete = () => {
                                     <div class="text-nowrap">
                                         <Link
                                             :href="
-                                                route(
-                                                    'brands.edit',
-                                                    brand.id
-                                                )
+                                                route('brands.edit', brand.id)
                                             "
                                             class="btn btn-sm btn-secondary mr-1"
                                         >

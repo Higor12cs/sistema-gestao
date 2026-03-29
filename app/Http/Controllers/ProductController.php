@@ -13,7 +13,7 @@ class ProductController extends Controller
         $products = Product::query()
             ->with(['group', 'group.section'])
             ->when(request('search'), function ($query, $search) {
-                $query->where('name', 'ilike', "%{$search}%");
+                $query->where('name', 'like', "%{$search}%");
             })
             ->latest()
             ->paginate(10)
@@ -94,7 +94,7 @@ class ProductController extends Controller
         $query = $request->search ?? '';
 
         $products = Product::with(['brand', 'group.section'])
-            ->where('name', 'ilike', "%{$query}%")
+            ->where('name', 'like', "%{$query}%")
             ->where('active', true)
             ->limit(10)
             ->get();

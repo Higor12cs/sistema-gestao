@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Tenant;
+use App\Models\TenantUser;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -35,21 +37,29 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = $request->user();
+        $tenantUser = null;
+
+        if ($user && session()->has('tenant_id')) {
+            tenancy()->initialize(session('tenant_id'));
+            $tenantUser = TenantUser::find($user->id);
+        }
+
         return array_merge(parent::share($request), [
+            'currentTenant' => session('tenant_id') ? Tenant::find(session('tenant_id')) : null,
             'auth' => [
-                'user' => fn () => $request->user() ? [
-                    'id' => $request->user()->id,
-                    'name' => $request->user()->name,
-                    'email' => $request->user()->email,
+                'user' => fn () => $user ? [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
                 ] : null,
-                'roles' => fn () => $request->user()
-                    ? $request->user()->getRoleNames()->toArray()
+                'roles' => fn () => $tenantUser
+                    ? $tenantUser->getRoleNames()->toArray()
                     : [],
-                'permissions' => fn () => $request->user()
-                    ? $request->user()->getAllPermissions()->pluck('name')->toArray()
+                'permissions' => fn () => $tenantUser
+                    ? $tenantUser->getAllPermissions()->pluck('name')->toArray()
                     : [],
             ],
-            'appName' => config('app.name'),
             'flash' => [
                 'success' => $request->session()->get('success'),
                 'error' => $request->session()->get('error'),

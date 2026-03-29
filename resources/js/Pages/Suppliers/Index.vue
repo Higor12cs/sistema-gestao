@@ -29,9 +29,9 @@ watch(
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
-    }, 300)
+    }, 300),
 );
 
 // onMounted(() => {
@@ -129,12 +129,7 @@ const cancelDelete = () => {
                                 :key="supplier.id"
                             >
                                 <td>
-                                    {{
-                                        String(supplier.sequential_id).padStart(
-                                            6,
-                                            "0"
-                                        )
-                                    }}
+                                    {{ String(supplier.id).padStart(6, "0") }}
                                 </td>
                                 <td>{{ supplier.first_name }}</td>
                                 <td>{{ supplier.last_name }}</td>
@@ -156,7 +151,7 @@ const cancelDelete = () => {
                                             :href="
                                                 route(
                                                     'suppliers.edit',
-                                                    supplier.id
+                                                    supplier.id,
                                                 )
                                             "
                                             class="btn btn-sm btn-secondary mr-1"

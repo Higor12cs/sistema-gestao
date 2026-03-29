@@ -35,7 +35,7 @@ const getLastSevenDays = () => {
 const defaultDates = getLastSevenDays();
 
 const filterForm = useForm({
-    sequential_id: props.filters?.sequential_id || "",
+    id: props.filters?.id || "",
     customer_id: props.filters?.customer_id || "",
     start_date: props.filters?.start_date || defaultDates.start,
     end_date: props.filters?.end_date || defaultDates.end,
@@ -54,7 +54,7 @@ const toggleFilterModal = () => {
 };
 
 const applyFilters = (formData) => {
-    filterForm.sequential_id = formData.sequential_id;
+    filterForm.id = formData.id;
     filterForm.customer_id = formData.customer_id;
     filterForm.start_date = formData.start_date;
     filterForm.end_date = formData.end_date;
@@ -80,7 +80,7 @@ const resetFilters = () => {
         {
             preserveState: true,
             replace: true,
-        }
+        },
     );
 };
 
@@ -156,9 +156,7 @@ onMounted(() => {
                         <tbody>
                             <tr v-for="order in orders.data" :key="order.id">
                                 <td>
-                                    {{
-                                        formatSequentialId(order.sequential_id)
-                                    }}
+                                    {{ formatSequentialId(order.id) }}
                                 </td>
                                 <td>
                                     {{ order.customer.name }}
@@ -185,12 +183,7 @@ onMounted(() => {
                                 <td>{{ formatCurrency(order.total_price) }}</td>
                                 <td class="text-nowrap">
                                     <Link
-                                        :href="
-                                            route(
-                                                'orders.show',
-                                                order.id
-                                            )
-                                        "
+                                        :href="route('orders.show', order.id)"
                                         class="btn btn-sm btn-secondary mr-1"
                                     >
                                         Visualizar
@@ -202,12 +195,7 @@ onMounted(() => {
                                                 order.receivables.length
                                             )
                                         "
-                                        :href="
-                                            route(
-                                                'orders.edit',
-                                                order.id
-                                            )
-                                        "
+                                        :href="route('orders.edit', order.id)"
                                         class="btn btn-sm btn-secondary mr-1"
                                     >
                                         Editar
@@ -222,7 +210,7 @@ onMounted(() => {
                                         :href="
                                             route(
                                                 'orders.create-receivables',
-                                                order.id
+                                                order.id,
                                             )
                                         "
                                         class="btn btn-sm btn-primary mr-1"

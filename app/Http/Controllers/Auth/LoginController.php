@@ -25,9 +25,7 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
-            $request->session()->put(['tenant_id' => Auth::user()->tenant_id]);
-
-            return response()->make('', 409, ['X-Inertia-Location' => route('home.index')]);
+            return to_route('tenant-select.index');
         }
 
         return back()->withErrors([

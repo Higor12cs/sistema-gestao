@@ -29,9 +29,9 @@ watch(
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
-    }, 300)
+    }, 300),
 );
 
 const confirmDelete = (role) => {
@@ -127,12 +127,7 @@ const getPermissionBadges = (permissions) => {
                         <tbody>
                             <tr v-for="role in roles.data" :key="role.id">
                                 <td>
-                                    {{
-                                        String(role.sequential_id).padStart(
-                                            6,
-                                            "0"
-                                        )
-                                    }}
+                                    {{ String(role.id).padStart(6, "0") }}
                                 </td>
                                 <td>{{ role.name }}</td>
                                 <td>

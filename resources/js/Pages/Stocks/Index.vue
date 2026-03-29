@@ -18,7 +18,7 @@ const submit = () => {
     router.get(
         route("stocks.index"),
         { search: search.value },
-        { preserveState: true }
+        { preserveState: true },
     );
 };
 </script>
@@ -79,9 +79,10 @@ const submit = () => {
                             <tr v-for="stock in stocks.data" :key="stock.id">
                                 <td>
                                     {{
-                                        String(
-                                            stock.product.sequential_id
-                                        ).padStart(6, "0")
+                                        String(stock.product.id).padStart(
+                                            6,
+                                            "0",
+                                        )
                                     }}
                                 </td>
                                 <td>{{ stock.product.name }}</td>
@@ -92,18 +93,14 @@ const submit = () => {
                                 <td>
                                     {{
                                         formatCurrency(
-                                            stock.product.price * stock.quantity
+                                            stock.product.price *
+                                                stock.quantity,
                                         )
                                     }}
                                 </td>
                                 <td class="text-nowrap">
                                     <Link
-                                        :href="
-                                            route(
-                                                'stocks.adjust',
-                                                stock.id
-                                            )
-                                        "
+                                        :href="route('stocks.adjust', stock.id)"
                                         class="btn btn-sm btn-primary mr-1"
                                     >
                                         Ajustar Estoque

@@ -29,9 +29,9 @@ watch(
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
-    }, 300)
+    }, 300),
 );
 
 const confirmDelete = (group) => {
@@ -110,12 +110,7 @@ const cancelDelete = () => {
                         <tbody>
                             <tr v-for="group in groups.data" :key="group.id">
                                 <td>
-                                    {{
-                                        String(group.sequential_id).padStart(
-                                            6,
-                                            "0"
-                                        )
-                                    }}
+                                    {{ String(group.id).padStart(6, "0") }}
                                 </td>
                                 <td>{{ group.name }}</td>
                                 <td>{{ group.section.name }}</td>
@@ -133,10 +128,7 @@ const cancelDelete = () => {
                                     <div class="text-nowrap">
                                         <Link
                                             :href="
-                                                route(
-                                                    'groups.edit',
-                                                    group.id
-                                                )
+                                                route('groups.edit', group.id)
                                             "
                                             class="btn btn-sm btn-secondary mr-1"
                                         >

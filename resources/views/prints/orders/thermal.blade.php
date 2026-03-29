@@ -1,10 +1,10 @@
 @extends('layouts.thermal-base')
 
-@section('title', 'Pedido_' . str_pad($order->sequential_id, 6, '0', STR_PAD_LEFT))
+@section('title', 'Pedido_' . str_pad($order->id, 6, '0', STR_PAD_LEFT))
 
 @section('content')
     <div class="header">
-        <div class="order-title">PEDIDO #{{ str_pad($order->sequential_id, 6, '0', STR_PAD_LEFT) }}</div>
+        <div class="order-title">PEDIDO #{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}</div>
         <div class="status-indicator">
             {{ $order->hasReceivables() ? '*** FINALIZADO ***' : '*** PENDENTE ***' }}
         </div>
@@ -21,7 +21,7 @@
         <div class="info-list">
             <div class="info-item">
                 <div class="info-label">Código:</div>
-                <div class="info-value">#{{ str_pad($order->sequential_id, 6, '0', STR_PAD_LEFT) }}</div>
+                <div class="info-value">#{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}</div>
             </div>
             <div class="info-item">
                 <div class="info-label">Data:</div>

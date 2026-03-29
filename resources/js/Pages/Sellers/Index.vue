@@ -29,9 +29,9 @@ watch(
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
-    }, 300)
+    }, 300),
 );
 
 const confirmDelete = (seller) => {
@@ -109,12 +109,7 @@ const cancelDelete = () => {
                         <tbody>
                             <tr v-for="seller in sellers.data" :key="seller.id">
                                 <td>
-                                    {{
-                                        String(seller.sequential_id).padStart(
-                                            6,
-                                            "0"
-                                        )
-                                    }}
+                                    {{ String(seller.id).padStart(6, "0") }}
                                 </td>
                                 <td>{{ seller.name }}</td>
                                 <td>
@@ -132,10 +127,7 @@ const cancelDelete = () => {
                                     <div class="text-nowrap">
                                         <Link
                                             :href="
-                                                route(
-                                                    'sellers.edit',
-                                                    seller.id
-                                                )
+                                                route('sellers.edit', seller.id)
                                             "
                                             class="btn btn-sm btn-secondary mr-1"
                                         >

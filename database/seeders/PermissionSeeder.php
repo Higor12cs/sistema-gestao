@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Permission;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 
 class PermissionSeeder extends Seeder
@@ -151,5 +152,24 @@ class PermissionSeeder extends Seeder
                 ]);
             }
         }
+
+        Role::firstOrCreate([
+            'name' => 'Administrador',
+        ])->syncPermissions(Permission::all());
+
+        $sellerPermissions = Permission::whereIn('name', [
+            'dashboard.index',
+            'customers.index',
+            'orders.index',
+            'orders.create',
+            'orders.edit',
+            'products.index',
+            'stocks.index',
+            'receivables.index',
+        ])->get();
+
+        Role::firstOrCreate([
+            'name' => 'Vendedor',
+        ])->syncPermissions($sellerPermissions);
     }
 }

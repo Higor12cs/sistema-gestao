@@ -35,8 +35,8 @@ class OrderController extends Controller
 
         $query = Order::query()->with(['customer', 'receivables', 'seller', 'createdBy']);
 
-        if ($request->filled('sequential_id')) {
-            $query->where('sequential_id', $request->sequential_id);
+        if ($request->filled('id')) {
+            $query->where('id', $request->id);
         } else {
             if ($request->filled('customer_id')) {
                 $query->where('customer_id', $request->customer_id);
@@ -79,7 +79,7 @@ class OrderController extends Controller
         return inertia('Orders/Index', [
             'orders' => $orders,
             'filters' => array_merge(
-                $request->only(['sequential_id', 'customer_id', 'seller_id', 'created_by', 'status']),
+                $request->only(['id', 'customer_id', 'seller_id', 'created_by', 'status']),
                 ['start_date' => $startDate, 'end_date' => $endDate]
             ),
             'hasResults' => true,
@@ -155,7 +155,7 @@ class OrderController extends Controller
     public function createReceivables(Order $order)
     {
         if ($order->hasReceivables()) {
-            return to_route('orders.show', $order->sequential_id)
+            return to_route('orders.show', $order->id)
                 ->with('error', 'Este pedido já possui recebíveis.');
         }
 
@@ -180,7 +180,7 @@ class OrderController extends Controller
 
             $this->orderService->createReceivables($order, $receivablesData);
 
-            return to_route('orders.show', $order->sequential_id)
+            return to_route('orders.show', $order->id)
                 ->with('success', 'Recebíveis criados com sucesso!');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);

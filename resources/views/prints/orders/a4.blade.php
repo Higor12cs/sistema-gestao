@@ -1,12 +1,12 @@
 @extends('layouts.report-base')
 
-@section('title', 'Pedido_' . str_pad($order->sequential_id, 6, '0', STR_PAD_LEFT))
+@section('title', 'Pedido_' . str_pad($order->id, 6, '0', STR_PAD_LEFT))
 
 @section('content')
     <div class="header">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <div class="order-id">
-                PEDIDO #{{ str_pad($order->sequential_id, 6, '0', STR_PAD_LEFT) }}
+                PEDIDO #{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}
             </div>
             <div>
                 <span class="status-badge {{ $order->hasReceivables() ? 'status-finalized' : 'status-pending' }}">
@@ -27,7 +27,7 @@
                 <div class="info-list">
                     <div class="info-item">
                         <div class="info-label">Código:</div>
-                        <div class="info-value">#{{ str_pad($order->sequential_id, 6, '0', STR_PAD_LEFT) }}</div>
+                        <div class="info-value">#{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}</div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Data Emissão:</div>
@@ -144,7 +144,7 @@
                 <tbody>
                     @foreach ($order->receivables as $receivable)
                         <tr>
-                            <td>{{ str_pad($receivable->sequential_id, 6, '0', STR_PAD_LEFT) }}</td>
+                            <td>{{ str_pad($receivable->id, 6, '0', STR_PAD_LEFT) }}</td>
                             <td>{{ $receivable->paymentMethod ? $receivable->paymentMethod->name : 'N/A' }}</td>
                             <td>{{ $receivable->due_date->format('d/m/Y') }}</td>
                             <td class="numeric">{{ 'R$ ' . number_format($receivable->total_amount, 2, ',', '.') }}</td>

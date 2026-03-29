@@ -55,7 +55,7 @@ const resetFilters = () => {
         {
             preserveState: true,
             replace: true,
-        }
+        },
     );
 };
 
@@ -166,7 +166,7 @@ const toggleSelectAll = () => {
         if (firstPayable) {
             selectedSupplierId.value = firstPayable.supplier_id;
             selectedPayables.value = getSelectablePayables().filter(
-                (r) => r.supplier_id === firstPayable.supplier_id
+                (r) => r.supplier_id === firstPayable.supplier_id,
             );
         }
     }
@@ -183,7 +183,7 @@ const isAllSelected = computed(() => {
     const selectableFromSameSupplier = selectablePayables.filter(
         (r) =>
             !selectedSupplierId.value ||
-            r.supplier_id === selectedSupplierId.value
+            r.supplier_id === selectedSupplierId.value,
     );
 
     return (
@@ -379,11 +379,7 @@ const isAllSelected = computed(() => {
                                     </div>
                                 </td>
                                 <td>
-                                    {{
-                                        formatSequentialId(
-                                            payable.sequential_id
-                                        )
-                                    }}
+                                    {{ formatSequentialId(payable.id) }}
                                 </td>
                                 <td>
                                     {{ payable.supplier.first_name }}
@@ -394,7 +390,7 @@ const isAllSelected = computed(() => {
                                 <td
                                     :class="{
                                         'text-danger': isOverdue(
-                                            payable.due_date
+                                            payable.due_date,
                                         ),
                                     }"
                                 >
@@ -428,7 +424,7 @@ const isAllSelected = computed(() => {
                                             :href="
                                                 route(
                                                     'payables.payments.create',
-                                                    { ids: payable.id }
+                                                    { ids: payable.id },
                                                 )
                                             "
                                             class="btn btn-sm btn-primary mr-1"
@@ -442,7 +438,7 @@ const isAllSelected = computed(() => {
                                             :href="
                                                 route(
                                                     'payables.edit',
-                                                    payable.id
+                                                    payable.id,
                                                 )
                                             "
                                             class="btn btn-sm btn-secondary mr-1"

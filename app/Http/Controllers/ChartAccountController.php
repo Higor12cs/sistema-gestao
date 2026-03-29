@@ -13,8 +13,8 @@ class ChartAccountController extends Controller
         $accounts = ChartAccount::query()
             ->when(request('search'), function ($query, $search) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('name', 'ilike', "%{$search}%")
-                        ->orWhere('code', 'ilike', "%{$search}%");
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('code', 'like', "%{$search}%");
                 });
             })
             ->when(request('parent_id'), function ($query, $parentId) {
@@ -162,8 +162,8 @@ class ChartAccountController extends Controller
 
         $accounts = ChartAccount::query()
             ->where(function ($q) use ($query) {
-                $q->where('name', 'ilike', "%{$query}%")
-                    ->orWhere('code', 'ilike', "%{$query}%");
+                $q->where('name', 'like', "%{$query}%")
+                    ->orWhere('code', 'like', "%{$query}%");
             })
             ->when($onlyAllowsTransactions, function ($q) {
                 $q->where('allows_transactions', true);

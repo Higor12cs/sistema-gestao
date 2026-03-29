@@ -2,33 +2,23 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Stancl\Tenancy\Contracts\TenantWithDatabase;
+use Stancl\Tenancy\Database\Concerns\HasDatabase;
+use Stancl\Tenancy\Database\Concerns\HasDomains;
+use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 
-class Tenant extends Model
+class Tenant extends BaseTenant implements TenantWithDatabase
 {
-    use HasUlids;
+    use HasDatabase, HasDomains;
 
-    protected $fillable = [
-        'name',
-        'trial_ends_at',
-        'subscription_ends_at',
-        'subscription_cancelled_at',
-    ];
-
-    protected $casts = [
-        'trial_ends_at' => 'datetime',
-        'subscription_ends_at' => 'datetime',
-    ];
-
-    public function users(): HasMany
+    public static function getCustomColumns(): array
     {
-        return $this->hasMany(User::class);
+        return ['id', 'name'];
     }
 
-    public function configurations(): HasMany
+    public function users(): BelongsToMany
     {
-        return $this->hasMany(Configuration::class);
+        return $this->belongsToMany(User::class);
     }
 }

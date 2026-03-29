@@ -1,213 +1,168 @@
-@extends('layouts.report-base')
+@extends('layouts.report')
 
 @section('title', 'Relatório Analítico de Pagáveis')
 
-@section('content')
-    <div class="header">
-        <div class="report-title">RELATÓRIO ANALÍTICO DE PAGÁVEIS</div>
-        <div class="report-subtitle">
-            @php
-                $dateTypeLabel = 'Emissão';
-                if ($date_type === 'due_date') {
-                    $dateTypeLabel = 'Vencimento';
-                } elseif ($date_type === 'payment_date') {
-                    $dateTypeLabel = 'Pagamento';
-                }
+@section('subtitle')
+    @php
+        $dateTypeLabel = 'Emissão';
+        if ($date_type === 'due_date') {
+            $dateTypeLabel = 'Vencimento';
+        } elseif ($date_type === 'payment_date') {
+            $dateTypeLabel = 'Pagamento';
+        }
 
-                $statusLabel = 'Todos';
-                if ($status === 'open') {
-                    $statusLabel = 'Em Aberto';
-                } elseif ($status === 'paid') {
-                    $statusLabel = 'Pagos';
-                }
-            @endphp
-            @if (isset($start_date) && isset($end_date))
-                Período ({{ $dateTypeLabel }}): {{ \Carbon\Carbon::parse($start_date)->format('d/m/Y') }} a
-                {{ \Carbon\Carbon::parse($end_date)->format('d/m/Y') }}
-            @else
-                Período: Todo o histórico
-            @endif
-            | Status: {{ $statusLabel }}
-        </div>
-    </div>
+        $statusLabel = 'Todos';
+        if ($status === 'open') {
+            $statusLabel = 'Em Aberto';
+        } elseif ($status === 'paid') {
+            $statusLabel = 'Pagos';
+        }
+    @endphp
+    @if (isset($start_date) && isset($end_date))
+        Período ({{ $dateTypeLabel }}): {{ \Carbon\Carbon::parse($start_date)->format('d/m/Y') }} a
+        {{ \Carbon\Carbon::parse($end_date)->format('d/m/Y') }}
+    @else
+        Período: Todo o histórico
+    @endif
+    | Status: {{ $statusLabel }}
+@endsection
+
+@section('content')
 
     <div class="summary">
-        <div class="summary-title">RESUMO GERAL</div>
-        <div class="summary-grid">
-            @php
-                $totalPayables = $payables->count();
-                $pendingPayables = $payables
-                    ->filter(function ($payable) {
-                        return $payable->paid_amount < $payable->total_amount;
-                    })
-                    ->count();
-                $paidPayables = $payables
-                    ->filter(function ($payable) {
-                        return $payable->paid_amount >= $payable->total_amount;
-                    })
-                    ->count();
-                $totalAmount = $payables->sum('total_amount');
-                $totalPaid = $payables->sum('paid_amount');
-                $totalRemaining = $totalAmount - $totalPaid;
-                $avgAmount = $totalPayables > 0 ? $totalAmount / $totalPayables : 0;
-
-                $summaryItems = [
-                    ['label' => 'Total de Pagáveis', 'value' => $totalPayables],
-                    ['label' => 'Valor Total', 'value' => 'R$ ' . number_format($totalAmount, 2, ',', '.')],
-                    ['label' => 'Valor Médio', 'value' => 'R$ ' . number_format($avgAmount, 2, ',', '.')],
-                    ['label' => 'Pagos', 'value' => $paidPayables],
-                    ['label' => 'Em Aberto', 'value' => $pendingPayables],
-                    ['label' => 'Total Restante', 'value' => 'R$ ' . number_format($totalRemaining, 2, ',', '.')],
-                ];
-            @endphp
-
-            @foreach ($summaryItems as $item)
-                <div class="summary-item">
-                    <div class="summary-label">{{ $item['label'] }}</div>
-                    <div class="summary-value">{{ $item['value'] }}</div>
-                </div>
-            @endforeach
-        </div>
+        <h3>RESUMO GERAL</h3>
+        @php
+            $totalPayables = $payables->count();
+            $pendingPayables = $payables
+                ->filter(function ($payable) {
+                    return $payable->paid_amount < $payable->total_amount;
+                })
+                ->count();
+            $paidPayables = $payables
+                ->filter(function ($payable) {
+                    return $payable->paid_amount >= $payable->total_amount;
+                })
+                ->count();
+            $totalAmount = $payables->sum('total_amount');
+            $totalPaid = $payables->sum('paid_amount');
+            $totalRemaining = $totalAmount - $totalPaid;
+            $avgAmount = $totalPayables > 0 ? $totalAmount / $totalPayables : 0;
+        @endphp
+        <table>
+            <tr>
+                <td><strong>Total de Pagáveis</strong></td>
+                <td>{{ $totalPayables }}</td>
+            </tr>
+            <tr>
+                <td><strong>Valor Total</strong></td>
+                <td>R$ {{ number_format($totalAmount, 2, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td><strong>Valor Médio</strong></td>
+                <td>R$ {{ number_format($avgAmount, 2, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td><strong>Pagos</strong></td>
+                <td>{{ $paidPayables }}</td>
+            </tr>
+            <tr>
+                <td><strong>Em Aberto</strong></td>
+                <td>{{ $pendingPayables }}</td>
+            </tr>
+            <tr>
+                <td><strong>Total Restante</strong></td>
+                <td>R$ {{ number_format($totalRemaining, 2, ',', '.') }}</td>
+            </tr>
+        </table>
     </div>
 
     @foreach ($payables as $payable)
-        <div class="order">
-            <div class="order-header">
-                <div class="order-id">
-                    PAGÁVEL #{{ str_pad($payable->sequential_id, 6, '0', STR_PAD_LEFT) }}
-                </div>
-                <div>
-                    <span
-                        class="status-badge {{ $payable->paid_amount >= $payable->total_amount ? 'status-finalized' : 'status-pending' }}">
-                        {{ $payable->paid_amount >= $payable->total_amount ? 'Pago' : 'Em Aberto' }}
-                    </span>
-                </div>
-            </div>
+        <div class="section">
+            <h3>PAGÁVEL #{{ str_pad($payable->id, 6, '0', STR_PAD_LEFT) }} -
+                {{ $payable->paid_amount >= $payable->total_amount ? 'Pago' : 'Em Aberto' }}</h3>
 
-            <div class="order-body">
-                <div class="grid">
-                    <div class="grid-column">
-                        <div class="section">
-                            <div class="section-title">Informações do Pagável</div>
-                            <div class="info-list">
-                                @php
-                                    $payableInfo = [
-                                        ['label' => 'Emissão:', 'value' => $payable->issue_date->format('d/m/Y')],
-                                        ['label' => 'Vencimento:', 'value' => $payable->due_date->format('d/m/Y')],
-                                        [
-                                            'label' => 'Plano de Contas:',
-                                            'value' => $payable->chartAccount
-                                                ? $payable->chartAccount->code . ' - ' . $payable->chartAccount->name
-                                                : 'N/A',
-                                        ],
-                                        [
-                                            'label' => 'Método de Pagamento:',
-                                            'value' => $payable->paymentMethod ? $payable->paymentMethod->name : 'N/A',
-                                        ],
-                                        [
-                                            'label' => 'Origem:',
-                                            'value' => $payable->purchase
-                                                ? 'Compra #' .
-                                                    str_pad($payable->purchase->sequential_id, 6, '0', STR_PAD_LEFT)
-                                                : ($payable->is_manual
-                                                    ? 'Manual'
-                                                    : 'N/A'),
-                                        ],
-                                    ];
-                                @endphp
+            <h4>Informações do Pagável</h4>
+            <table>
+                <tr>
+                    <td><strong>Emissão</strong></td>
+                    <td>{{ $payable->issue_date->format('d/m/Y') }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Vencimento</strong></td>
+                    <td>{{ $payable->due_date->format('d/m/Y') }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Plano de Contas</strong></td>
+                    <td>{{ $payable->chartAccount ? $payable->chartAccount->code . ' - ' . $payable->chartAccount->name : 'N/A' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Método de Pagamento</strong></td>
+                    <td>{{ $payable->paymentMethod ? $payable->paymentMethod->name : 'N/A' }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Origem</strong></td>
+                    <td>{{ $payable->purchase ? 'Compra #' . str_pad($payable->purchase->id, 6, '0', STR_PAD_LEFT) : ($payable->is_manual ? 'Manual' : 'N/A') }}
+                    </td>
+                </tr>
+            </table>
 
-                                @foreach ($payableInfo as $info)
-                                    <div class="info-item">
-                                        <div class="info-label">{{ $info['label'] }}</div>
-                                        <div class="info-value">{{ $info['value'] }}</div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
+            <h4>Informações do Fornecedor</h4>
+            <table>
+                <tr>
+                    <td><strong>Fornecedor</strong></td>
+                    <td>{{ $payable->supplier ? $payable->supplier->first_name . ' ' . $payable->supplier->last_name : 'N/A' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Razão Social</strong></td>
+                    <td>{{ $payable->supplier && $payable->supplier->legal_name ? $payable->supplier->legal_name : 'N/A' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>CPF/CNPJ</strong></td>
+                    <td>{{ $payable->supplier && $payable->supplier->cpf_cnpj ? $payable->supplier->cpf_cnpj : 'N/A' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Telefone</strong></td>
+                    <td>{{ $payable->supplier && $payable->supplier->phone ? $payable->supplier->phone : 'N/A' }}</td>
+                </tr>
+            </table>
 
-                    <div class="grid-column">
-                        <div class="section">
-                            <div class="section-title">Informações do Fornecedor</div>
-                            <div class="info-list">
-                                @php
-                                    $supplierInfo = [
-                                        [
-                                            'label' => 'Fornecedor:',
-                                            'value' => $payable->supplier
-                                                ? $payable->supplier->first_name . ' ' . $payable->supplier->last_name
-                                                : 'N/A',
-                                        ],
-                                        [
-                                            'label' => 'Razão Social:',
-                                            'value' =>
-                                                $payable->supplier && $payable->supplier->legal_name
-                                                    ? $payable->supplier->legal_name
-                                                    : 'N/A',
-                                        ],
-                                        [
-                                            'label' => 'CPF/CNPJ:',
-                                            'value' =>
-                                                $payable->supplier && $payable->supplier->cpf_cnpj
-                                                    ? $payable->supplier->cpf_cnpj
-                                                    : 'N/A',
-                                        ],
-                                        [
-                                            'label' => 'Telefone:',
-                                            'value' =>
-                                                $payable->supplier && $payable->supplier->phone
-                                                    ? $payable->supplier->phone
-                                                    : 'N/A',
-                                        ],
-                                    ];
-                                @endphp
+            <h4>Valores e Pagamentos</h4>
+            <table>
+                <tr>
+                    <td><strong>Valor Total</strong></td>
+                    <td class="numeric">R$ {{ number_format($payable->total_amount, 2, ',', '.') }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Valor Pago</strong></td>
+                    <td class="numeric">R$ {{ number_format($payable->paid_amount, 2, ',', '.') }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Valor Restante</strong></td>
+                    <td class="numeric">R$ {{ number_format($payable->remaining_amount, 2, ',', '.') }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Desconto</strong></td>
+                    <td class="numeric">R$ {{ number_format($payable->discount, 2, ',', '.') }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Juros/Multa</strong></td>
+                    <td class="numeric">R$ {{ number_format($payable->fees, 2, ',', '.') }}</td>
+                </tr>
+            </table>
 
-                                @foreach ($supplierInfo as $info)
-                                    <div class="info-item">
-                                        <div class="info-label">{{ $info['label'] }}</div>
-                                        <div class="info-value">{{ $info['value'] }}</div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            @if ($payable->description)
+                <h4>Descrição</h4>
+                <p>{{ $payable->description }}</p>
+            @endif
 
-                <div class="section">
-                    <div class="section-title">Valores e Pagamentos</div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th width="20%">Valor Total</th>
-                                <th width="20%">Valor Pago</th>
-                                <th width="20%">Valor Restante</th>
-                                <th width="20%">Desconto</th>
-                                <th width="20%">Juros/Multa</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>R$ {{ number_format($payable->total_amount, 2, ',', '.') }}</td>
-                                <td>R$ {{ number_format($payable->paid_amount, 2, ',', '.') }}</td>
-                                <td>R$ {{ number_format($payable->remaining_amount, 2, ',', '.') }}</td>
-                                <td>R$ {{ number_format($payable->discount, 2, ',', '.') }}</td>
-                                <td>R$ {{ number_format($payable->fees, 2, ',', '.') }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                @if ($payable->description)
-                    <div class="section">
-                        <div class="section-title">Descrição</div>
-                        <div class="observations">
-                            {{ $payable->description }}
-                        </div>
-                    </div>
-                @endif
-            </div>
+            <hr>
         </div>
     @endforeach
+
 @endsection
 
 @section('footer-text', 'Relatório gerado em ' . now()->format('d/m/Y H:i:s'))

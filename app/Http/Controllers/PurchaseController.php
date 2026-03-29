@@ -11,7 +11,6 @@ use App\Models\User;
 use App\Services\PurchaseService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class PurchaseController extends Controller
 {
@@ -33,8 +32,8 @@ class PurchaseController extends Controller
 
         $query = Purchase::query()->with(['supplier', 'payables', 'createdBy']);
 
-        if ($request->filled('sequential_id')) {
-            $query->where('sequential_id', $request->sequential_id);
+        if ($request->filled('id')) {
+            $query->where('id', $request->id);
         } else {
             if ($request->filled('supplier_id')) {
                 $query->where('supplier_id', $request->supplier_id);
@@ -72,7 +71,7 @@ class PurchaseController extends Controller
         return inertia('Purchases/Index', [
             'purchases' => $purchases,
             'filters' => array_merge(
-                $request->only(['sequential_id', 'supplier_id', 'created_by', 'status']),
+                $request->only(['id', 'supplier_id', 'created_by', 'status']),
                 ['start_date' => $startDate, 'end_date' => $endDate]
             ),
             'hasResults' => true,
@@ -107,7 +106,7 @@ class PurchaseController extends Controller
     public function edit(Purchase $purchase)
     {
         if ($purchase->hasPayables()) {
-            return to_route('purchases.show', $purchase->sequential_id)->with('error', 'Compras com pagáveis não podem ser editadas.');
+            return to_route('purchases.show', $purchase->id)->with('error', 'Compras com pagáveis não podem ser editadas.');
         }
 
         $purchase->load(['items.product', 'createdBy']);
@@ -120,7 +119,7 @@ class PurchaseController extends Controller
     public function update(PurchaseUpdateRequest $request, Purchase $purchase)
     {
         if ($purchase->hasPayables()) {
-            return to_route('purchases.show', $purchase->sequential_id)->with('error', 'Compras com pagáveis não podem ser editadas.');
+            return to_route('purchases.show', $purchase->id)->with('error', 'Compras com pagáveis não podem ser editadas.');
         }
 
         $this->purchaseService->updatePurchase($purchase, $request->validated());
@@ -184,7 +183,7 @@ class PurchaseController extends Controller
                 'data' => $purchases->map(function (Purchase $purchase) {
                     return [
                         'id' => $purchase->id,
-                        'name' => 'Compra #' . $purchase->sequential_id . ' - ' . $purchase->issue_date->format('d/m/Y'),
+                        'name' => 'Compra #'.$purchase->id.' - '.$purchase->issue_date->format('d/m/Y'),
                         'total' => $purchase->total_cost,
                     ];
                 }),
@@ -192,7 +191,7 @@ class PurchaseController extends Controller
         }
 
         $query = $request->search ?? '';
-        $purchases = Purchase::where('sequential_id', 'ilike', "%{$query}%")
+        $purchases = Purchase::where('id', 'like', "%{$query}%")
             ->limit(10)
             ->get();
 
@@ -200,7 +199,7 @@ class PurchaseController extends Controller
             'data' => $purchases->map(function (Purchase $purchase) {
                 return [
                     'id' => $purchase->id,
-                    'name' => 'Compra #' . $purchase->sequential_id . ' - ' . $purchase->issue_date->format('d/m/Y'),
+                    'name' => 'Compra #'.$purchase->id.' - '.$purchase->issue_date->format('d/m/Y'),
                     'total' => $purchase->total_cost,
                 ];
             }),

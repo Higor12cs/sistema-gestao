@@ -43,12 +43,12 @@ watch(
     (value) => {
         if (value) {
             selectedTransactions.value = props.transactions.data.map(
-                (t) => t.id
+                (t) => t.id,
             );
         } else {
             selectedTransactions.value = [];
         }
-    }
+    },
 );
 
 watch(
@@ -63,7 +63,7 @@ watch(
             allSelected.value = false;
         }
     },
-    { deep: true }
+    { deep: true },
 );
 
 const hasSelectedTransactions = computed(() => {
@@ -77,7 +77,7 @@ const applyFilters = () => {
         {
             preserveState: true,
             replace: true,
-        }
+        },
     );
 };
 
@@ -89,7 +89,7 @@ const resetFilters = () => {
         {
             preserveState: true,
             replace: true,
-        }
+        },
     );
 };
 
@@ -132,13 +132,13 @@ const getTransactionOrigin = (transaction) => {
     if (transaction.receivable) {
         if (transaction.receivable.order) {
             return `Pedido #${formatSequentialId(
-                transaction.receivable.order.sequential_id
+                transaction.receivable.order.id,
             )} - ${transaction.receivable.customer.first_name} ${
                 transaction.receivable.customer.last_name || ""
             }`;
         }
         return `Recebível #${formatSequentialId(
-            transaction.receivable.sequential_id
+            transaction.receivable.id,
         )} - ${transaction.receivable.customer.first_name} ${
             transaction.receivable.customer.last_name || ""
         }`;
@@ -147,13 +147,13 @@ const getTransactionOrigin = (transaction) => {
     if (transaction.payable) {
         if (transaction.payable.purchase) {
             return `Compra #${formatSequentialId(
-                transaction.payable.purchase.sequential_id
+                transaction.payable.purchase.id,
             )} - ${transaction.payable.supplier.first_name} ${
                 transaction.payable.supplier.last_name || ""
             }`;
         }
         return `Pagável #${formatSequentialId(
-            transaction.payable.sequential_id
+            transaction.payable.id,
         )} - ${transaction.payable.supplier.first_name} ${
             transaction.payable.supplier.last_name || ""
         }`;
@@ -349,11 +349,7 @@ const getTransactionOrigin = (transaction) => {
                                     </div>
                                 </td>
                                 <td>
-                                    {{
-                                        formatSequentialId(
-                                            transaction.sequential_id
-                                        )
-                                    }}
+                                    {{ formatSequentialId(transaction.id) }}
                                 </td>
                                 <td>
                                     {{

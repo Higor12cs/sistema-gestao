@@ -33,7 +33,7 @@ const getLastSevenDays = () => {
 const defaultDates = getLastSevenDays();
 
 const filterForm = useForm({
-    sequential_id: props.filters?.sequential_id || "",
+    id: props.filters?.id || "",
     supplier_id: props.filters?.supplier_id || "",
     start_date: props.filters?.start_date || defaultDates.start,
     end_date: props.filters?.end_date || defaultDates.end,
@@ -51,7 +51,7 @@ const toggleFilterModal = () => {
 };
 
 const applyFilters = (formData) => {
-    filterForm.sequential_id = formData.sequential_id;
+    filterForm.id = formData.id;
     filterForm.supplier_id = formData.supplier_id;
     filterForm.start_date = formData.start_date;
     filterForm.end_date = formData.end_date;
@@ -76,7 +76,7 @@ const resetFilters = () => {
         {
             preserveState: true,
             replace: true,
-        }
+        },
     );
 };
 
@@ -158,11 +158,7 @@ onMounted(() => {
                                 :key="purchase.id"
                             >
                                 <td>
-                                    {{
-                                        formatSequentialId(
-                                            purchase.sequential_id
-                                        )
-                                    }}
+                                    {{ formatSequentialId(purchase.id) }}
                                 </td>
                                 <td>{{ purchase.supplier.first_name }}</td>
                                 <td>{{ formatDate(purchase.issue_date) }}</td>
@@ -190,10 +186,7 @@ onMounted(() => {
                                 <td class="text-nowrap">
                                     <Link
                                         :href="
-                                            route(
-                                                'purchases.show',
-                                                purchase.id
-                                            )
+                                            route('purchases.show', purchase.id)
                                         "
                                         class="btn btn-sm btn-secondary mr-1"
                                     >
@@ -207,10 +200,7 @@ onMounted(() => {
                                             )
                                         "
                                         :href="
-                                            route(
-                                                'purchases.edit',
-                                                purchase.id
-                                            )
+                                            route('purchases.edit', purchase.id)
                                         "
                                         class="btn btn-sm btn-secondary mr-1"
                                     >
@@ -226,7 +216,7 @@ onMounted(() => {
                                         :href="
                                             route(
                                                 'purchases.create-payables',
-                                                purchase.id
+                                                purchase.id,
                                             )
                                         "
                                         class="btn btn-sm btn-primary mr-1"

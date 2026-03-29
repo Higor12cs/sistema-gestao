@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Configuration;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class ConfigurationController extends Controller
 {

@@ -59,13 +59,13 @@ const addMonthsToDateString = (dateString, monthsToAdd) => {
     const lastDayOfTargetMonth = new Date(
         newYear,
         adjustedMonth + 1,
-        0
+        0,
     ).getDate();
 
     const adjustedDay = Math.min(day, lastDayOfTargetMonth);
 
     return `${newYear}-${String(adjustedMonth + 1).padStart(2, "0")}-${String(
-        adjustedDay
+        adjustedDay,
     ).padStart(2, "0")}`;
 };
 
@@ -80,7 +80,7 @@ const setDayInDateString = (dateString, newDay) => {
     const adjustedDay = Math.min(newDay, lastDayOfMonth);
 
     return `${year}-${String(month + 1).padStart(2, "0")}-${String(
-        adjustedDay
+        adjustedDay,
     ).padStart(2, "0")}`;
 };
 
@@ -107,7 +107,7 @@ watch(
             installmentForm.due_day = getDayFromDateString(newValue);
         }
     },
-    { immediate: true }
+    { immediate: true },
 );
 
 const generateInstallments = () => {
@@ -148,9 +148,10 @@ const generateInstallments = () => {
             payment_method_id: paymentMethodId,
             due_date: dueDate,
             amount: installmentAmount,
-            description: `RECEBÍVEL PEDIDO #${String(
-                props.order.sequential_id
-            ).padStart(6, "0")} - ${i + 1}/${installmentsCount}`,
+            description: `RECEBÍVEL PEDIDO #${String(props.order.id).padStart(
+                6,
+                "0",
+            )} - ${i + 1}/${installmentsCount}`,
         });
     }
 
@@ -168,7 +169,7 @@ const addReceivable = () => {
         form.receivables.length > 0
             ? addMonthsToDateString(
                   form.receivables[form.receivables.length - 1].due_date,
-                  1
+                  1,
               )
             : currentDate;
 
@@ -176,9 +177,10 @@ const addReceivable = () => {
         payment_method_id: "",
         due_date: newDueDate,
         amount: remainingAmount.value > 0 ? remainingAmount.value : 0,
-        description: `RECEBÍVEL PEDIDO #${String(
-            props.order.sequential_id
-        ).padStart(6, "0")}`,
+        description: `RECEBÍVEL PEDIDO #${String(props.order.id).padStart(
+            6,
+            "0",
+        )}`,
     });
 };
 
@@ -209,7 +211,7 @@ watch(
         remainingAmount.value = Math.max(0, props.order.total_price - newTotal);
         installmentForm.amount = remainingAmount.value;
     },
-    { immediate: true }
+    { immediate: true },
 );
 
 const submit = () => {
@@ -234,7 +236,7 @@ const adjustLastReceivable = () => {
     if (form.receivables.length > 0) {
         const lastIndex = form.receivables.length - 1;
         const currentLastAmount = convertToNumber(
-            form.receivables[lastIndex].amount
+            form.receivables[lastIndex].amount,
         );
         const adjustedAmount =
             Math.round((currentLastAmount - difference.value) * 100) / 100;
@@ -250,9 +252,7 @@ const adjustLastReceivable = () => {
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>
-                    Finalizar Pedido #{{
-                        String(order.sequential_id).padStart(6, "0")
-                    }}
+                    Finalizar Pedido #{{ String(order.id).padStart(6, "0") }}
                 </h4>
                 <Breadcrumb
                     :breadcrumb="[
@@ -446,7 +446,7 @@ const adjustLastReceivable = () => {
                                             "
                                             :search-url="
                                                 route(
-                                                    'api.payment-methods.search'
+                                                    'api.payment-methods.search',
                                                 )
                                             "
                                             :class="{

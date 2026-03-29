@@ -7,12 +7,19 @@ use App\Models\Brand;
 use App\Models\Group;
 use App\Models\OrderItem;
 use App\Models\Section;
+use App\Services\Reports\BaseReportService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Spatie\Browsershot\Browsershot;
 
 class ProductAbcReportController extends Controller
 {
+    protected BaseReportService $reportService;
+
+    public function __construct(BaseReportService $reportService)
+    {
+        $this->reportService = $reportService;
+    }
+
     public function generate(Request $request)
     {
         $startDate = $request->get('start_date');
@@ -144,7 +151,14 @@ class ProductAbcReportController extends Controller
             'group' => $groupId ? Group::find($groupId)?->name : null,
         ];
 
-        $html = view('reports.product-abc', [
+        $analysisTypeName = $analysisType === 'value' ? 'Valor' : 'Quantidade';
+        $filename = "RelatorioCurvaABC_Produtos_{$analysisTypeName}";
+        if ($startDate && $endDate) {
+            $filename .= "_{$startDate}_{$endDate}";
+        }
+        $filename .= '.pdf';
+
+        return $this->reportService->streamPdf('reports.abc.products.abc', [
             'products' => $classifiedProducts,
             'totalsByClass' => $totalsByClass,
             'totalValue' => $totalValue,
@@ -154,37 +168,6 @@ class ProductAbcReportController extends Controller
             'startDate' => $startDate,
             'endDate' => $endDate,
             'filterDetails' => $filterDetails,
-        ])->render();
-
-        $pdf = $this->generatePdf($html);
-
-        $analysisTypeName = $analysisType === 'value' ? 'Valor' : 'Quantidade';
-        $filename = "RelatorioCurvaABC_Produtos_{$analysisTypeName}";
-        if ($startDate && $endDate) {
-            $filename .= "_{$startDate}_{$endDate}";
-        }
-        $filename .= '.pdf';
-
-        return response($pdf)
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'inline; filename="'.$filename.'"');
-    }
-
-    private function generatePdf($html)
-    {
-        $browsershot = Browsershot::html($html)
-            ->showBackground()
-            ->waitUntilNetworkIdle()
-            ->timeout(120)
-            ->margins(10, 10, 10, 10)
-            ->format('A4');
-
-        if (config('app.env') === 'production') {
-            $browsershot->setNodeBinary('/usr/bin/node')
-                ->setNpmBinary('/usr/bin/npm')
-                ->noSandbox();
-        }
-
-        return $browsershot->pdf();
+        ], $filename, 'landscape');
     }
 }

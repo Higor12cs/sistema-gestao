@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
-use App\Models\Product;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\Receivable;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
@@ -82,7 +82,7 @@ class POSController extends Controller
             DB::rollBack();
 
             return back()->withErrors([
-                'error' => 'Erro ao processar a venda: ' . $e->getMessage()
+                'error' => 'Erro ao processar a venda: '.$e->getMessage(),
             ])->withInput();
         }
     }
@@ -99,7 +99,7 @@ class POSController extends Controller
                 Receivable::create([
                     'customer_id' => $order->customer_id,
                     'order_id' => $order->id,
-                    'description' => "Venda POS #{$order->sequential_id}",
+                    'description' => "Venda POS #{$order->id}",
                     'amount' => $totalAmount,
                     'due_date' => now(),
                     'status' => 'paid',
@@ -114,7 +114,7 @@ class POSController extends Controller
                 Receivable::create([
                     'customer_id' => $order->customer_id,
                     'order_id' => $order->id,
-                    'description' => "Venda POS #{$order->sequential_id} - Cartão",
+                    'description' => "Venda POS #{$order->id} - Cartão",
                     'amount' => $totalAmount,
                     'due_date' => now()->addDays(1),
                     'status' => 'pending',
@@ -137,7 +137,7 @@ class POSController extends Controller
                     Receivable::create([
                         'customer_id' => $order->customer_id,
                         'order_id' => $order->id,
-                        'description' => "Venda POS #{$order->sequential_id} - Parcela {$i}/{$installments}",
+                        'description' => "Venda POS #{$order->id} - Parcela {$i}/{$installments}",
                         'amount' => $currentAmount,
                         'due_date' => now()->addMonths($i - 1),
                         'status' => 'pending',
@@ -158,8 +158,8 @@ class POSController extends Controller
 
         $products = Product::query()
             ->where(function ($q) use ($query) {
-                $q->where('name', 'ilike', "%{$query}%")
-                    ->orWhere('sku', 'ilike', "%{$query}%");
+                $q->where('name', 'like', "%{$query}%")
+                    ->orWhere('sku', 'like', "%{$query}%");
             })
             ->select('id', 'name', 'price')
             ->limit($limit)
@@ -179,7 +179,7 @@ class POSController extends Controller
             ->select('id', 'name', 'price')
             ->first();
 
-        if (!$product) {
+        if (! $product) {
             return response()->json([
                 'success' => false,
                 'message' => 'Produto não encontrado',

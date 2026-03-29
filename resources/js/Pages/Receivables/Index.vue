@@ -55,13 +55,13 @@ const resetFilters = () => {
         {
             preserveState: true,
             replace: true,
-        }
+        },
     );
 };
 
 const toggleReceivableSelection = (receivable) => {
     const index = selectedReceivables.value.findIndex(
-        (r) => r.id === receivable.id
+        (r) => r.id === receivable.id,
     );
 
     if (index === -1) {
@@ -170,7 +170,7 @@ const toggleSelectAll = () => {
         if (firstReceivable) {
             selectedCustomerId.value = firstReceivable.customer_id;
             selectedReceivables.value = getSelectableReceivables().filter(
-                (r) => r.customer_id === firstReceivable.customer_id
+                (r) => r.customer_id === firstReceivable.customer_id,
             );
         }
     }
@@ -187,7 +187,7 @@ const isAllSelected = computed(() => {
     const selectableFromSameCustomer = selectableReceivables.filter(
         (r) =>
             !selectedCustomerId.value ||
-            r.customer_id === selectedCustomerId.value
+            r.customer_id === selectedCustomerId.value,
     );
 
     return (
@@ -373,7 +373,7 @@ const isAllSelected = computed(() => {
                                             :checked="isSelected(receivable)"
                                             @change="
                                                 toggleReceivableSelection(
-                                                    receivable
+                                                    receivable,
                                                 )
                                             "
                                             :disabled="
@@ -388,11 +388,7 @@ const isAllSelected = computed(() => {
                                     </div>
                                 </td>
                                 <td>
-                                    {{
-                                        formatSequentialId(
-                                            receivable.sequential_id
-                                        )
-                                    }}
+                                    {{ formatSequentialId(receivable.id) }}
                                 </td>
                                 <td>
                                     {{ receivable.customer.first_name }}
@@ -403,7 +399,7 @@ const isAllSelected = computed(() => {
                                 <td
                                     :class="{
                                         'text-danger': isOverdue(
-                                            receivable.due_date
+                                            receivable.due_date,
                                         ),
                                     }"
                                 >
@@ -420,7 +416,7 @@ const isAllSelected = computed(() => {
                                 <td>
                                     {{
                                         formatCurrency(
-                                            receivable.remaining_amount
+                                            receivable.remaining_amount,
                                         )
                                     }}
                                 </td>
@@ -441,7 +437,7 @@ const isAllSelected = computed(() => {
                                             :href="
                                                 route(
                                                     'receivables.payments.create',
-                                                    { ids: receivable.id }
+                                                    { ids: receivable.id },
                                                 )
                                             "
                                             class="btn btn-sm btn-primary mr-1"
@@ -455,7 +451,7 @@ const isAllSelected = computed(() => {
                                             :href="
                                                 route(
                                                     'receivables.edit',
-                                                    receivable.id
+                                                    receivable.id,
                                                 )
                                             "
                                             class="btn btn-sm btn-secondary mr-1"

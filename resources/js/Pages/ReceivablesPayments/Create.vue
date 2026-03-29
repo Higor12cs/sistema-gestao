@@ -39,22 +39,22 @@ const parseLocaleNumber = (value) => {
 const totalPaidAmount = computed(() =>
     payments.value.reduce(
         (total, payment) => total + parseLocaleNumber(payment.paid_amount || 0),
-        0
-    )
+        0,
+    ),
 );
 
 const totalFees = computed(() =>
     payments.value.reduce(
         (total, payment) => total + parseLocaleNumber(payment.fees || 0),
-        0
-    )
+        0,
+    ),
 );
 
 const totalDiscounts = computed(() =>
     payments.value.reduce(
         (total, payment) => total + parseLocaleNumber(payment.discount || 0),
-        0
-    )
+        0,
+    ),
 );
 
 const effectiveTotal = computed(() =>
@@ -64,8 +64,8 @@ const effectiveTotal = computed(() =>
             parseLocaleNumber(payment.paid_amount || 0) +
             parseLocaleNumber(payment.fees || 0) -
             parseLocaleNumber(payment.discount || 0),
-        0
-    )
+        0,
+    ),
 );
 
 const form = useForm({
@@ -91,7 +91,7 @@ const validatePaymentAmounts = () => {
             parseLocaleNumber(receivable.remaining_amount)
         ) {
             validationError.value = `O valor de pagamento não pode exceder o valor restante para o recebível ${formatSequentialId(
-                receivable.sequential_id
+                receivable.id,
             )}.`;
             isValid = false;
             break;
@@ -225,37 +225,33 @@ const calculateEffectiveAmount = (payment, index) => {
                                     :key="receivable.id"
                                 >
                                     <td>
-                                        {{
-                                            formatSequentialId(
-                                                receivable.sequential_id
-                                            )
-                                        }}
+                                        {{ formatSequentialId(receivable.id) }}
                                     </td>
                                     <td>
                                         {{
                                             new Date(
-                                                receivable.due_date
+                                                receivable.due_date,
                                             ).toLocaleDateString("pt-BR")
                                         }}
                                     </td>
                                     <td>
                                         {{
                                             formatCurrency(
-                                                receivable.total_amount
+                                                receivable.total_amount,
                                             )
                                         }}
                                     </td>
                                     <td>
                                         {{
                                             formatCurrency(
-                                                receivable.paid_amount
+                                                receivable.paid_amount,
                                             )
                                         }}
                                     </td>
                                     <td>
                                         {{
                                             formatCurrency(
-                                                receivable.remaining_amount
+                                                receivable.remaining_amount,
                                             )
                                         }}
                                     </td>
@@ -274,7 +270,7 @@ const calculateEffectiveAmount = (payment, index) => {
                                             @update:modelValue="
                                                 calculateEffectiveAmount(
                                                     payments[index],
-                                                    index
+                                                    index,
                                                 )
                                             "
                                             required
@@ -282,10 +278,10 @@ const calculateEffectiveAmount = (payment, index) => {
                                         <div
                                             v-if="
                                                 parseLocaleNumber(
-                                                    payments[index].paid_amount
+                                                    payments[index].paid_amount,
                                                 ) >
                                                 parseLocaleNumber(
-                                                    receivable.remaining_amount
+                                                    receivable.remaining_amount,
                                                 )
                                             "
                                             class="text-danger small"
@@ -306,7 +302,7 @@ const calculateEffectiveAmount = (payment, index) => {
                                             @update:modelValue="
                                                 calculateEffectiveAmount(
                                                     payments[index],
-                                                    index
+                                                    index,
                                                 )
                                             "
                                         />
@@ -324,7 +320,7 @@ const calculateEffectiveAmount = (payment, index) => {
                                             @update:modelValue="
                                                 calculateEffectiveAmount(
                                                     payments[index],
-                                                    index
+                                                    index,
                                                 )
                                             "
                                         />
@@ -332,7 +328,8 @@ const calculateEffectiveAmount = (payment, index) => {
                                     <td v-if="payments[index]">
                                         {{
                                             formatCurrency(
-                                                payments[index].effective_amount
+                                                payments[index]
+                                                    .effective_amount,
                                             )
                                         }}
                                     </td>

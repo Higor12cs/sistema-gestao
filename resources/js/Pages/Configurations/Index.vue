@@ -48,9 +48,10 @@ const props = defineProps({
                             >
                                 <td>
                                     {{
-                                        String(
-                                            configuration.sequential_id
-                                        ).padStart(6, "0")
+                                        String(configuration.id).padStart(
+                                            6,
+                                            "0",
+                                        )
                                     }}
                                 </td>
                                 <td>{{ configuration.description }}</td>
@@ -59,8 +60,7 @@ const props = defineProps({
                                     <Link
                                         :href="
                                             route('configurations.edit', {
-                                                configuration:
-                                                    configuration.id,
+                                                configuration: configuration.id,
                                             })
                                         "
                                         class="btn btn-sm btn-secondary"

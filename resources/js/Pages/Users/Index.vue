@@ -29,9 +29,9 @@ watch(
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
-    }, 300)
+    }, 300),
 );
 
 const confirmDelete = (user) => {
@@ -41,7 +41,7 @@ const confirmDelete = (user) => {
         user.roles.some((role) => role.name === "Administrador")
     ) {
         const adminCount = props.users.data.filter(
-            (u) => u.roles && u.roles.some((r) => r.name === "Administrador")
+            (u) => u.roles && u.roles.some((r) => r.name === "Administrador"),
         ).length;
 
         if (adminCount === 1) {
@@ -122,12 +122,7 @@ const cancelDelete = () => {
                         <tbody>
                             <tr v-for="user in users.data" :key="user.id">
                                 <td>
-                                    {{
-                                        String(user.sequential_id).padStart(
-                                            6,
-                                            "0"
-                                        )
-                                    }}
+                                    {{ String(user.id).padStart(6, "0") }}
                                 </td>
                                 <td>{{ user.name }}</td>
                                 <td>{{ user.email }}</td>
@@ -157,12 +152,7 @@ const cancelDelete = () => {
                                 <td>
                                     <div class="text-nowrap">
                                         <Link
-                                            :href="
-                                                route(
-                                                    'users.edit',
-                                                    user.id
-                                                )
-                                            "
+                                            :href="route('users.edit', user.id)"
                                             class="btn btn-sm btn-secondary mr-1"
                                         >
                                             Editar

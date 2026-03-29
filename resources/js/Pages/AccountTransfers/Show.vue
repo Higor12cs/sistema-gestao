@@ -29,7 +29,7 @@ const props = defineProps({
                         },
                         {
                             label: `Transferência #${formatSequentialId(
-                                transfer.sequential_id
+                                transfer.id,
                             )}`,
                         },
                     ]"
@@ -59,11 +59,7 @@ const props = defineProps({
                                         Código:
                                     </th>
                                     <td>
-                                        {{
-                                            formatSequentialId(
-                                                transfer.sequential_id
-                                            )
-                                        }}
+                                        {{ formatSequentialId(transfer.id) }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -123,8 +119,7 @@ const props = defineProps({
                                     <td>
                                         {{
                                             formatSequentialId(
-                                                transfer.debit_transaction
-                                                    .sequential_id
+                                                transfer.debit_transaction.id,
                                             )
                                         }}
                                     </td>
@@ -147,7 +142,7 @@ const props = defineProps({
                                         {{
                                             formatCurrency(
                                                 transfer.debit_transaction
-                                                    .amount
+                                                    .amount,
                                             )
                                         }}
                                     </td>
@@ -200,8 +195,7 @@ const props = defineProps({
                                     <td>
                                         {{
                                             formatSequentialId(
-                                                transfer.credit_transaction
-                                                    .sequential_id
+                                                transfer.credit_transaction.id,
                                             )
                                         }}
                                     </td>
@@ -226,7 +220,7 @@ const props = defineProps({
                                         {{
                                             formatCurrency(
                                                 transfer.credit_transaction
-                                                    .amount
+                                                    .amount,
                                             )
                                         }}
                                     </td>

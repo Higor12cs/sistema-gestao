@@ -35,7 +35,7 @@ watch(
     (newProps) => {
         showFlashMessages();
     },
-    { deep: true }
+    { deep: true },
 );
 
 const toggleDarkMode = () => {
@@ -55,7 +55,7 @@ const visibleMenuItems = computed(() => {
                 const filteredSubItems = item.subItems.filter(
                     (subItem) =>
                         !subItem.permission ||
-                        checkPermission(subItem.permission)
+                        checkPermission(subItem.permission),
                 );
 
                 if (filteredSubItems.length === 0) return false;

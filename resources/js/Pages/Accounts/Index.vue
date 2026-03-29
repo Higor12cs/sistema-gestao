@@ -29,9 +29,9 @@ watch(
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
-    }, 300)
+    }, 300),
 );
 
 const confirmDelete = (account) => {
@@ -112,12 +112,7 @@ const cancelDelete = () => {
                                 :key="account.id"
                             >
                                 <td>
-                                    {{
-                                        String(account.sequential_id).padStart(
-                                            6,
-                                            "0"
-                                        )
-                                    }}
+                                    {{ String(account.id).padStart(6, "0") }}
                                 </td>
                                 <td>{{ account.name }}</td>
                                 <td>
@@ -137,7 +132,7 @@ const cancelDelete = () => {
                                             :href="
                                                 route(
                                                     'accounts.edit',
-                                                    account.id
+                                                    account.id,
                                                 )
                                             "
                                             class="btn btn-sm btn-secondary mr-1"

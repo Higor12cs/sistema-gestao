@@ -29,7 +29,7 @@ const props = defineProps({
                         },
                         {
                             label: `Pagamento #${formatSequentialId(
-                                payment.sequential_id
+                                payment.id,
                             )}`,
                         },
                     ]"
@@ -59,11 +59,7 @@ const props = defineProps({
                                         Código:
                                     </th>
                                     <td class="pr-3 text-right">
-                                        {{
-                                            formatSequentialId(
-                                                payment.sequential_id
-                                            )
-                                        }}
+                                        {{ formatSequentialId(payment.id) }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -119,7 +115,7 @@ const props = defineProps({
                                             formatCurrency(
                                                 (payment.paid_amount || 0) +
                                                     (payment.fees || 0) -
-                                                    (payment.discount || 0)
+                                                    (payment.discount || 0),
                                             )
                                         }}
                                     </td>
@@ -149,7 +145,7 @@ const props = defineProps({
                                     <td class="pr-3 text-right">
                                         {{
                                             formatSequentialId(
-                                                payment.receivable.sequential_id
+                                                payment.receivable.id,
                                             )
                                         }}
                                     </td>
@@ -169,7 +165,7 @@ const props = defineProps({
                                     <td class="pr-3 text-right">
                                         {{
                                             formatDate(
-                                                payment.receivable.issue_date
+                                                payment.receivable.issue_date,
                                             )
                                         }}
                                     </td>
@@ -179,7 +175,7 @@ const props = defineProps({
                                     <td class="pr-3 text-right">
                                         {{
                                             formatDate(
-                                                payment.receivable.due_date
+                                                payment.receivable.due_date,
                                             )
                                         }}
                                     </td>
@@ -189,7 +185,7 @@ const props = defineProps({
                                     <td class="pr-3 text-right">
                                         {{
                                             formatCurrency(
-                                                payment.receivable.total_amount
+                                                payment.receivable.total_amount,
                                             )
                                         }}
                                     </td>
@@ -199,7 +195,7 @@ const props = defineProps({
                                     <td class="pr-3 text-right">
                                         {{
                                             formatCurrency(
-                                                payment.receivable.paid_amount
+                                                payment.receivable.paid_amount,
                                             )
                                         }}
                                     </td>
@@ -210,7 +206,7 @@ const props = defineProps({
                                         {{
                                             formatCurrency(
                                                 payment.receivable
-                                                    .remaining_amount
+                                                    .remaining_amount,
                                             )
                                         }}
                                     </td>
@@ -225,9 +221,10 @@ const props = defineProps({
                                                 'paid'
                                                     ? 'badge-primary'
                                                     : payment.receivable
-                                                          .status === 'partial'
-                                                    ? 'badge-secondary'
-                                                    : 'badge-warning',
+                                                            .status ===
+                                                        'partial'
+                                                      ? 'badge-secondary'
+                                                      : 'badge-warning',
                                             ]"
                                         >
                                             {{
@@ -235,9 +232,10 @@ const props = defineProps({
                                                 "paid"
                                                     ? "Pago"
                                                     : payment.receivable
-                                                          .status === "partial"
-                                                    ? "Parcial"
-                                                    : "Pendente"
+                                                            .status ===
+                                                        "partial"
+                                                      ? "Parcial"
+                                                      : "Pendente"
                                             }}
                                         </span>
                                     </td>
@@ -261,8 +259,7 @@ const props = defineProps({
                                     <td class="pr-3 text-right">
                                         {{
                                             formatSequentialId(
-                                                payment.transaction
-                                                    .sequential_id
+                                                payment.transaction.id,
                                             )
                                         }}
                                     </td>
@@ -273,7 +270,7 @@ const props = defineProps({
                                         {{
                                             formatDate(
                                                 payment.transaction
-                                                    .transaction_date
+                                                    .transaction_date,
                                             )
                                         }}
                                     </td>
@@ -294,7 +291,7 @@ const props = defineProps({
                                     <td class="pr-3 text-right">
                                         {{
                                             formatCurrency(
-                                                payment.transaction.amount
+                                                payment.transaction.amount,
                                             )
                                         }}
                                     </td>

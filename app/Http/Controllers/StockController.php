@@ -21,7 +21,7 @@ class StockController extends Controller
         $stocks = Stock::with(['product'])
             ->when($request->filled('search'), function ($query, $search) {
                 $query->whereHas('product', function ($q) use ($search) {
-                    $q->where('name', 'ilike', "%{$search}%");
+                    $q->where('name', 'like', "%{$search}%");
                 });
             })
             ->latest()

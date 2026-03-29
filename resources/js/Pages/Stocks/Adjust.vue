@@ -55,12 +55,7 @@ const submit = () => {
                         </h5>
                         <p class="text-muted">
                             Código:
-                            {{
-                                String(stock.product.sequential_id).padStart(
-                                    6,
-                                    "0"
-                                )
-                            }}
+                            {{ String(stock.product.id).padStart(6, "0") }}
                         </p>
                     </div>
                 </div>

@@ -143,7 +143,7 @@ class StockService
                     $item->quantity,
                     'purchase',
                     $purchase->id,
-                    'ENTRADA POR COMPRA #'.str_pad($purchase->sequential_id, 6, '0', STR_PAD_LEFT)
+                    'ENTRADA POR COMPRA #'.str_pad($purchase->id, 6, '0', STR_PAD_LEFT)
                 );
             }
         });
@@ -159,7 +159,7 @@ class StockService
                     $item->quantity,
                     'order',
                     $order->id,
-                    'SAIDA POR PEDIDO #'.str_pad($order->sequential_id, 6, '0', STR_PAD_LEFT)
+                    'SAIDA POR PEDIDO #'.str_pad($order->id, 6, '0', STR_PAD_LEFT)
                 );
             }
         });

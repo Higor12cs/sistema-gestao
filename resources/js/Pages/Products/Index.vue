@@ -30,9 +30,9 @@ watch(
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
-    }, 300)
+    }, 300),
 );
 
 const confirmDelete = (product) => {
@@ -116,12 +116,7 @@ const cancelDelete = () => {
                                 :key="product.id"
                             >
                                 <td>
-                                    {{
-                                        String(product.sequential_id).padStart(
-                                            6,
-                                            "0"
-                                        )
-                                    }}
+                                    {{ String(product.id).padStart(6, "0") }}
                                 </td>
                                 <td>{{ product.name }}</td>
                                 <td>{{ product?.group?.section?.name }}</td>
@@ -145,7 +140,7 @@ const cancelDelete = () => {
                                             :href="
                                                 route(
                                                     'products.edit',
-                                                    product.id
+                                                    product.id,
                                                 )
                                             "
                                             class="btn btn-sm btn-secondary mr-1"

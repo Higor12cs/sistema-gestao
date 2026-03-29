@@ -12,7 +12,7 @@ class AccountController extends Controller
     {
         $accounts = Account::query()
             ->when(request('search'), function ($query, $search) {
-                $query->where('name', 'ilike', "%{$search}%");
+                $query->where('name', 'like', "%{$search}%");
             })
             ->latest()
             ->paginate(10)
@@ -83,8 +83,8 @@ class AccountController extends Controller
 
         $sections = Account::query()
             ->when($query, function ($query, $search) {
-                $query->where('name', 'ilike', "%{$search}%")
-                    ->orWhere('code', 'ilike', "%{$search}%");
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('code', 'like', "%{$search}%");
             })
             ->where('active', true)
             ->limit(5)

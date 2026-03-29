@@ -2,20 +2,16 @@
 
 namespace App\Models;
 
-use App\Traits\BelongsToTenant;
-use App\Traits\Sequential;
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PurchaseItem extends Model
 {
-    use BelongsToTenant, HasFactory, HasUlids, Sequential;
+    use HasFactory;
 
     protected $fillable = [
-        'tenant_id',
-        'sequential_id',
+        'id',
         'purchase_id',
         'product_id',
         'quantity',

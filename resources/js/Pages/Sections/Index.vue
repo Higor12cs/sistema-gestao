@@ -29,9 +29,9 @@ watch(
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
-    }, 300)
+    }, 300),
 );
 
 const confirmDelete = (section) => {
@@ -112,12 +112,7 @@ const cancelDelete = () => {
                                 :key="section.id"
                             >
                                 <td>
-                                    {{
-                                        String(section.sequential_id).padStart(
-                                            6,
-                                            "0"
-                                        )
-                                    }}
+                                    {{ String(section.id).padStart(6, "0") }}
                                 </td>
                                 <td>{{ section.name }}</td>
                                 <td>
@@ -140,7 +135,7 @@ const cancelDelete = () => {
                                             :href="
                                                 route(
                                                     'sections.edit',
-                                                    section.id
+                                                    section.id,
                                                 )
                                             "
                                             class="btn btn-sm btn-secondary mr-1"

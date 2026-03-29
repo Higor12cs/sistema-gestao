@@ -63,9 +63,7 @@ const handleSubmit = () => {
                         <div class="form-group">
                             <label>Código</label>
                             <p class="form-control-static">
-                                {{
-                                    formatSequentialId(receivable.sequential_id)
-                                }}
+                                {{ formatSequentialId(receivable.id) }}
                             </p>
                         </div>
                     </div>
@@ -132,16 +130,16 @@ const handleSubmit = () => {
                                         receivable.status === 'paid'
                                             ? 'badge-success'
                                             : receivable.status === 'partial'
-                                            ? 'badge-warning'
-                                            : 'badge-secondary',
+                                              ? 'badge-warning'
+                                              : 'badge-secondary',
                                     ]"
                                 >
                                     {{
                                         receivable.status === "paid"
                                             ? "Pago"
                                             : receivable.status === "partial"
-                                            ? "Parcial"
-                                            : "Pendente"
+                                              ? "Parcial"
+                                              : "Pendente"
                                     }}
                                 </span>
                             </p>

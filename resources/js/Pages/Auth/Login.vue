@@ -124,14 +124,6 @@ const submit = () => {
                             >Esqueci minha senha</Link
                         >
                     </p>
-                    <p class="mb-0">
-                        <Link
-                            :href="route('register')"
-                            class="text-primary text-center"
-                        >
-                            Registre uma nova conta
-                        </Link>
-                    </p>
                 </div>
             </div>
         </div>

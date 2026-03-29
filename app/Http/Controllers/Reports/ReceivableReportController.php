@@ -5,12 +5,19 @@ namespace App\Http\Controllers\Reports;
 use App\Http\Controllers\Controller;
 use App\Models\ChartAccount;
 use App\Models\Receivable;
+use App\Services\Reports\BaseReportService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Spatie\Browsershot\Browsershot;
 
 class ReceivableReportController extends Controller
 {
+    protected BaseReportService $reportService;
+
+    public function __construct(BaseReportService $reportService)
+    {
+        $this->reportService = $reportService;
+    }
+
     public function analytical(Request $request)
     {
         $query = Receivable::query()
@@ -26,25 +33,19 @@ class ReceivableReportController extends Controller
 
         $receivables = $query->orderBy($this->getOrderByField($request), 'desc')->get();
 
-        $html = view('reports.receivables.analytical', [
-            'receivables' => $receivables,
-            'start_date' => $request->get('start_date'),
-            'end_date' => $request->get('end_date'),
-            'date_type' => $request->get('date_type', 'issue_date'),
-            'status' => $request->get('status', 'all'),
-        ])->render();
-
-        $pdf = $this->generatePdf($html);
-
         $filename = 'RelatorioRecebiveisAnalitico';
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $filename .= '_'.$request->get('start_date').'_'.$request->get('end_date');
         }
         $filename .= '.pdf';
 
-        return response($pdf)
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'inline; filename="'.$filename.'"');
+        return $this->reportService->streamPdf('reports.receivables.analytical', [
+            'receivables' => $receivables,
+            'start_date' => $request->get('start_date'),
+            'end_date' => $request->get('end_date'),
+            'date_type' => $request->get('date_type', 'issue_date'),
+            'status' => $request->get('status', 'all'),
+        ], $filename);
     }
 
     public function synthetic(Request $request)
@@ -117,7 +118,13 @@ class ReceivableReportController extends Controller
                 ];
             })->sortByDesc('total')->take(10)->values()->toArray();
 
-        $html = view('reports.receivables.synthetic', [
+        $filename = 'RelatorioRecebiveisSintetico';
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $filename .= '_'.$request->get('start_date').'_'.$request->get('end_date');
+        }
+        $filename .= '.pdf';
+
+        return $this->reportService->streamPdf('reports.receivables.synthetic', [
             'receivables' => $receivables,
             'totalReceivables' => $totalReceivables,
             'totalAmount' => $totalAmount,
@@ -132,19 +139,7 @@ class ReceivableReportController extends Controller
             'status' => $request->get('status', 'all'),
             'start_date' => $request->get('start_date'),
             'end_date' => $request->get('end_date'),
-        ])->render();
-
-        $pdf = $this->generatePdf($html);
-
-        $filename = 'RelatorioRecebiveisSintetico';
-        if ($request->filled('start_date') && $request->filled('end_date')) {
-            $filename .= '_'.$request->get('start_date').'_'.$request->get('end_date');
-        }
-        $filename .= '.pdf';
-
-        return response($pdf)
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'inline; filename="'.$filename.'"');
+        ], $filename);
     }
 
     private function applyFilters($query, Request $request)
@@ -229,23 +224,5 @@ class ReceivableReportController extends Controller
         }
 
         return Carbon::createFromFormat('Y-m', $period)->format('M/Y');
-    }
-
-    private function generatePdf($html)
-    {
-        $browsershot = Browsershot::html($html)
-            ->showBackground()
-            ->waitUntilNetworkIdle()
-            ->timeout(120)
-            ->margins(10, 10, 10, 10)
-            ->format('A4');
-
-        if (config('app.env') === 'production') {
-            $browsershot->setNodeBinary('/usr/bin/node')
-                ->setNpmBinary('/usr/bin/npm')
-                ->noSandbox();
-        }
-
-        return $browsershot->pdf();
     }
 }

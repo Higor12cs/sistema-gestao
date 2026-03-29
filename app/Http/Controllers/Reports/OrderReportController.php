@@ -4,12 +4,19 @@ namespace App\Http\Controllers\Reports;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Services\Reports\BaseReportService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Spatie\Browsershot\Browsershot;
 
 class OrderReportController extends Controller
 {
+    protected BaseReportService $reportService;
+
+    public function __construct(BaseReportService $reportService)
+    {
+        $this->reportService = $reportService;
+    }
+
     public function analytical(Request $request)
     {
         $orders = Order::query()
@@ -30,23 +37,17 @@ class OrderReportController extends Controller
             ->orderBy('issue_date', 'desc')
             ->get();
 
-        $html = view('reports.orders.analytical', [
-            'orders' => $orders,
-            'start_date' => $request->get('start_date'),
-            'end_date' => $request->get('end_date'),
-        ])->render();
-
-        $pdf = $this->generatePdf($html);
-
         $filename = 'RelatorioPedidosAnalitico';
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $filename .= '_'.$request->get('start_date').'_'.$request->get('end_date');
         }
         $filename .= '.pdf';
 
-        return response($pdf)
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'inline; filename="'.$filename.'"');
+        return $this->reportService->streamPdf('reports.orders.analytical', [
+            'orders' => $orders,
+            'start_date' => $request->get('start_date'),
+            'end_date' => $request->get('end_date'),
+        ], $filename);
     }
 
     public function synthetic(Request $request)
@@ -65,7 +66,13 @@ class OrderReportController extends Controller
         $topCustomers = $this->getTopCustomers($ordersWithItems);
         $topSellers = $this->getTopSellers($ordersWithItems);
 
-        $html = view('reports.orders.synthetic', [
+        $filename = 'RelatorioPedidosSintetico';
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $filename .= '_'.$request->get('start_date').'_'.$request->get('end_date');
+        }
+        $filename .= '.pdf';
+
+        return $this->reportService->streamPdf('reports.orders.synthetic', [
             'orders' => $ordersWithItems,
             'totalOrders' => $totalOrders,
             'totalSales' => $totalSales,
@@ -77,19 +84,7 @@ class OrderReportController extends Controller
             'groupBy' => $request->get('group_by', 'day'),
             'start_date' => $request->get('start_date'),
             'end_date' => $request->get('end_date'),
-        ])->render();
-
-        $pdf = $this->generatePdf($html);
-
-        $filename = 'RelatorioPedidosSintetico';
-        if ($request->filled('start_date') && $request->filled('end_date')) {
-            $filename .= '_'.$request->get('start_date').'_'.$request->get('end_date');
-        }
-        $filename .= '.pdf';
-
-        return response($pdf)
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'inline; filename="'.$filename.'"');
+        ], $filename);
     }
 
     private function buildOrderQuery(Request $request)
@@ -167,23 +162,5 @@ class OrderReportController extends Controller
         }
 
         return Carbon::createFromFormat('Y-m', $period)->format('M/Y');
-    }
-
-    private function generatePdf($html)
-    {
-        $browsershot = Browsershot::html($html)
-            ->showBackground()
-            ->waitUntilNetworkIdle()
-            ->timeout(120)
-            ->margins(10, 10, 10, 10)
-            ->format('A4');
-
-        if (config('app.env') === 'production') {
-            $browsershot->setNodeBinary('/usr/bin/node')
-                ->setNpmBinary('/usr/bin/npm')
-                ->noSandbox();
-        }
-
-        return $browsershot->pdf();
     }
 }

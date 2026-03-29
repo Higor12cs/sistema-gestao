@@ -62,7 +62,7 @@ onMounted(() => {
             <div>
                 <h4>
                     Visualizar Compra #{{
-                        String(purchase.sequential_id).padStart(6, "0")
+                        String(purchase.id).padStart(6, "0")
                     }}
                 </h4>
                 <Breadcrumb
@@ -94,10 +94,7 @@ onMounted(() => {
                                 <p>
                                     <strong>Código:</strong>
                                     &nbsp; #{{
-                                        String(purchase.sequential_id).padStart(
-                                            6,
-                                            "0"
-                                        )
+                                        String(purchase.id).padStart(6, "0")
                                     }}
                                 </p>
                                 <p>
@@ -156,7 +153,7 @@ onMounted(() => {
                                             {{
                                                 String(index + 1).padStart(
                                                     3,
-                                                    "0"
+                                                    "0",
                                                 )
                                             }}
                                         </td>
@@ -209,9 +206,10 @@ onMounted(() => {
                                         >
                                             <td>
                                                 {{
-                                                    String(
-                                                        payable.sequential_id
-                                                    ).padStart(6, "0")
+                                                    String(payable.id).padStart(
+                                                        6,
+                                                        "0",
+                                                    )
                                                 }}
                                             </td>
                                             <td>
@@ -228,7 +226,7 @@ onMounted(() => {
                                             <td>
                                                 {{
                                                     formatCurrency(
-                                                        payable.total_amount
+                                                        payable.total_amount,
                                                     )
                                                 }}
                                             </td>
@@ -252,9 +250,9 @@ onMounted(() => {
                                                         "paid"
                                                             ? "Pago"
                                                             : payable.status ===
-                                                              "partial"
-                                                            ? "Parcial"
-                                                            : "Pendente"
+                                                                "partial"
+                                                              ? "Parcial"
+                                                              : "Pendente"
                                                     }}
                                                 </span>
                                             </td>
@@ -270,7 +268,7 @@ onMounted(() => {
                                     :href="
                                         route(
                                             'purchases.create-payables',
-                                            purchase.id
+                                            purchase.id,
                                         )
                                     "
                                     class="btn btn-sm btn-primary ml-2"
@@ -295,7 +293,7 @@ onMounted(() => {
                                             formatCurrency(
                                                 Number(purchase.total_cost) +
                                                     Number(purchase.discount) -
-                                                    Number(purchase.fees)
+                                                    Number(purchase.fees),
                                             )
                                         }}
                                     </td>

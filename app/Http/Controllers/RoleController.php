@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
-use App\Models\Permission;
 
 class RoleController extends Controller
 {
@@ -15,7 +15,7 @@ class RoleController extends Controller
         $roles = Role::query()
             ->with('permissions')
             ->when(request('search'), function ($query, $search) {
-                $query->where('name', 'ilike', "%{$search}%");
+                $query->where('name', 'like', "%{$search}%");
             })
             ->latest()
             ->paginate(10)
@@ -129,7 +129,7 @@ class RoleController extends Controller
 
         $roles = Role::query()
             ->where('tenant_id', Auth::user()->tenant_id)
-            ->where('name', 'ilike', "%{$query}%")
+            ->where('name', 'like', "%{$query}%")
             ->limit(5)
             ->get(['id', 'name']);
 

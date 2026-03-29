@@ -61,9 +61,7 @@ onMounted(() => {
         <div class="d-flex justify-content-between mb-3">
             <div>
                 <h4>
-                    Visualizar Pedido #{{
-                        String(order.sequential_id).padStart(6, "0")
-                    }}
+                    Visualizar Pedido #{{ String(order.id).padStart(6, "0") }}
                 </h4>
                 <Breadcrumb
                     :breadcrumb="[
@@ -90,10 +88,7 @@ onMounted(() => {
                     <div class="dropdown-menu" aria-labelledby="printDropdown">
                         <a
                             class="dropdown-item"
-                            :href="
-                                route('orders.print', order.id) +
-                                '?type=a4'
-                            "
+                            :href="route('orders.print', order.id) + '?type=a4'"
                             target="_blank"
                         >
                             Imprimir A4
@@ -132,10 +127,7 @@ onMounted(() => {
                                 <p>
                                     <strong>Código:</strong>
                                     &nbsp; #{{
-                                        String(order.sequential_id).padStart(
-                                            6,
-                                            "0"
-                                        )
+                                        String(order.id).padStart(6, "0")
                                     }}
                                 </p>
                                 <p>
@@ -192,7 +184,7 @@ onMounted(() => {
                                             {{
                                                 String(index + 1).padStart(
                                                     3,
-                                                    "0"
+                                                    "0",
                                                 )
                                             }}
                                         </td>
@@ -248,7 +240,7 @@ onMounted(() => {
                                             <td>
                                                 {{
                                                     String(
-                                                        receivable.sequential_id
+                                                        receivable.id,
                                                     ).padStart(6, "0")
                                                 }}
                                             </td>
@@ -261,14 +253,14 @@ onMounted(() => {
                                             <td>
                                                 {{
                                                     formatDate(
-                                                        receivable.due_date
+                                                        receivable.due_date,
                                                     )
                                                 }}
                                             </td>
                                             <td>
                                                 {{
                                                     formatCurrency(
-                                                        receivable.total_amount
+                                                        receivable.total_amount,
                                                     )
                                                 }}
                                             </td>
@@ -292,9 +284,9 @@ onMounted(() => {
                                                         "paid"
                                                             ? "Pago"
                                                             : receivable.status ===
-                                                              "partial"
-                                                            ? "Parcial"
-                                                            : "Pendente"
+                                                                "partial"
+                                                              ? "Parcial"
+                                                              : "Pendente"
                                                     }}
                                                 </span>
                                             </td>
@@ -310,7 +302,7 @@ onMounted(() => {
                                     :href="
                                         route(
                                             'orders.create-receivables',
-                                            order.id
+                                            order.id,
                                         )
                                     "
                                     class="btn btn-sm btn-primary ml-2"
@@ -335,7 +327,7 @@ onMounted(() => {
                                             formatCurrency(
                                                 Number(order.total_price) +
                                                     Number(order.discount) -
-                                                    Number(order.fees)
+                                                    Number(order.fees),
                                             )
                                         }}
                                     </td>

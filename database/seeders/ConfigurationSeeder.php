@@ -18,7 +18,7 @@ class ConfigurationSeeder extends Seeder
                         'name' => 'order_receivable_default_chart_account_id',
                     ],
                     [
-                        'sequential_id' => 1,
+                        'id' => 1,
                         'description' => 'Padrão do Plano de Contas para Recebíveis de Vendas',
                         'value' => '',
                         'type' => 'string',
@@ -32,7 +32,7 @@ class ConfigurationSeeder extends Seeder
                         'name' => 'purchase_payable_default_chart_account_id',
                     ],
                     [
-                        'sequential_id' => 2,
+                        'id' => 2,
                         'description' => 'Padrão do Plano de Contas para Pagáveis de Compras',
                         'value' => '',
                         'type' => 'string',
@@ -50,7 +50,7 @@ class ConfigurationSeeder extends Seeder
                 'name' => 'order_receivable_default_chart_account_id',
             ],
             [
-                'sequential_id' => 1,
+                'id' => 1,
                 'description' => 'Padrão do Plano de Contas para Recebíveis de Vendas',
                 'value' => '',
                 'type' => 'string',
@@ -62,7 +62,7 @@ class ConfigurationSeeder extends Seeder
                 'name' => 'purchase_payable_default_chart_account_id',
             ],
             [
-                'sequential_id' => 2,
+                'id' => 2,
                 'description' => 'Padrão do Plano de Contas para Pagáveis de Compras',
                 'value' => '',
                 'type' => 'string',

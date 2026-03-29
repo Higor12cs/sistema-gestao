@@ -36,7 +36,7 @@ const applyDateFilter = () => {
         {
             preserveState: true,
             replace: true,
-        }
+        },
     );
 };
 
@@ -49,7 +49,7 @@ const resetFilter = () => {
         {
             preserveState: true,
             replace: true,
-        }
+        },
     );
 };
 
@@ -158,11 +158,7 @@ const cancelDelete = () => {
                                 :key="transfer.id"
                             >
                                 <td>
-                                    {{
-                                        formatSequentialId(
-                                            transfer.sequential_id
-                                        )
-                                    }}
+                                    {{ formatSequentialId(transfer.id) }}
                                 </td>
                                 <td>
                                     {{ formatDate(transfer.transfer_date) }}
@@ -185,7 +181,7 @@ const cancelDelete = () => {
                                             :href="
                                                 route(
                                                     'account-transfers.show',
-                                                    transfer.id
+                                                    transfer.id,
                                                 )
                                             "
                                             class="btn btn-sm btn-secondary mr-1"

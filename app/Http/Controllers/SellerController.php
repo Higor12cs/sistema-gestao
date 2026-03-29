@@ -12,7 +12,7 @@ class SellerController extends Controller
     {
         $sellers = Seller::query()
             ->when(request('search'), function ($query, $search) {
-                $query->where('name', 'ilike', "%{$search}%");
+                $query->where('name', 'like', "%{$search}%");
             })
             ->latest()
             ->paginate(10)

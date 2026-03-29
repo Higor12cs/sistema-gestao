@@ -15,7 +15,7 @@ const emit = defineEmits(["cancel", "filter", "reset"]);
 const isVisible = ref(props.visible);
 
 const form = ref({
-    sequential_id: props.filters?.sequential_id || "",
+    id: props.filters?.id || "",
     supplier_id: props.filters?.supplier_id || "",
     start_date: props.filters?.start_date || "",
     end_date: props.filters?.end_date || "",
@@ -37,7 +37,7 @@ watch(
         if (value && window.$) {
             setTimeout(() => $("#filterModal").modal("show"), 100);
         }
-    }
+    },
 );
 
 watch(
@@ -45,7 +45,7 @@ watch(
     (newFilters) => {
         if (newFilters) {
             form.value = {
-                sequential_id: newFilters.sequential_id || "",
+                id: newFilters.id || "",
                 supplier_id: newFilters.supplier_id || "",
                 start_date: newFilters.start_date || "",
                 end_date: newFilters.end_date || "",
@@ -54,7 +54,7 @@ watch(
             };
         }
     },
-    { deep: true }
+    { deep: true },
 );
 
 const closeModal = () => {
@@ -113,9 +113,9 @@ onMounted(() => {
                     <div class="row">
                         <div class="col-md-4">
                             <InputField
-                                id="sequential_id"
+                                id="id"
                                 label="Código"
-                                v-model="form.sequential_id"
+                                v-model="form.id"
                                 type="text"
                                 placeholder="Código da Compra"
                             />

@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Permission;
+use App\Models\TenantUser;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -53,13 +54,19 @@ class CheckRoutePermissionMiddleware
 
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             throw UnauthorizedException::forPermissions([$permission]);
         }
 
-        $userPermissions = $user->getAllPermissions()->pluck('name')->toArray();
+        $tenantUser = TenantUser::find($user->id);
 
-        if (!in_array($permission, $userPermissions)) {
+        if (! $tenantUser) {
+            throw UnauthorizedException::forPermissions([$permission]);
+        }
+
+        $userPermissions = $tenantUser->getAllPermissions()->pluck('name')->toArray();
+
+        if (! in_array($permission, $userPermissions)) {
             throw UnauthorizedException::forPermissions([$permission]);
         }
 

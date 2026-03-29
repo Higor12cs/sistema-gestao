@@ -15,7 +15,7 @@ createInertiaApp({
     resolve: (name) =>
         resolvePageComponent(
             `./Pages/${name}.vue`,
-            import.meta.glob("./Pages/**/*.vue")
+            import.meta.glob("./Pages/**/*.vue"),
         ),
     setup({ el, App, props, plugin }) {
         const app = createApp({ render: () => h(App, props) })
@@ -23,6 +23,7 @@ createInertiaApp({
             .use(ZiggyVue);
 
         app.mount(el);
+
         initTreeview();
 
         return app;
@@ -39,10 +40,19 @@ function initTreeview() {
 
         if ($treeview.length) $treeview.Treeview("destroy").Treeview("init");
         if ($pushmenu.length) {
-            $pushmenu.PushMenu("destroy").PushMenu({ autoCollapseSize: 1024, enableRemember: false, collapseScreenSize: 1024 });
+            $pushmenu.PushMenu("destroy").PushMenu({
+                autoCollapseSize: 1024,
+                enableRemember: false,
+                collapseScreenSize: 1024,
+            });
             $(document).on("click", (e) => {
-                if ($(window).width() < 1024 && $("body").hasClass("sidebar-open") &&
-                    !$(e.target).closest(".main-sidebar, [data-widget='pushmenu']").length) {
+                if (
+                    $(window).width() < 1024 &&
+                    $("body").hasClass("sidebar-open") &&
+                    !$(e.target).closest(
+                        ".main-sidebar, [data-widget='pushmenu']",
+                    ).length
+                ) {
                     $pushmenu.PushMenu("collapse");
                 }
             });

@@ -4,22 +4,17 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use App\Traits\Sequential;
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasPermissions;
-use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, HasRoles, HasUlids, Notifiable, Sequential, HasPermissions;
+    use HasFactory, Notifiable;
 
     protected $fillable = [
-        'tenant_id',
-        'sequential_id',
+        'id',
         'name',
         'email',
         'password',
@@ -30,23 +25,13 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected function casts(): array
+    public function getConnectionName()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return config('tenancy.database.central_connection');
     }
 
-    public function hasPermissionWithTenant($permission)
+    public function tenants(): BelongsToMany
     {
-        return $this->getAllPermissions()
-            ->where('name', $permission)
-            ->count() > 0;
-    }
-
-    public function tenant(): BelongsTo
-    {
-        return $this->belongsTo(Tenant::class);
+        return $this->belongsToMany(Tenant::class);
     }
 }

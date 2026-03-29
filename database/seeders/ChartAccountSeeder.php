@@ -554,10 +554,10 @@ class ChartAccountSeeder extends Seeder
         $account = new ChartAccount;
         $account->id = Str::ulid();
 
-        // Buscar sequential_id específico para este tenant
+        // Buscar id específico para este tenant
         $maxSequential = ChartAccount::where('tenant_id', $data['tenant_id'])
-            ->max('sequential_id') ?? 0;
-        $account->sequential_id = $maxSequential + 1;
+            ->max('id') ?? 0;
+        $account->id = $maxSequential + 1;
 
         foreach ($data as $key => $value) {
             $account->{$key} = $value;

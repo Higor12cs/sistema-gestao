@@ -2,19 +2,13 @@
 
 namespace App\Models;
 
-use App\Traits\BelongsToTenant;
-use App\Traits\Sequential;
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StockMovement extends Model
 {
-    use BelongsToTenant, HasUlids, Sequential;
-
     protected $fillable = [
-        'tenant_id',
-        'sequential_id',
+        'id',
         'stock_id',
         'product_id',
         'type',

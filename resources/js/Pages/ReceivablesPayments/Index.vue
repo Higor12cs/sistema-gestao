@@ -43,7 +43,7 @@ const resetFilters = () => {
         {
             preserveState: true,
             replace: true,
-        }
+        },
     );
 };
 
@@ -176,16 +176,12 @@ const cancelDelete = () => {
                                 :key="payment.id"
                             >
                                 <td>
-                                    {{
-                                        formatSequentialId(
-                                            payment.sequential_id
-                                        )
-                                    }}
+                                    {{ formatSequentialId(payment.id) }}
                                 </td>
                                 <td>
                                     {{
                                         formatSequentialId(
-                                            payment.receivable.sequential_id
+                                            payment.receivable.id,
                                         )
                                     }}
                                 </td>
@@ -221,7 +217,7 @@ const cancelDelete = () => {
                                             :href="
                                                 route(
                                                     'receivables.payments.show',
-                                                    payment.id
+                                                    payment.id,
                                                 )
                                             "
                                             class="btn btn-sm btn-secondary mr-1"

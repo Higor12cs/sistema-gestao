@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\Permission;
+use App\Models\Role;
+use Spatie\Permission\DefaultTeamResolver;
+
 return [
 
     'models' => [
@@ -13,8 +17,7 @@ return [
          * `Spatie\Permission\Contracts\Permission` contract.
          */
 
-        // 'permission' => Spatie\Permission\Models\Permission::class,
-        'permission' => App\Models\Permission::class,
+        'permission' => Permission::class,
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -25,8 +28,7 @@ return [
          * `Spatie\Permission\Contracts\Role` contract.
          */
 
-        // 'role' => Spatie\Permission\Models\Role::class,
-        'role' => App\Models\Role::class,
+        'role' => Role::class,
 
     ],
 
@@ -95,7 +97,7 @@ return [
          * foreign key is other than `team_id`.
          */
 
-        'team_foreign_key' => 'tenant_id',
+        'team_foreign_key' => 'team_id',
     ],
 
     /*
@@ -114,10 +116,10 @@ return [
 
     /*
      * Events will fire when a role or permission is assigned/unassigned:
-     * \Spatie\Permission\Events\RoleAttached
-     * \Spatie\Permission\Events\RoleDetached
-     * \Spatie\Permission\Events\PermissionAttached
-     * \Spatie\Permission\Events\PermissionDetached
+     * \Spatie\Permission\Events\RoleAttachedEvent
+     * \Spatie\Permission\Events\RoleDetachedEvent
+     * \Spatie\Permission\Events\PermissionAttachedEvent
+     * \Spatie\Permission\Events\PermissionDetachedEvent
      *
      * To enable, set to true, and then create listeners to watch these events.
      */
@@ -133,12 +135,12 @@ return [
      * (view the latest version of this package's migration file)
      */
 
-    'teams' => true,
+    'teams' => false,
 
     /*
      * The class to use to resolve the permissions team id
      */
-    'team_resolver' => \Spatie\Permission\DefaultTeamResolver::class,
+    'team_resolver' => DefaultTeamResolver::class,
 
     /*
      * Passport Client Credentials Grant
@@ -174,7 +176,7 @@ return [
      * The class to use for interpreting wildcard permissions.
      * If you need to modify delimiters, override the class and specify its name here.
      */
-    // 'permission.wildcard_permission' => Spatie\Permission\WildcardPermission::class,
+    // 'wildcard_permission' => Spatie\Permission\WildcardPermission::class,
 
     /* Cache-specific settings */
 
@@ -185,7 +187,7 @@ return [
          * When permissions or roles are updated the cache is flushed automatically.
          */
 
-        'expiration_time' => \DateInterval::createFromDateString('24 hours'),
+        'expiration_time' => DateInterval::createFromDateString('24 hours'),
 
         /*
          * The cache key used to store all permissions.
@@ -199,6 +201,6 @@ return [
          * file. Using 'default' here means to use the `default` set in cache.php.
          */
 
-        'store' => 'default',
+        'store' => 'array',
     ],
 ];

@@ -29,9 +29,9 @@ watch(
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
-    }, 300)
+    }, 300),
 );
 
 // onMounted(() => {
@@ -129,12 +129,7 @@ const cancelDelete = () => {
                                 :key="customer.id"
                             >
                                 <td>
-                                    {{
-                                        String(customer.sequential_id).padStart(
-                                            6,
-                                            "0"
-                                        )
-                                    }}
+                                    {{ String(customer.id).padStart(6, "0") }}
                                 </td>
                                 <td>{{ customer.first_name }}</td>
                                 <td>{{ customer.last_name }}</td>
@@ -161,7 +156,7 @@ const cancelDelete = () => {
                                             :href="
                                                 route(
                                                     'customers.edit',
-                                                    customer.id
+                                                    customer.id,
                                                 )
                                             "
                                             class="btn btn-sm btn-secondary mr-1"

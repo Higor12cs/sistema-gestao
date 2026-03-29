@@ -29,9 +29,9 @@ watch(
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
-    }, 300)
+    }, 300),
 );
 
 const confirmDelete = (paymentMethod) => {
@@ -113,9 +113,10 @@ const cancelDelete = () => {
                             >
                                 <td>
                                     {{
-                                        String(
-                                            paymentMethod.sequential_id
-                                        ).padStart(6, "0")
+                                        String(paymentMethod.id).padStart(
+                                            6,
+                                            "0",
+                                        )
                                     }}
                                 </td>
                                 <td>{{ paymentMethod.name }}</td>
@@ -136,7 +137,7 @@ const cancelDelete = () => {
                                             :href="
                                                 route(
                                                     'payment-methods.edit',
-                                                    paymentMethod.id
+                                                    paymentMethod.id,
                                                 )
                                             "
                                             class="btn btn-sm btn-secondary mr-1"
