@@ -68,7 +68,7 @@ class CustomerAbcReportController extends Controller
 
             $classifiedCustomers[] = [
                 'id' => $customer->id,
-                'name' => $customer->first_name.' '.$customer->last_name,
+                'name' => $customer->first_name . ' ' . $customer->last_name,
                 'order_count' => $customer->order_count,
                 'total_value' => $customer->total_value,
                 'percentage' => $percentage,

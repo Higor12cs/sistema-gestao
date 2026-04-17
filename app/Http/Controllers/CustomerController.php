@@ -38,27 +38,31 @@ class CustomerController extends Controller
         return to_route('customers.index')->with('success', 'Cliente criado com sucesso!');
     }
 
-    // public function show(Customer $customer)
+    // public function show(int $id)
     // {
     //     //
     // }
 
-    public function edit(Customer $customer)
+    public function edit(int $id)
     {
+        $customer = Customer::findOrFail($id);
+
         return inertia('Customers/Edit', [
             'customer' => $customer,
         ]);
     }
 
-    public function update(CustomerRequest $request, Customer $customer)
+    public function update(CustomerRequest $request, int $id)
     {
+        $customer = Customer::findOrFail($id);
         $customer->update($request->validated());
 
         return to_route('customers.index')->with('success', 'Cliente atualizado com sucesso!');
     }
 
-    public function destroy(Customer $customer)
+    public function destroy(int $id)
     {
+        $customer = Customer::findOrFail($id);
         // TODO: Check if the customer has any related data before deleting it
         return to_route('customers.index')->with('error', 'Funcionalidade não implementada.');
 

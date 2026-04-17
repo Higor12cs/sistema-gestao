@@ -9,6 +9,7 @@ class InitializeTenancyBySession
 {
     public function handle(Request $request, Closure $next)
     {
+        // dd('InitializeTenancyBySession');
         if (session()->has('tenant_id')) {
             tenancy()->initialize(session('tenant_id'));
 
